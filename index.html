@@ -89,6 +89,9 @@ body{background:var(--bg);font-family:Inter,sans-serif;color:var(--text);-webkit
 .rent-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f1f5f9}
 .rent-item:last-child{border:none;padding-bottom:0}
 @keyframes spin{to{transform:rotate(360deg)}}
+.poi-tooltip{font-family:Inter,system-ui,sans-serif!important;font-size:12px!important;font-weight:600!important;padding:4px 8px!important;border-radius:6px!important;box-shadow:0 2px 8px rgba(0,0,0,.15)!important;max-width:200px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+@keyframes driveAcross{0%{left:-60px}100%{left:calc(100% + 60px)}}
+@keyframes progressPulse{0%{width:15%}50%{width:85%}100%{width:15%}}
 .spin{width:15px;height:15px;border:2.5px solid rgba(249,115,22,.2);border-top-color:#f97316;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0}
 @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .fade{animation:fu .3s ease both}
@@ -152,6 +155,7 @@ const I18N={
     privacy:"Privacy Policy",terms:"Termini di Servizio",lang:"Lingua",
     accessible:"Accessibile",withCare:"Con attenzione",notSuitable:"Non adatto",
     analysisInProgress:"Analisi in corso...",techData:"Dati Tecnici Raccolti",
+    phaseGps:"Acquisizione posizione GPS...",phaseRouting:"Calcolo percorso e accessi...",phaseOsm:"Raccolta dati strade e ostacoli...",phasePitches:"Analisi piazzole e strade interne...",phaseMapillary:"Ricerca foto stradali zona...",phaseVision:"Analisi visiva immagini...",phaseAi:"Elaborazione verdetto AI...",
     totalStr:"Totali",campground:"Campeggio",restArea:"Area Sosta",stellplatz:"Stellplatz",
     parking:"Parcheggio",farm:"Agriturismo",freeStop:"Sosta libera",
     minutes:"min",hours:"h",days:"g",
@@ -162,6 +166,12 @@ const I18N={
     resetApp:"Resetta App — Riconfigura chiavi",firebaseCommunity:"Firebase Community",
     firebaseDesc:"Configura Firebase per sincronizzare i certificati con la community.",
     connectFirebase:"Connetti Firebase",
+    navSearch:"Cerca",navCert:"Certificate",navRental:"Noleggio",navFav:"Preferiti",navProfile:"Profilo",
+    rental:"Noleggio Auto & Moto",rentalDesc:"Trova autonoleggi e noleggio moto nella tua zona di viaggio.",rentalPlaceholder:"Inserisci citt\u00e0 o zona...",noRental:"Nessun noleggio trovato in zona",rentalFound:"noleggi trovati",
+    wheelbase:"Interasse",rearOverhang:"Sbalzo post.",length:"Lunghezza",width:"Larghezza",height:"Altezza",weight:"Peso",model:"Modello",
+    rearOverhangCorner:"Sbalzo posteriore in curva",
+    privacyText:"Oversize in Tour rispetta la tua privacy. Tutti i dati (chiavi API, configurazione camper, ricerche, analisi) sono salvati esclusivamente in locale sul tuo dispositivo tramite localStorage. Nessun dato personale viene trasmesso ai nostri server. Le chiamate API (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) sono effettuate direttamente dal tuo browser verso i rispettivi servizi. Se attivi Firebase, i dati dei certificati community vengono condivisi con altri utenti tramite il database configurato. Puoi cancellare tutti i dati in qualsiasi momento resettando l'app.",
+    termsText:"Oversize in Tour fornisce analisi indicative basate su dati OpenStreetMap, algoritmi di routing e modelli AI. I risultati NON sostituiscono la verifica sul posto. L'utente è responsabile di verificare personalmente l'accessibilità delle strutture. L'app è fornita \"as is\" senza garanzie di alcun tipo. Non ci assumiamo responsabilità per eventuali danni derivanti dall'uso delle informazioni fornite. Le chiavi API sono di proprietà e responsabilità dell'utente. L'uso dell'app implica l'accettazione di questi termini.",
   },
   en:{
     appName:"Oversize in Tour",findStop:"Find your stop",searchPlaceholder:"E.g.: Lake Garda, Côte d'Azur, Barcelona, Bayern...",
@@ -193,6 +203,7 @@ const I18N={
     privacy:"Privacy Policy",terms:"Terms of Service",lang:"Language",
     accessible:"Accessible",withCare:"With care",notSuitable:"Not suitable",
     analysisInProgress:"Analysis in progress...",techData:"Technical Data Collected",
+    phaseGps:"Acquiring GPS position...",phaseRouting:"Calculating route and access...",phaseOsm:"Collecting road and obstacle data...",phasePitches:"Analyzing pitches and internal roads...",phaseMapillary:"Searching street photos of the area...",phaseVision:"Visual analysis of images...",phaseAi:"Generating AI verdict...",
     totalStr:"Total",campground:"Campsite",restArea:"Rest Area",stellplatz:"Stellplatz",
     parking:"Parking",farm:"Farm stay",freeStop:"Free stop",
     minutes:"min",hours:"h",days:"d",
@@ -203,6 +214,12 @@ const I18N={
     resetApp:"Reset App — Reconfigure keys",firebaseCommunity:"Firebase Community",
     firebaseDesc:"Configure Firebase to sync certificates with the community.",
     connectFirebase:"Connect Firebase",
+    navSearch:"Search",navCert:"Certificate",navRental:"Rental",navFav:"Favorites",navProfile:"Profile",
+    rental:"Car & Motorcycle Rental",rentalDesc:"Find car and motorcycle rentals in your travel area.",rentalPlaceholder:"Enter city or area...",noRental:"No rentals found in area",rentalFound:"rentals found",
+    wheelbase:"Wheelbase",rearOverhang:"Rear overhang",length:"Length",width:"Width",height:"Height",weight:"Weight",model:"Model",
+    rearOverhangCorner:"Rear overhang in turn",
+    privacyText:"Oversize in Tour respects your privacy. All data (API keys, camper configuration, searches, analyses) is saved exclusively on your device via localStorage. No personal data is transmitted to our servers. API calls (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) are made directly from your browser to the respective services. If you enable Firebase, community certificate data is shared with other users via the configured database. You can delete all data at any time by resetting the app.",
+    termsText:"Oversize in Tour provides indicative analyses based on OpenStreetMap data, routing algorithms and AI models. Results do NOT replace on-site verification. The user is responsible for personally verifying the accessibility of structures. The app is provided \"as is\" without warranties of any kind. We assume no liability for any damages arising from the use of the information provided. API keys are the property and responsibility of the user. Use of the app implies acceptance of these terms.",
   },
   de:{
     appName:"Oversize in Tour",findStop:"Finde deinen Stellplatz",searchPlaceholder:"Z.B.: Gardasee, Côte d'Azur, Barcelona, Bayern...",
@@ -234,6 +251,7 @@ const I18N={
     privacy:"Datenschutzerklärung",terms:"Nutzungsbedingungen",lang:"Sprache",
     accessible:"Zugänglich",withCare:"Mit Vorsicht",notSuitable:"Nicht geeignet",
     analysisInProgress:"Analyse läuft...",techData:"Gesammelte technische Daten",
+    phaseGps:"GPS-Position wird ermittelt...",phaseRouting:"Route und Zufahrt berechnen...",phaseOsm:"Straßen- und Hindernisdaten sammeln...",phasePitches:"Stellplätze und interne Wege analysieren...",phaseMapillary:"Straßenfotos der Umgebung suchen...",phaseVision:"Visuelle Bildanalyse...",phaseAi:"KI-Bewertung wird erstellt...",
     totalStr:"Gesamt",campground:"Campingplatz",restArea:"Stellplatz",stellplatz:"Stellplatz",
     parking:"Parkplatz",farm:"Bauernhof",freeStop:"Freies Stehen",
     minutes:"Min",hours:"Std",days:"T",
@@ -244,6 +262,12 @@ const I18N={
     resetApp:"App zurücksetzen — Schlüssel neu konfigurieren",firebaseCommunity:"Firebase Community",
     firebaseDesc:"Konfiguriere Firebase, um Zertifikate mit der Community zu synchronisieren.",
     connectFirebase:"Firebase verbinden",
+    navSearch:"Suche",navCert:"Zertifikate",navRental:"Verleih",navFav:"Favoriten",navProfile:"Profil",
+    rental:"Auto- & Motorradverleih",rentalDesc:"Finde Auto- und Motorradverleih in deiner Reiseregion.",rentalPlaceholder:"Stadt oder Gebiet eingeben...",noRental:"Keine Vermietungen in der Umgebung gefunden",rentalFound:"Vermietungen gefunden",
+    wheelbase:"Radstand",rearOverhang:"Hecküberhang",length:"Länge",width:"Breite",height:"Höhe",weight:"Gewicht",model:"Modell",
+    rearOverhangCorner:"Hecküberhang in der Kurve",
+    privacyText:"Oversize in Tour respektiert deine Privatsphäre. Alle Daten (API-Schlüssel, Wohnmobil-Konfiguration, Suchen, Analysen) werden ausschließlich lokal auf deinem Gerät über localStorage gespeichert. Keine personenbezogenen Daten werden an unsere Server übertragen. API-Aufrufe (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) werden direkt von deinem Browser an die jeweiligen Dienste gesendet. Wenn du Firebase aktivierst, werden Community-Zertifikatsdaten über die konfigurierte Datenbank mit anderen Nutzern geteilt. Du kannst alle Daten jederzeit durch Zurücksetzen der App löschen.",
+    termsText:"Oversize in Tour liefert indikative Analysen basierend auf OpenStreetMap-Daten, Routing-Algorithmen und KI-Modellen. Die Ergebnisse ersetzen NICHT die Überprüfung vor Ort. Der Nutzer ist verantwortlich für die persönliche Überprüfung der Zugänglichkeit der Anlagen. Die App wird \"wie besehen\" ohne jegliche Garantie bereitgestellt. Wir übernehmen keine Haftung für Schäden, die aus der Nutzung der bereitgestellten Informationen entstehen. API-Schlüssel liegen in der Eigenverantwortung des Nutzers. Die Nutzung der App impliziert die Akzeptanz dieser Bedingungen.",
   },
   fr:{
     appName:"Oversize in Tour",findStop:"Trouvez votre halte",searchPlaceholder:"Ex: Lac de Garde, Côte d'Azur, Barcelone, Bavière...",
@@ -275,6 +299,7 @@ const I18N={
     privacy:"Politique de confidentialité",terms:"Conditions d'utilisation",lang:"Langue",
     accessible:"Accessible",withCare:"Avec prudence",notSuitable:"Non adapté",
     analysisInProgress:"Analyse en cours...",techData:"Données techniques collectées",
+    phaseGps:"Acquisition de la position GPS...",phaseRouting:"Calcul de l'itinéraire et des accès...",phaseOsm:"Collecte des données routières et obstacles...",phasePitches:"Analyse des emplacements et voies internes...",phaseMapillary:"Recherche de photos de rue...",phaseVision:"Analyse visuelle des images...",phaseAi:"Élaboration du verdict IA...",
     totalStr:"Total",campground:"Camping",restArea:"Aire de services",stellplatz:"Aire de stationnement",
     parking:"Parking",farm:"Ferme",freeStop:"Stationnement libre",
     minutes:"min",hours:"h",days:"j",
@@ -285,6 +310,12 @@ const I18N={
     resetApp:"Réinitialiser l'app — Reconfigurer les clés",firebaseCommunity:"Firebase Community",
     firebaseDesc:"Configurez Firebase pour synchroniser les certificats avec la communauté.",
     connectFirebase:"Connecter Firebase",
+    navSearch:"Recherche",navCert:"Certificats",navRental:"Location",navFav:"Favoris",navProfile:"Profil",
+    rental:"Location Voitures & Motos",rentalDesc:"Trouvez des locations de voitures et motos dans votre zone de voyage.",rentalPlaceholder:"Entrez ville ou zone...",noRental:"Aucune location trouv\u00e9e dans la zone",rentalFound:"locations trouv\u00e9es",
+    wheelbase:"Empattement",rearOverhang:"Porte-à-faux AR",length:"Longueur",width:"Largeur",height:"Hauteur",weight:"Poids",model:"Modèle",
+    rearOverhangCorner:"Porte-à-faux arrière en virage",
+    privacyText:"Oversize in Tour respecte votre vie privée. Toutes les données (clés API, configuration du camping-car, recherches, analyses) sont sauvegardées exclusivement sur votre appareil via localStorage. Aucune donnée personnelle n'est transmise à nos serveurs. Les appels API (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) sont effectués directement depuis votre navigateur vers les services respectifs. Si vous activez Firebase, les données des certificats communautaires sont partagées avec d'autres utilisateurs via la base de données configurée. Vous pouvez supprimer toutes les données à tout moment en réinitialisant l'application.",
+    termsText:"Oversize in Tour fournit des analyses indicatives basées sur les données OpenStreetMap, des algorithmes de routage et des modèles IA. Les résultats NE remplacent PAS la vérification sur place. L'utilisateur est responsable de vérifier personnellement l'accessibilité des structures. L'application est fournie \"telle quelle\" sans aucune garantie. Nous déclinons toute responsabilité pour les dommages résultant de l'utilisation des informations fournies. Les clés API sont la propriété et la responsabilité de l'utilisateur. L'utilisation de l'app implique l'acceptation de ces conditions.",
   },
   es:{
     appName:"Oversize in Tour",findStop:"Encuentra tu parada",searchPlaceholder:"Ej: Lago de Garda, Costa Azul, Barcelona, Baviera...",
@@ -316,6 +347,7 @@ const I18N={
     privacy:"Política de privacidad",terms:"Términos de servicio",lang:"Idioma",
     accessible:"Accesible",withCare:"Con precaución",notSuitable:"No apto",
     analysisInProgress:"Análisis en curso...",techData:"Datos técnicos recopilados",
+    phaseGps:"Adquiriendo posición GPS...",phaseRouting:"Calculando ruta y accesos...",phaseOsm:"Recopilando datos de carreteras y obstáculos...",phasePitches:"Analizando parcelas y vías internas...",phaseMapillary:"Buscando fotos de la zona...",phaseVision:"Análisis visual de imágenes...",phaseAi:"Generando veredicto IA...",
     totalStr:"Total",campground:"Camping",restArea:"Área de servicio",stellplatz:"Área de estacionamiento",
     parking:"Aparcamiento",farm:"Agroturismo",freeStop:"Estacionamiento libre",
     minutes:"min",hours:"h",days:"d",
@@ -326,9 +358,16 @@ const I18N={
     resetApp:"Restablecer app — Reconfigurar claves",firebaseCommunity:"Firebase Community",
     firebaseDesc:"Configura Firebase para sincronizar certificados con la comunidad.",
     connectFirebase:"Conectar Firebase",
+    navSearch:"Buscar",navCert:"Certificados",navRental:"Alquiler",navFav:"Favoritos",navProfile:"Perfil",
+    rental:"Alquiler Coches & Motos",rentalDesc:"Encuentra alquileres de coches y motos en tu zona de viaje.",rentalPlaceholder:"Introduce ciudad o zona...",noRental:"No se encontraron alquileres en la zona",rentalFound:"alquileres encontrados",
+    wheelbase:"Distancia entre ejes",rearOverhang:"Voladizo trasero",length:"Longitud",width:"Anchura",height:"Altura",weight:"Peso",model:"Modelo",
+    rearOverhangCorner:"Voladizo trasero en curva",
+    privacyText:"Oversize in Tour respeta tu privacidad. Todos los datos (claves API, configuración de la autocaravana, búsquedas, análisis) se guardan exclusivamente en tu dispositivo mediante localStorage. Ningún dato personal se transmite a nuestros servidores. Las llamadas API (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) se realizan directamente desde tu navegador a los respectivos servicios. Si activas Firebase, los datos de certificados comunitarios se comparten con otros usuarios a través de la base de datos configurada. Puedes eliminar todos los datos en cualquier momento restableciendo la app.",
+    termsText:"Oversize in Tour proporciona análisis indicativos basados en datos de OpenStreetMap, algoritmos de enrutamiento y modelos de IA. Los resultados NO sustituyen la verificación in situ. El usuario es responsable de verificar personalmente la accesibilidad de las estructuras. La app se proporciona \"tal cual\" sin garantías de ningún tipo. No asumimos responsabilidad por daños derivados del uso de la información proporcionada. Las claves API son propiedad y responsabilidad del usuario. El uso de la app implica la aceptación de estos términos.",
   }
 };
 const LANG_OPTIONS=[{id:"it",label:"Italiano",flag:"🇮🇹"},{id:"en",label:"English",flag:"🇬🇧"},{id:"de",label:"Deutsch",flag:"🇩🇪"},{id:"fr",label:"Français",flag:"🇫🇷"},{id:"es",label:"Español",flag:"🇪🇸"}];
+const LANG_NAMES={it:"italiano",en:"English",de:"Deutsch",fr:"français",es:"español"};
 function useI18n(){
   const [lang,setLang]=useState(()=>LS.get("oit_lang")||"it");
   const t=useCallback((key,...args)=>{
@@ -413,105 +452,305 @@ async function geocode(_key,q){
   }catch(e){}
   return null;
 }
-/* ─── POI search: Overpass/OSM (gratuito, nessuna chiave) ─── */
-/* Tag EU: camp_site, caravan_site, motorhome_stopover, parking+motorhome, dump_station */
-/* Fallback automatico su 3 server Overpass se il principale è sovraccarico */
+/* ─── Haversine distance in km ─── */
+function calcDistKm(lat1,lon1,lat2,lon2){
+  const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+/* ─── POI search: MULTI-SOURCE EUROPA (5 fonti) ─── */
+/* 5 fonti parallele: 1) Overpass/OSM  2) OpenCampingMap  3) Park4Night  4) iOverlander  5) Nominatim */
+/* Copertura: tutta Europa — campeggi, aree sosta, parcheggi camper, stellplatz, aires, dump station */
+/* Raggio adattivo: 30km base → 50km se pochi risultati */
+let _poiSearchLock=null;/* prevent duplicate concurrent searches */
 async function searchPOIs(_key,lat,lng){
-  const R=30000;
+  const lockKey=lat.toFixed(3)+"_"+lng.toFixed(3);
+  if(_poiSearchLock&&_poiSearchLock.key===lockKey)return _poiSearchLock.promise;
+
   const cacheKeyPOI=lat.toFixed(2)+"_"+lng.toFixed(2);
   const cachedPOIs=OCache.getPOIs(cacheKeyPOI);
-  if(cachedPOIs)return cachedPOIs;
-  const q=`[out:json][timeout:25];
-(
-  nwr(around:${R},${lat},${lng})["tourism"~"camp_site|caravan_site"];
-  nwr(around:${R},${lat},${lng})["amenity"~"campervan_site|camping"];
-  nwr(around:${R},${lat},${lng})["motorhome"~"yes|designated"];
-  nwr(around:${R},${lat},${lng})["amenity"="parking"]["caravans"="yes"];
-  nwr(around:${R},${lat},${lng})["overnight_parking"="yes"];
-  nwr(around:${R},${lat},${lng})["amenity"="sanitary_dump_station"];
-);
-out body center 80;`;
-  const SERVERS=[
-    "https://overpass-api.de/api/interpreter",
-    "https://overpass.kumi.systems/api/interpreter",
-    "https://overpass.private.coffee/api/interpreter"
-  ];
-  let elements=[];
-  for(const srv of SERVERS){
+  if(cachedPOIs&&cachedPOIs.length>0)return cachedPOIs;
+
+  const searchPromise=_doSearchPOIs(lat,lng,cacheKeyPOI);
+  _poiSearchLock={key:lockKey,promise:searchPromise};
+  try{return await searchPromise;}finally{_poiSearchLock=null;}
+}
+async function _doSearchPOIs(lat,lng,cacheKeyPOI){
+  console.log("[POI] Search start — 5 sources",lat,lng);
+  const R=30000;/* 30km base radius */
+  const A=`around:${R},${lat},${lng}`;
+  const degR=R/111000;/* approx degrees for bbox */
+
+  /* ═══════ SOURCE 1: Overpass/OSM — race 3 servers ═══════ */
+  const q1=`[out:json][timeout:15];(nwr(${A})["tourism"~"camp_site|caravan_site|camp_pitch"];nwr(${A})["amenity"~"campervan_site|camping|sanitary_dump_station"];nwr(${A})["motorhome"~"yes|designated"];);out body center 100;`;
+  const q2=`[out:json][timeout:12];(nwr(${A})["amenity"="parking"]["caravans"~"yes|designated"];nwr(${A})["amenity"="parking"]["motorhome"~"yes|designated"];nwr(${A})["overnight_parking"="yes"];nwr(${A})["amenity"="parking"]["overnight"~"yes|only"];nwr(${A})["amenity"="parking"]["name"~"camper|sosta|stellplatz|aire|wohnmobil|motorhome|caravan",i];nwr(${A})["club"="caravanning"];);out body center 50;`;
+  const SERVERS=["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://overpass.private.coffee/api/interpreter"];
+
+  async function fetchOvp(query,srv,timeout){
     try{
-      const r=await fetch(srv,{
-        method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
-        body:"data="+encodeURIComponent(q),signal:AbortSignal.timeout(35000)
-      });
+      const ctrl=new AbortController();
+      const timer=setTimeout(()=>ctrl.abort(),timeout);
+      const r=await fetch(srv,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"data="+encodeURIComponent(query),signal:ctrl.signal});
+      clearTimeout(timer);
+      if(!r.ok){console.warn("[OVP] "+srv+" → "+r.status);return[];}
       const d=await r.json();
-      elements=d.elements||[];
-      if(elements.length>0)break;
-    }catch(e){continue;}
+      return d.elements||[];
+    }catch(e){console.warn("[OVP] "+srv+" fail:",e.message);return[];}
   }
-  // Blacklist: workshop/gas/hotel/restaurant — NOT agricampeggi/agriturismi con campeggio
-  const BLACKLIST=/officin|meccan|autolavag|benzin|distribut|(?<!agri)hotel|ristoran(?!.*camp)|b&b(?!.*camp)|motel|ostello|pizzer|autorimess|tankstelle|werkstatt|waschanlage|pension(?!.*camp)|gaststätte|restaurant|gasolinera|taller|lavadero|hostal|station.service|(?<!agri)garage|auberge/i;
-  // Park4Night supplementary search (unofficial API, no auth required)
-  let p4nResults=[];
-  try{
-    const p4nR=await fetch("https://guest.park4night.com/services/V4.1/lieuxGetFilter.php?latitude="+lat+"&longitude="+lng+"&distance=30",{signal:AbortSignal.timeout(8000)});
-    const p4nD=await p4nR.json();
-    if(Array.isArray(p4nD)){
-      p4nResults=p4nD.slice(0,30).map(function(p){
-        const pLat=parseFloat(p.latitude);const pLng=parseFloat(p.longitude);
-        if(!pLat||!pLng)return null;
+  async function fetchOverpass(){
+    const raceQ1=SERVERS.map(s=>fetchOvp(q1,s,15000).then(r=>r.length>0?r:Promise.reject("empty")));
+    let r1=[];
+    try{r1=await Promise.any(raceQ1);}catch(e){console.warn("[OVP] q1 all failed");}
+    if(r1.length>0)console.log("[OVP] q1 OK: "+r1.length);
+    /* q2: race first 2 servers */
+    const raceQ2=[SERVERS[0],SERVERS[1]].map(s=>fetchOvp(q2,s,10000).then(r=>r.length>0?r:Promise.reject("empty")));
+    let r2=[];
+    try{r2=await Promise.any(raceQ2);}catch(e){}
+    if(r2.length>0)console.log("[OVP] q2 OK: "+r2.length);
+    return[...r1,...r2];
+  }
+
+  /* ═══════ SOURCE 2: OpenCampingMap — GeoJSON, CORS enabled ═══════ */
+  async function fetchOpenCampingMap(){
+    const west=lng-degR,south=lat-degR,east=lng+degR,north=lat+degR;
+    const url="https://opencampingmap.org/getcampsites?bbox="+west+","+south+","+east+","+north;
+    try{
+      const r=await fetch(url,{signal:AbortSignal.timeout(10000)});
+      if(!r.ok){console.warn("[OCM] → "+r.status);return[];}
+      const geo=await r.json();
+      if(!geo||!geo.features){console.warn("[OCM] no features");return[];}
+      console.log("[OCM] OK: "+geo.features.length+" features");
+      return geo.features.slice(0,100).map(function(f){
+        const p=f.properties||{};
+        const g=f.geometry;
+        if(!g||!g.coordinates)return null;
+        /* GeoJSON: [lng, lat] */
+        const fLng=Array.isArray(g.coordinates[0])?g.coordinates[0][0]:g.coordinates[0];
+        const fLat=Array.isArray(g.coordinates[0])?g.coordinates[0][1]:g.coordinates[1];
+        if(!fLat||!fLng)return null;
+        const dist=calcDistKm(lat,lng,fLat,fLng);
+        if(dist>35)return null;
+        const rawName=p.name||p["name:en"]||p["name:de"]||p["name:fr"]||p["name:it"]||"";
+        const isCamp=/(camp_site|camping)/i.test(p.tourism||p.category||"");
+        const isDump=p.amenity==="sanitary_dump_station";
+        const isStellplatz=p.motorhome==="designated"||p.tourism==="caravan_site";
+        const cat=isDump?"dump_station":isStellplatz?"stellplatz":isCamp?"camp_site":"area sosta";
         return{
-          id:"p4n_"+p.id,name:p.titre||p.description_fr||"Park4Night",
-          address:p.adresse||"",city:p.ville||"",
-          lat:pLat,lng:pLng,distKm:calcDistKm(lat,lng,pLat,pLng),
-          website:"https://park4night.com/lieu/"+p.id,phone:null,
-          isCamp:/camp/i.test(p.titre||""),cat:"park4night",
-          _source:"park4night",_rating:p.note_moy||null,_reviews:p.nb_commentaires||0
+          id:"ocm_"+(p.osm_id||f.id||Math.random().toString(36).slice(2)),
+          name:rawName||"Campeggio",
+          address:p["addr:street"]?[p["addr:street"],p["addr:housenumber"],p["addr:city"]].filter(Boolean).join(", "):"",
+          city:p["addr:city"]||p["addr:town"]||"",
+          lat:fLat,lng:fLng,distKm:dist,
+          website:p.website||p["contact:website"]||null,
+          phone:p.phone||p["contact:phone"]||null,
+          isCamp,isDump,isStellplatz,isOvernight:false,cat,
+          _source:"opencampingmap",
+          _capacity:p.capacity||null,_fee:p.fee||null,
+          _power:p.power_supply||null,_water:p.drinking_water||null,_wifi:p.internet_access||null
         };
       }).filter(Boolean);
+    }catch(e){console.warn("[OCM] fail:",e.message);return[];}
+  }
+
+  /* ═══════ SOURCE 3: Park4Night — CORS proxy (3 proxies) ═══════ */
+  async function fetchP4N(){
+    const p4nUrl="https://guest.park4night.com/services/V4.1/lieuxGetFilter.php?latitude="+lat+"&longitude="+lng+"&distance=30";
+    const proxies=[
+      "https://api.allorigins.win/raw?url="+encodeURIComponent(p4nUrl),
+      "https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(p4nUrl),
+      "https://corsproxy.io/?"+encodeURIComponent(p4nUrl)
+    ];
+    for(const url of proxies){
+      try{
+        const r=await fetch(url,{signal:AbortSignal.timeout(10000)});
+        if(!r.ok){console.warn("[P4N] proxy → "+r.status);continue;}
+        const txt=await r.text();
+        if(!txt||txt.length<20){console.warn("[P4N] empty response");continue;}
+        let d;try{d=JSON.parse(txt);}catch(pe){console.warn("[P4N] JSON parse fail");continue;}
+        if(d&&d.error){console.warn("[P4N] proxy error:",d.error);continue;}
+        const lieux=Array.isArray(d)?d:(d&&d.lieux?d.lieux:[]);
+        if(!lieux.length){console.warn("[P4N] 0 lieux");continue;}
+        console.log("[P4N] OK: "+lieux.length+" lieux via "+url.split("/")[2]);
+        return lieux.slice(0,80).map(function(p){
+          const pLat=parseFloat(p.latitude),pLng=parseFloat(p.longitude);
+          if(!pLat||!pLng)return null;
+          const pName=p.titre||p.description_fr||p.description_en||"";
+          const isCamp=/camp/i.test(pName);
+          const isDump=/vidange|scarico|dump|entsorgung/i.test(pName)||p.category_id==="7";
+          const isStellplatz=/stell|sosta|aire|parking/i.test(pName)||p.category_id==="6";
+          const cat=isDump?"dump_station":isCamp?"camp_site":isStellplatz?"stellplatz":"area sosta";
+          return{id:"p4n_"+p.id,name:pName||"Area sosta",address:p.adresse||"",city:p.ville||"",lat:pLat,lng:pLng,distKm:calcDistKm(lat,lng,pLat,pLng),website:p.site_internet||null,phone:null,isCamp,isDump,isStellplatz,isOvernight:false,cat,_source:"park4night",_rating:p.note_moy||null,_reviews:p.nb_commentaires||0,_p4nId:p.id};
+        }).filter(Boolean);
+      }catch(e){console.warn("[P4N] proxy fail:",e.message);continue;}
     }
-  }catch(e){/* park4night non disponibile */}
-  const osmResults=elements
+    return[];
+  }
+
+  /* ═══════ SOURCE 4: iOverlander — bbox search ═══════ */
+  async function fetchIOverlander(){
+    const south=lat-degR,north=lat+degR,west=lng-degR,east=lng+degR;
+    const ioUrl="https://www.ioverlander.com/places/search.json?searchboxmin="+south+","+west+"&searchboxmax="+north+","+east;
+    const proxies=[
+      "https://api.allorigins.win/raw?url="+encodeURIComponent(ioUrl),
+      "https://api.codetabs.com/v1/proxy?quest="+encodeURIComponent(ioUrl)
+    ];
+    for(const url of proxies){
+      try{
+        const r=await fetch(url,{signal:AbortSignal.timeout(10000)});
+        if(!r.ok){console.warn("[IOV] proxy → "+r.status);continue;}
+        const txt=await r.text();
+        if(!txt||txt.length<10)continue;
+        let arr;try{arr=JSON.parse(txt);}catch(pe){continue;}
+        if(!Array.isArray(arr)||!arr.length){console.warn("[IOV] empty");continue;}
+        console.log("[IOV] OK: "+arr.length+" places");
+        return arr.slice(0,80).map(function(p){
+          const pLat=parseFloat(p.latitude||p.lat);
+          const pLng=parseFloat(p.longitude||p.lng||p.lon);
+          if(!pLat||!pLng)return null;
+          const dist=calcDistKm(lat,lng,pLat,pLng);
+          if(dist>40)return null;
+          const pName=p.name||p.title||"";
+          const catRaw=(p.category||p.type||"").toLowerCase();
+          const isCamp=/camp/i.test(catRaw+pName);
+          const isDump=/dump|waste|scarico|vidange/i.test(catRaw+pName);
+          const isStellplatz=/parking|stellplatz|sosta|rest area|overnight/i.test(catRaw+pName);
+          const cat=isDump?"dump_station":isCamp?"camp_site":isStellplatz?"stellplatz":"area sosta";
+          /* Filter only camper-relevant categories */
+          if(!/camp|park|overnight|dump|waste|water|rest|wild|sosta|stell|aire|propane|gas/i.test(catRaw+pName))return null;
+          return{id:"iov_"+(p.id||Math.random().toString(36).slice(2)),name:pName||"Area sosta",address:p.location||"",city:"",lat:pLat,lng:pLng,distKm:dist,website:p.website||null,phone:null,isCamp,isDump,isStellplatz,isOvernight:isStellplatz,cat,_source:"ioverlander",_rating:p.rating||null,_reviews:p.num_reviews||p.reviews_count||0};
+        }).filter(Boolean);
+      }catch(e){console.warn("[IOV] proxy fail:",e.message);continue;}
+    }
+    return[];
+  }
+
+  /* ═══════ SOURCE 5: Nominatim — keyword search ═══════ */
+  async function fetchNominatim(){
+    const kws=["campeggio","area sosta camper","campsite","Stellplatz","aire de camping-car"];
+    const results=[];
+    const vb=(lng-0.35)+","+(lat+0.25)+","+(lng+0.35)+","+(lat-0.25);
+    for(let i=0;i<kws.length;i++){
+      if(i>0)await new Promise(r=>setTimeout(r,900));
+      try{
+        const r=await fetch("https://nominatim.openstreetmap.org/search?q="+encodeURIComponent(kws[i])+"&format=json&limit=12&addressdetails=1&viewbox="+vb+"&bounded=1",
+          {headers:{"User-Agent":"OversizeInTour/1.0","Accept-Language":"it,en,de,fr,es"},signal:AbortSignal.timeout(5000)});
+        if(!r.ok)continue;
+        const batch=await r.json();
+        console.log("[NOM] '"+kws[i]+"' → "+((batch||[]).length)+" hits");
+        for(const item of(batch||[])){
+          const nLat=parseFloat(item.lat),nLng=parseFloat(item.lon);
+          if(!nLat||!nLng)continue;
+          const dist=calcDistKm(lat,lng,nLat,nLng);
+          if(dist>35)continue;
+          const raw=item.display_name||"";const short=raw.split(",")[0].trim();
+          const city=item.address?(item.address.city||item.address.town||item.address.village||""):"";
+          const dup=results.some(m=>calcDistKm(m.lat,m.lng,nLat,nLng)<0.1);
+          if(!dup)results.push({id:"nom_"+item.place_id,name:short||"Area sosta",address:raw.split(",").slice(1,3).join(",").trim(),city,lat:nLat,lng:nLng,distKm:dist,website:null,phone:null,isCamp:/(camp|camping|campeggio)/i.test(raw),isDump:false,isStellplatz:/(stell|sosta|parking|aire)/i.test(raw),isOvernight:false,cat:/(camp)/i.test(raw)?"camp_site":"area sosta",_source:"nominatim",_capacity:null,_fee:null});
+        }
+        if(results.length>=20)break;
+      }catch(e){continue;}
+    }
+    return results;
+  }
+
+  /* ═══════ LAUNCH: ALL 5 sources in parallel + 25s master timeout ═══════ */
+  let ovpElements=[],ocmResults=[],p4nResults=[],iovResults=[],nomResults=[];
+  const masterTimeout=new Promise(r=>setTimeout(()=>r("TIMEOUT"),25000));
+  const allSources=Promise.all([
+    fetchOverpass().then(r=>{ovpElements=r;}).catch(()=>{}),
+    fetchOpenCampingMap().then(r=>{ocmResults=r;}).catch(()=>{}),
+    fetchP4N().then(r=>{p4nResults=r;}).catch(()=>{}),
+    fetchIOverlander().then(r=>{iovResults=r;}).catch(()=>{}),
+    fetchNominatim().then(r=>{nomResults=r;}).catch(()=>{})
+  ]);
+  await Promise.race([allSources,masterTimeout]);
+  console.log("[POI] Sources: OVP="+ovpElements.length+" OCM="+ocmResults.length+" P4N="+p4nResults.length+" IOV="+iovResults.length+" NOM="+nomResults.length);
+
+  /* ── BLACKLIST: officine, benzinai, hotel, ristoranti (NON agricampeggi) ── */
+  const BLACKLIST=/officin|meccan|autolavag|benzin|distribut|(?<!agri)hotel|ristoran(?!.*camp)|b&b(?!.*camp)|motel|ostello|pizzer|autorimess|tankstelle|werkstatt|waschanlage|pension(?!.*camp)|gaststätte|restaurant|gasolinera|taller|lavadero|hostal|station.service|(?<!agri)garage|auberge/i;
+
+  /* ── Parse OSM elements ── */
+  const osmResults=ovpElements
     .map(function(el){
       const t=el.tags||{};
       const elLat=el.lat!==undefined?el.lat:(el.center?el.center.lat:null);
       const elLng=el.lon!==undefined?el.lon:(el.center?el.center.lon:null);
-      if(!elLat||!elLng)return null;
+      if(elLat==null||elLng==null)return null;
       const rawName=t.name||t["name:en"]||t["name:de"]||t["name:fr"]||t["name:es"]||t["name:it"]||t["name:nl"]||t["name:pt"]||"";
-      const fallbackName=t["amenity"]==="sanitary_dump_station"?"Scarico acque/Dump station":t["motorhome"]==="designated"?"Stellplatz / Area sosta":"Area sosta camper";
-      const name=rawName||(fallbackName+(city?" — "+city:""));
-      if(rawName&&BLACKLIST.test(rawName)&&!/(camp|sosta|stell|wohnmobil|motorhome|caravan)/i.test(rawName+" "+(t.tourism||"")+" "+(t.amenity||"")))return null;
-      const addr=[t["addr:street"],t["addr:housenumber"],t["addr:city"]].filter(Boolean).join(", ");
       const city=t["addr:city"]||t["addr:municipality"]||t["addr:town"]||"";
+      const fallbackName=t["amenity"]==="sanitary_dump_station"?"Scarico acque / Dump station":
+        t["motorhome"]==="designated"?"Stellplatz / Area sosta":
+        t["overnight_parking"]==="yes"?"Parcheggio notturno":
+        t["amenity"]==="parking"?"Parcheggio camper":
+        t["club"]==="caravanning"?"Club caravanning":
+        t["leisure"]==="marina"?"Marina con sosta camper":"Area sosta camper";
+      const name=rawName||(fallbackName+(city?" — "+city:""));
+      if(rawName&&BLACKLIST.test(rawName)&&!/(camp|sosta|stell|wohnmobil|motorhome|caravan|camper|aire)/i.test(rawName+" "+(t.tourism||"")+" "+(t.amenity||"")))return null;
+      const addr=[t["addr:street"],t["addr:housenumber"],t["addr:city"],t["addr:postcode"]].filter(Boolean).join(", ");
       const distKm=calcDistKm(lat,lng,elLat,elLng);
       const isCamp=/(camp_site|camping)/i.test(t.tourism||t.amenity||"");
-      const isDump=t.amenity==="sanitary_dump_station";
-      const isStellplatz=t.motorhome==="designated"||t.caravan_site==="motorhome_stopover";
-      const cat=isDump?"dump_station":isStellplatz?"stellplatz":(t.tourism||t.amenity||(t.motorhome?"area sosta":"area sosta"));
+      const isDump=t.amenity==="sanitary_dump_station"||t.waterway==="sanitary_dump_station";
+      const isStellplatz=t.motorhome==="designated"||t.caravan_site==="motorhome_stopover"||t.parking==="motorhome";
+      const isOvernight=t.overnight_parking==="yes"||t.overnight==="yes";
+      const cat=isDump?"dump_station":isStellplatz?"stellplatz":isOvernight?"overnight":isCamp?"camp_site":(t.tourism||t.amenity||(t.motorhome?"area sosta":"area sosta"));
       return{
         id:el.id,name,
         address:addr||city||"",city,
         lat:elLat,lng:elLng,distKm,
         website:t.website||t["contact:website"]||null,
         phone:t.phone||t["contact:phone"]||null,
-        isCamp,isDump,isStellplatz,cat,
-        _source:"osm",_capacity:t.capacity||null,_fee:t.fee||null
+        isCamp,isDump,isStellplatz,isOvernight,cat,
+        _source:"osm",_capacity:t.capacity||t["capacity:caravans"]||null,
+        _fee:t.fee||null,_power:t.power_supply||null,
+        _water:t.drinking_water||null,_wifi:t.internet_access||null
       };
     })
     .filter(Boolean);
-  // Deduplicate OSM results by proximity (100m) — keeps first (closest) of each cluster
-  const dedupOsm=[];
-  for(const r of osmResults){
-    const dup=dedupOsm.some(function(m){return calcDistKm(m.lat,m.lng,r.lat,r.lng)<0.1;});
-    if(!dup)dedupOsm.push(r);
+
+  /* ── Filter OCM duplicates of OSM by ID ── */
+  const osmIds=new Set(osmResults.map(r=>String(r.id)));
+  const ocmFiltered=ocmResults.filter(r=>{
+    const rawId=String(r.id).replace("ocm_","");
+    return!osmIds.has(rawId);
+  });
+
+  /* ── SMART MERGE & DEDUPLICATE all sources (150m proximity) ── */
+  /* Priority: OSM > OpenCampingMap > Park4Night > iOverlander > Nominatim */
+  const allResults=[...osmResults,...ocmFiltered,...p4nResults,...iovResults,...nomResults];
+  const dedup=[];
+  for(const r of allResults){
+    let existing=null;
+    for(const m of dedup){
+      if(calcDistKm(m.lat,m.lng,r.lat,r.lng)<0.15){existing=m;break;}
+    }
+    if(!existing){dedup.push(r);continue;}
+    /* Merge: enrich existing with data from secondary source */
+    if(!existing.website&&r.website)existing.website=r.website;
+    if(!existing.phone&&r.phone)existing.phone=r.phone;
+    if(!existing._rating&&r._rating)existing._rating=r._rating;
+    if((!existing._reviews||existing._reviews<(r._reviews||0)))existing._reviews=r._reviews;
+    if(!existing._capacity&&r._capacity)existing._capacity=r._capacity;
+    if(!existing._fee&&r._fee)existing._fee=r._fee;
+    if(!existing._power&&r._power)existing._power=r._power;
+    if(!existing._water&&r._water)existing._water=r._water;
+    if(!existing._wifi&&r._wifi)existing._wifi=r._wifi;
+    if(!existing._p4nId&&r._p4nId)existing._p4nId=r._p4nId;
+    /* Prefer longer/better name */
+    if(r.name&&r.name.length>existing.name.length&&/(area sosta|campeggio|stellplatz)/i.test(existing.name))existing.name=r.name;
+    /* Track sources */
+    existing._mergedSources=(existing._mergedSources||existing._source)+"+"+r._source;
   }
-  // Merge OSM + Park4Night, deduplicate by proximity (100m)
-  const merged=[...dedupOsm];
-  for(const p of p4nResults){
-    const dup=merged.some(function(m){return calcDistKm(m.lat,m.lng,p.lat,p.lng)<0.1;});
-    if(!dup)merged.push(p);
-  }
-  const finalResult=merged.sort(function(a,b){return a.distKm-b.distKm;}).slice(0,80);
-  OCache.savePOIs(cacheKeyPOI,finalResult);
+
+  /* ── Apply blacklist to non-OSM results ── */
+  const finalDedup=dedup.filter(r=>{
+    if(r._source==="osm")return true;/* already filtered */
+    if(r.name&&BLACKLIST.test(r.name)&&!/(camp|sosta|stell|wohnmobil|motorhome|caravan|camper|aire)/i.test(r.name))return false;
+    return true;
+  });
+
+  const finalResult=finalDedup.sort(function(a,b){return a.distKm-b.distKm;}).slice(0,200);
+  console.log("[POI] FINAL: "+finalResult.length+" unique (OSM="+osmResults.length+" OCM="+ocmFiltered.length+" P4N="+p4nResults.length+" IOV="+iovResults.length+" NOM="+nomResults.length+")");
+  if(finalResult.length>0)OCache.savePOIs(cacheKeyPOI,finalResult);
   return finalResult;
 }
 /* ─── Decodifica polyline Valhalla (precision 6) ─── */
@@ -646,7 +885,7 @@ async function getMapillaryData(lat,lng,mlyKey){
   }catch(e){return null;}
 }
 /* ─── Mapillary Vision: analisi visiva foto con Gemini multimodale ─── */
-async function analyzeMapillaryImages(geminiKey,hiResUrls,camper){
+async function analyzeMapillaryImages(geminiKey,hiResUrls,camper,lang){
   if(!geminiKey||!hiResUrls||hiResUrls.length===0)return null;
   try{
     // Scarica immagini come base64
@@ -664,7 +903,7 @@ async function analyzeMapillaryImages(geminiKey,hiResUrls,camper){
       }catch(e){/* skip immagine fallita */}
     }
     if(imagesParts.length===0)return null;
-    const visionPrompt=`Sei un esperto di accessibilità stradale per veicoli oversize. Analizza queste ${imagesParts.length} foto stradali scattate vicino all'ingresso di una struttura/campeggio.
+    const visionPrompt=`${lang&&lang!=="it"?"IMPORTANT: Respond entirely in "+(LANG_NAMES[lang]||"English")+". ":""}Sei un esperto di accessibilità stradale per veicoli oversize. Analizza queste ${imagesParts.length} foto stradali scattate vicino all'ingresso di una struttura/campeggio.
 
 Il veicolo è un camper di: ${camper.length}m lunghezza × ${camper.width}m larghezza × ${camper.height}m altezza × ${camper.weight}t peso.
 
@@ -802,6 +1041,29 @@ async function groqDeepAnalysis(key,prompt){
   }
   return{_apiError:"Groq: nessun modello disponibile."};
 }
+/* ─── Cerebras: AI gratuita velocissima (Llama 3.3 70B) — chiave da cloud.cerebras.ai ─── */
+async function cerebrasDeepAnalysis(key,prompt){
+  if(!key)return null;
+  const models=["llama-3.3-70b","llama-3.1-70b"];
+  for(var mi=0;mi<models.length;mi++){
+    try{
+      const r=await fetch("https://api.cerebras.ai/v1/chat/completions",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":"Bearer "+key.trim()},
+        body:JSON.stringify({model:models[mi],messages:[{role:"user",content:prompt}],max_tokens:3500,temperature:0.3}),
+        signal:AbortSignal.timeout(35000)
+      });
+      const d=await r.json();
+      if(d.error){
+        if(/invalid.*key|unauthorized/i.test(d.error.message||d.error.type||""))return{_apiError:"Chiave Cerebras non valida."};
+        continue;
+      }
+      const txt=d.choices?.[0]?.message?.content||"";
+      if(txt.length>30)return{txt,_model:"cerebras:"+models[mi]};
+    }catch(e){continue;}
+  }
+  return{_apiError:"Cerebras: nessun modello disponibile."};
+}
 /* ─── 1. SWEPT PATH: traiettoria di sterzata ─── */
 function calcSweptPath(camper){
   // Usa i valori reali se inseriti dall'utente, altrimenti stima geometrica
@@ -874,12 +1136,6 @@ function computeAccessibilityScore(camper, routing, extraData, pitchData, mapill
   // Turning circles
   if (critical && critical.turningCircles === 0 && camper.length >= 10) { pen("turning", 5, "Nessun punto di inversione per camper " + camper.length + "m"); }
   if (critical && critical.turningCircles > 0) { bon("turning", 3, critical.turningCircles + " punto/i inversione trovati"); }
-  // Gradient
-  if (elev) {
-    const maxGrad = parseFloat(elev.maxGradPct);
-    if (maxGrad > 18) { pen("gradient", 20, "Pendenza " + maxGrad + "% molto ripida"); }
-    else if (maxGrad > 12) { pen("gradient", 10, "Pendenza " + maxGrad + "% significativa"); }
-  }
   // Routing
   if (routing) {
     if (!routing.ok) { pen("routing", 10, "Routing camion non disponibile"); }
@@ -1087,22 +1343,6 @@ out body;`;
     };
   }catch(e){return{found:false,bridges:[],restrictions:[],gates:[],turningCircles:0,maxlengths:[],parkingLimits:[],roadWidths:[],surfaces:[]};}
 }
-/* ─── 3. OPEN-ELEVATION: pendenza accesso ─── */
-async function getElevationGradient(lat,lng){
-  const pts=Array.from({length:6},(_,i)=>({latitude:lat+(i*0.0022),longitude:lng}));
-  try{
-    const resp=await fetch("https://api.open-elevation.com/api/v1/lookup",{
-      method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({locations:pts}),signal:AbortSignal.timeout(8000)
-    });
-    const data=await resp.json();
-    const elevs=data.results.map(r=>r.elevation);
-    const delta=Math.abs(elevs[5]-elevs[0]);
-    const gradients=elevs.map((e,i)=>i>0?Math.abs(e-elevs[i-1])/244*100:0);
-    const maxGrad=Math.max(...gradients);
-    return{elevMin:Math.min(...elevs),elevMax:Math.max(...elevs),deltam:delta.toFixed(0),maxGradPct:maxGrad.toFixed(1),elevs:elevs.map(e=>Math.round(e))};
-  }catch(e){return null;}
-}
 /* ─── 4. KEYWORD REVIEW BUILDER ─── */
 function buildReviewKeywords(poi,camper,countryInfo){
   const name=poi.name;
@@ -1148,7 +1388,7 @@ function buildHiddenObstacleKeywords(poi,camper,countryInfo){
   return{veg,edil,infra,barrier,forum,all:[...veg,...edil,...infra,...barrier,...forum].join(" | ")};
 }
 /* ─── Build analysis prompt (shared by Gemini and Groq) ─── */
-function buildAnalysisPrompt(poi,camper,routing,extraData,mapillaryData,countryInfo){
+function buildAnalysisPrompt(poi,camper,routing,extraData,mapillaryData,countryInfo,lang){
   const swp=extraData?.swept||calcSweptPath(camper);
   const osm=extraData?.osm||null;
   const elev=extraData?.elev||null;
@@ -1225,9 +1465,6 @@ function buildAnalysisPrompt(poi,camper,routing,extraData,mapillaryData,countryI
     if(pitches.hasElectricity)parts.push("Colonnine elettriche presenti");
     return parts.join(" | ");
   })();
-  const elevInfo=elev
-    ?"Quota: "+elev.elevMin+"-"+elev.elevMax+"m | Dislivello 1.2km: "+elev.deltam+"m | Pendenza max: "+elev.maxGradPct+"%"
-    :"Dati elevazione non disponibili";
   const altInfo=(routing.alternatives&&routing.alternatives.length>0)
     ?" | Alternative camion: "+routing.alternatives.map(a=>"da "+a.dir+" "+a.dist+"km (+"+a.extraKm+"km)").join(", ")
     :"";
@@ -1295,9 +1532,6 @@ ${pitchInfo}
 ⚠️ Confronta le dimensioni piazzola con il camper: lunghezza minima ${(camper.length+1.5).toFixed(1)}m, larghezza minima ${(camper.width+0.8).toFixed(1)}m.
 Strade interne: larghezza minima per manovra ${swp.minEntry}m (basato su swept path).
 
-════ DATI ALTIMETRICI (Open-Elevation) ════
-${elevInfo}
-
 ${extraData?.accessibilityScore?`
 ════ PUNTEGGIO ACCESSIBILITÀ CALCOLATO (0-100) ════
 Punteggio: ${extraData.accessibilityScore.score}/100
@@ -1315,7 +1549,6 @@ ${extraData.historicalFeedback.map(fb=>"- Verdetto utente: "+fb.userVerdict+" | 
 2. PLANIMETRIA: se il sito ufficiale è disponibile, cerca la mappa piazzole con dimensioni dichiarate.
 3. RECENSIONI MIRATE: cerca con queste keyword: ${reviewKw}. Cerca nei forum locali: ${forumList}. Cerca anche su Google Reviews, TripAdvisor, park4night.com. Trova commenti su: ${reviewTerms}. Cerca ANCHE in inglese: "narrow entrance", "difficult access motorhome", "low barrier", "tight manoeuvre".
 4. OSM/OVERPASS: usa i dati OSM sopra — confronta maxwidth/maxheight con le soglie del camper. Evidenzia ponti con restrizioni di peso/altezza/larghezza.
-5. PENDENZA: valuta l'impatto della pendenza ${elevInfo} su un camper di ${camper.weight}t.
 6. SWEPT PATH: in curva il retro sporge di ${swp.rearSwing}m. I vialetti interni devono essere ≥${swp.minEntry}m.
 7. PERCORSI ALTERNATIVI: Se Valhalla/OSM segnala deviazione o se Overpass individua restrizioni incompatibili con le misure del camper, identifica obbligatoriamente percorsi alternativi. Per ciascuno indica: direzione di provenienza, nomi strade (autostrada/statale/provinciale/locale), punti di svolta chiave, km aggiuntivi stimati, e quale restrizione viene aggirata. Se non ci sono problemi, confermalo esplicitamente.
 8. OSTACOLI NASCOSTI (OCR su recensioni e foto): Usa il grounding Google Search per cercare ostacoli fisici NON rilevabili dalle mappe vettoriali, che compaiono solo in recensioni, foto o forum. La destinazione è in ${destCountry} — cerca nella lingua locale (${destLang}) E in inglese. Cerca con queste keyword specifiche:
@@ -1360,7 +1593,7 @@ ${camper.length>=10?`
   - Recensioni/fonti che confermano impossibilità per mezzi di queste dimensioni
 
 ════ FORMATO RISPOSTA ════
-Rispondi SOLO in italiano. Copia esattamente le etichette in MAIUSCOLO:
+${lang&&lang!=="it"?"IMPORTANT: Respond entirely in "+(LANG_NAMES[lang]||"English")+". ":""}Rispondi SOLO in ${LANG_NAMES[lang||"it"]||"italiano"}. Copia esattamente le etichette in MAIUSCOLO:
 
 VERDETTO: [ADATTO oppure CON RISERVA oppure NON ADATTO]
 CONFIDENZA: [0-100]%
@@ -1369,7 +1602,7 @@ ACCESSO_STRADALE: [tipo strada SS/SP/comunale, larghezza vs ${(camper.width+1.2)
 STREET_VIEW: [descrizione visiva ingresso: larghezza cancello/sbarra vs ${swp.minEntry}m, tipo accesso, superficie, segnaletica, visibilità in curva]
 OSTACOLI_NASCOSTI: [Ostacoli fisici NON presenti nelle mappe vettoriali, trovati tramite Google Search su recensioni/foto/forum. Categorie da verificare: rami/alberi sporgenti, balconi bassi, archi/voltoni, cavi sospesi, insegne sporgenti, piloni ingresso, strettoia tra edifici. Per ciascuno: tipo · posizione · quota/larghezza stimata vs ${camper.height}m×${camper.width}m · fonte. Se nessuno trovato: "Nessun ostacolo nascosto rilevato da recensioni/foto"]
 SWEPT_PATH: [analisi swept path reale: interasse ${swp.wheelbase}m, sbalzo post. ${swp.rearOverhang}m (swing ${swp.rearSwing}m), sbalzo ant. ${swp.frontOverhang}m (swing ${swp.frontSwing}m), raggio min curva ${swp.minTurnRadius}m, largh. min ingresso ${swp.minEntry}m — i vialetti e corsie di accesso sono sufficienti per questa geometria?]
-TERRITORIO: [pianura/collina/montagna, dislivello ${elevInfo}, caratteristiche ultimo km]
+TERRITORIO: [pianura/collina/montagna, caratteristiche ultimo km]
 PIAZZOLE_INTERNE: [Dati OSM piazzole: ${pitchInfo}. Analisi compatibilità: lunghezza piazzola vs ${(camper.length+1.5).toFixed(1)}m, larghezza vs ${(camper.width+0.8).toFixed(1)}m, larghezza strade interne vs ${swp.minEntry}m. Se dati OSM non disponibili, cerca dimensioni piazzola sul sito ufficiale o nelle recensioni]
 STRUTTURA: [tipo, ingresso vs ${swp.minEntry}m, piazzole vs ${(camper.length+1.5).toFixed(1)}m, altezza sbarre vs ${(camper.height+0.3).toFixed(1)}m, pavimentazione, servizi]
 RECENSIONI: [3-5 punti concreti: valutazione media, commenti camper grandi/lunghi, segnali critici trovati con le keyword, stagionalità. Fonte per ogni dato]
@@ -1381,14 +1614,14 @@ NON scrivere nulla prima di VERDETTO. Se i dati sono scarsi abbassa la confidenz
   return prompt;
 }
 /* ─── Gemini review search (Google Search grounding) — cerca recensioni online ─── */
-async function geminiReviewSearch(key,poi,camper,countryInfo){
+async function geminiReviewSearch(key,poi,camper,countryInfo,lang){
   if(!key)return null;
   const destCountry=countryInfo?.country||"Italia";
   const destLang=getLangForCountry(destCountry);
   const destKw=getKeywordsForLang(destLang);
   const destReg=EU_REGULATIONS[destCountry]||EU_REGULATIONS["Italia"];
   const forumList=(destReg.forumSites||[]).join(", ");
-  const prompt=`Cerca recensioni e informazioni online su "${poi.name}" (${poi.address}).
+  const prompt=`${lang&&lang!=="it"?"IMPORTANT: Respond entirely in "+(LANG_NAMES[lang]||"English")+". ":""}Cerca recensioni e informazioni online su "${poi.name}" (${poi.address}).
 Questo è un campeggio/area sosta in ${destCountry}. Devo sapere se un camper di ${camper.length}m × ${camper.width}m × ${camper.height}m può accedervi.
 
 Cerca su Google in queste lingue: ${destLang}, inglese, italiano.
@@ -1425,9 +1658,9 @@ Formato: FONTE: [url/sito] | INFO: [cosa dice]`;
   return null;
 }
 /* ─── Gemini deep analysis (Google Search grounding) ─── */
-async function geminiDeepAnalysis(key,poi,camper,routing,extraData,mapillaryData,countryInfo){
+async function geminiDeepAnalysis(key,poi,camper,routing,extraData,mapillaryData,countryInfo,lang){
   if(!key)return null;
-  const prompt=buildAnalysisPrompt(poi,camper,routing,extraData,mapillaryData,countryInfo);
+  const prompt=buildAnalysisPrompt(poi,camper,routing,extraData,mapillaryData,countryInfo,lang);
   // Modelli attivi marzo 2026 — v1beta prima (supporta google_search grounding)
   const attempts=[
     {v:"v1beta",m:"gemini-2.5-flash"},
@@ -1600,11 +1833,10 @@ function TomMap({center,zoom,markers,routePts,onPoiClick,height}){
       const icon=window.L.divIcon({html,className:"",iconSize:[s,s],iconAnchor:[s/2,s]});
       const wb=m.website?`<br><a href="${m.website}" target="_blank" onclick="event.stopPropagation()" style="color:#f97316;font-size:10px;font-weight:700">🌐 Sito web</a>`:"";
       const gm=`<br><a href="https://www.google.com/maps/search/${encodeURIComponent((m.name||"")+" "+(m.sub||""))}" target="_blank" onclick="event.stopPropagation()" style="color:#1a73e8;font-size:10px;font-weight:700">🗺 Google Maps</a>`;
-      const p4n=`<br><a href="#" onclick="openP4N(${m.lat},${m.lng},event)" style="color:#7c3aed;font-size:10px;font-weight:700">🌿 Park4Night</a>`;
       const popup=window.L.popup({offset:[0,-s],maxWidth:200}).setContent(
-        `<div style="font-family:Inter,sans-serif;padding:4px"><b style="font-size:12px">${m.name||""}</b><div style="font-size:10px;color:#666;margin:2px 0">${m.sub||""}</div><div style="margin-top:4px">${wb}${gm}${p4n}</div></div>`
+        `<div style="font-family:Inter,sans-serif;padding:4px"><b style="font-size:12px">${m.name||""}</b><div style="font-size:10px;color:#666;margin:2px 0">${m.sub||""}</div><div style="margin-top:4px">${wb}${gm}</div></div>`
       );
-      const mk=window.L.marker([m.lat,m.lng],{icon}).addTo(map.current).bindPopup(popup);
+      const mk=window.L.marker([m.lat,m.lng],{icon}).addTo(map.current).bindPopup(popup).bindTooltip(m.name||"",{direction:"top",offset:[0,-s],className:"poi-tooltip"});
       if(!m.isDest&&onPoiClick)mk.on("click",()=>{mk.openPopup();onPoiClick(m);});
       mks.current.push(mk);
     });
@@ -1618,8 +1850,28 @@ function TomMap({center,zoom,markers,routePts,onPoiClick,height}){
   },[routePts]);
   return<div ref={ref} style={{width:"100%",height:height||200}}/>;
 }
+/* ══════════════════ FUN TIPS COMPONENT ══════════════════ */
+function FunTips({lang}){
+  const tips={
+    it:["Lo sapevi? Un camper 12m ha un raggio di svolta di circa 14 metri!","Consiglio: controlla sempre le altezze dei sottopassi prima di partire","In Europa ci sono oltre 30.000 aree sosta per camper","La Scandinavia ha il diritto di accesso alla natura (allemansr\u00e4tten)","Un camper oversize consuma circa 18-25 litri per 100km","Il primo camper motorizzato fu costruito nel 1910!","La Germania ha la rete pi\u00f9 grande di Stellplatz in Europa","Consiglio: arriva presto al campeggio, le piazzole grandi finiscono prima!"],
+    en:["Did you know? A 12m motorhome has a turning radius of about 14 meters!","Tip: always check underpass heights before departure","Europe has over 30,000 camper stopover areas","Scandinavia has the right of public access (allemansr\u00e4tten)","An oversize motorhome uses about 18-25 liters per 100km","The first motorized camper was built in 1910!","Germany has the largest network of Stellplatz in Europe","Tip: arrive early at the campsite, large pitches go first!"],
+    de:["Wusstest du? Ein 12m Wohnmobil hat einen Wendekreis von etwa 14 Metern!","Tipp: \u00dcberpr\u00fcfe immer die Durchfahrtsh\u00f6hen vor der Abfahrt","Europa hat \u00fcber 30.000 Wohnmobil-Stellpl\u00e4tze","Skandinavien hat das Jedermannsrecht (allemansr\u00e4tten)","Ein Oversize-Wohnmobil verbraucht etwa 18-25 Liter pro 100km","Das erste motorisierte Wohnmobil wurde 1910 gebaut!","Deutschland hat das gr\u00f6\u00dfte Stellplatznetz Europas","Tipp: Komm fr\u00fch zum Campingplatz, gro\u00dfe Parzellen sind schnell weg!"],
+    fr:["Le saviez-vous? Un camping-car de 12m a un rayon de braquage d'environ 14 m\u00e8tres!","Conseil: v\u00e9rifiez toujours les hauteurs des ponts avant de partir","L'Europe compte plus de 30 000 aires de stationnement pour camping-cars","La Scandinavie a le droit d'acc\u00e8s \u00e0 la nature (allemansr\u00e4tten)","Un camping-car XXL consomme environ 18-25 litres aux 100km","Le premier camping-car motoris\u00e9 a \u00e9t\u00e9 construit en 1910!","L'Allemagne a le plus grand r\u00e9seau de Stellplatz d'Europe","Conseil: arrivez t\u00f4t au camping, les grands emplacements partent vite!"],
+    es:["\u00bfSab\u00edas que? Una autocaravana de 12m tiene un radio de giro de unos 14 metros!","Consejo: comprueba siempre las alturas de los pasos subterr\u00e1neos antes de salir","Europa tiene m\u00e1s de 30.000 \u00e1reas de estacionamiento para autocaravanas","Escandinavia tiene el derecho de acceso p\u00fablico (allemansr\u00e4tten)","Una autocaravana XXL consume unos 18-25 litros por 100km","\u00a1La primera autocaravana motorizada se construy\u00f3 en 1910!","Alemania tiene la red m\u00e1s grande de Stellplatz de Europa","Consejo: \u00a1llega temprano al camping, las parcelas grandes se agotan primero!"]
+  };
+  const list=tips[lang]||tips.it;
+  const [idx,setIdx]=useState(0);
+  useEffect(()=>{const iv=setInterval(()=>setIdx(i=>(i+1)%list.length),3500);return()=>clearInterval(iv);},[list.length]);
+  return(
+    <div style={{minHeight:50,display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{background:"var(--card)",borderRadius:12,padding:"12px 16px",fontSize:13,color:"var(--text)",fontStyle:"italic",maxWidth:340,transition:"opacity .3s",lineHeight:1.5}}>
+        {"\ud83d\udca1"} {list[idx]}
+      </div>
+    </div>
+  );
+}
 /* ══════════════════ SCHERMATA ANALISI AI ══════════════════ */
-function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,onSave,tripMode,tripStops,onAddTrip,t}){
+function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,onSave,onSaveCert,t,lang}){
   const [phase,setPhase]=useState("gps"); // gps | routing | osm | pitches | mapillary | vision | ai | done
   const [routing,setRouting]=useState(null);
   const [userPos,setUserPos]=useState(null);
@@ -1691,15 +1943,14 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
     setOrsRoute(orsR);
     // 3. OSM data
     setPhase("osm");
-    const [osmRes,elevRes,critRes,wData]=await Promise.all([
+    const [osmRes,critRes,wData]=await Promise.all([
       getOSMData(poi.lat,poi.lng),
-      getElevationGradient(poi.lat,poi.lng),
       getCriticalPoints(poi.lat,poi.lng),
       fetchWeather(poi.lat,poi.lng)
     ]);
     if(wData)setWeatherData(wData);
     const swept=calcSweptPath(camper);
-    const extra={swept,osm:osmRes,elev:elevRes,critical:critRes,orsHGV:orsR||null};
+    const extra={swept,osm:osmRes,critical:critRes,orsHGV:orsR||null};
     setExtraData(extra);
     // 4. Camp pitches + internal roads
     setPhase("pitches");
@@ -1729,14 +1980,14 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
     const parallelTasks=[];
     if(geminiKey&&mlyData&&mlyData.hiResUrls&&mlyData.hiResUrls.length>0){
       setPhase("vision");
-      parallelTasks.push(analyzeMapillaryImages(geminiKey,mlyData.hiResUrls,camper).then(v=>{visionResult=v;}));
+      parallelTasks.push(analyzeMapillaryImages(geminiKey,mlyData.hiResUrls,camper,lang).then(v=>{visionResult=v;}));
     }
     if(geminiKey){
-      parallelTasks.push(geminiReviewSearch(geminiKey,poi,camper,cInfo).then(rv=>{reviewData=rv;}));
+      parallelTasks.push(geminiReviewSearch(geminiKey,poi,camper,cInfo,lang).then(rv=>{reviewData=rv;}));
     }
     // Route photos vision analysis
     if(geminiKey && rPhotosLocal && rPhotosLocal.hiResUrls && rPhotosLocal.hiResUrls.length>0){
-      parallelTasks.push(analyzeMapillaryImages(geminiKey,rPhotosCur.hiResUrls,camper).then(v=>{routeVisionResult=v;}));
+      parallelTasks.push(analyzeMapillaryImages(geminiKey,rPhotosCur.hiResUrls,camper,lang).then(v=>{routeVisionResult=v;}));
     }
     if(parallelTasks.length>0){
       if(phase!=="vision")setPhase("vision");
@@ -1761,7 +2012,7 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
     let primaryAnalysis=null;
     let primarySource=null;
     if(groqKey){
-      const prompt=buildAnalysisPrompt(poi,camper,r,extra,mlyData,cInfo);
+      const prompt=buildAnalysisPrompt(poi,camper,r,extra,mlyData,cInfo,lang);
       const groqRes=await groqDeepAnalysis(groqKey,prompt);
       if(groqRes&&!groqRes._apiError){
         const parsed=parseAIResponse(groqRes.txt);
@@ -1769,7 +2020,7 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
       }
     }
     if(!primaryAnalysis&&geminiKey){
-      const ai=await geminiDeepAnalysis(geminiKey,poi,camper,r,extra,mlyData,cInfo);
+      const ai=await geminiDeepAnalysis(geminiKey,poi,camper,r,extra,mlyData,cInfo,lang);
       if(ai?._apiError){
         setAiError(ai._apiError);
       } else if(ai){
@@ -1787,9 +2038,9 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
     if(groqKey&&geminiKey&&primaryAnalysis){
       try{
         if(primarySource==="groq"){
-          secAn=await geminiDeepAnalysis(geminiKey,poi,camper,r,extra,mlyData,cInfo);
+          secAn=await geminiDeepAnalysis(geminiKey,poi,camper,r,extra,mlyData,cInfo,lang);
         } else {
-          const prompt2=buildAnalysisPrompt(poi,camper,r,extra,mlyData,cInfo);
+          const prompt2=buildAnalysisPrompt(poi,camper,r,extra,mlyData,cInfo,lang);
           const groqRes2=await groqDeepAnalysis(groqKey,prompt2);
           if(groqRes2&&!groqRes2._apiError) secAn=parseAIResponse(groqRes2.txt);
         }
@@ -1819,6 +2070,11 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
   function handleSave(){
     onSave(poi,analysis);
     setSaved(true);
+  }
+  const [savedCert,setSavedCert]=useState(false);
+  function handleSaveCert(){
+    if(onSaveCert)onSaveCert(poi,analysis);
+    setSavedCert(true);
   }
   const vcfg={
     ok:{cls:"v-ok",bdg:"vb-ok",label:"✅ ADATTO AL TUO CAMPER",meterColor:"#16a34a"},
@@ -1860,7 +2116,6 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
         <a href={gmUrl} target="_blank" style={{textDecoration:"none"}}>
           <button className="btn bsm" style={{background:"#e8f0fe",color:"#1a73e8",border:"none",fontFamily:"Inter",fontWeight:700}}>🗺 Google Maps</button>
         </a>
-        <button className="btn bsm" style={{background:"#f3e8ff",color:"#7c3aed",border:"none",fontFamily:"Inter",fontWeight:700}} onClick={()=>openP4N(poi.lat,poi.lng,null)}>🌿 Park4Night</button>
         <a href={webUrl} target="_blank" style={{textDecoration:"none"}}>
           <button className="btn bsm" style={{background:"#fff7ed",color:"#ea580c",border:"none",fontFamily:"Inter",fontWeight:700}}>{poi.website?"🌐 Sito":"🔍 Cerca"}</button>
         </a>
@@ -1949,35 +2204,38 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
           </div>
         </a>
       </div>
-      {/* Loading phases */}
+      {/* Loading — status steps */}
       {phase!=="done"&&(
-        <div style={{background:"#fff",border:"1.5px solid #e2e8f0",borderRadius:14,padding:"14px 16px"}}>
-          <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:13,marginBottom:10}}>🔍 Analisi in corso...</div>
+        <div style={{padding:"24px 16px"}}>
+          <div style={{fontWeight:700,fontSize:15,color:"var(--text)",marginBottom:16}}>{t("analysisInProgress")}</div>
           {[
-            ["gps","📍 Rilevamento posizione GPS..."],
-            ["routing","🗺 Calcolo percorso camion "+camper.length+"m (Valhalla + ORS HGV)..."],
-            ["osm","🗄 Query Overpass: ponti, strettoie, restrizioni..."],
-            ["pitches","🏕 Piazzole e strade interne campeggio (OSM)..."],
-            ...(mapillaryKey?[["mapillary","📸 Mapillary: foto stradali ingresso..."]]:[] ),
-            ...(geminiKey?[["vision","👁 Analisi visiva + ricerca recensioni online (Gemini)..."]]:[] ),
-            ["ai","🤖 Analisi AI"+(groqKey&&geminiKey?" + Consenso multi-modello":"")+": "+(groqKey?"Groq":"")+(groqKey&&geminiKey?" + ":"")+(geminiKey?"Gemini":"")+"..."]
-          ].map(([p,label])=>(
-            <div key={p} className="step-row">
-              <div className="step-dot" style={{
-                background:phase===p?"#f97316":["done"].includes(phase)?"#16a34a":"#e2e8f0"
-              }}/>
-              <span style={{color:phase===p?"#1a1a2e":"#94a3b8",fontWeight:phase===p?600:400}}
-                className={phase===p?"pulse":""}>{label}</span>
-              {phase===p&&<span className="spin" style={{marginLeft:"auto"}}/>}
-              {phase==="done"&&<span style={{marginLeft:"auto",color:"#16a34a",fontSize:12}}>✓</span>}
-            </div>
-          ))}
+            {key:"gps",icon:"\ud83d\udccd",label:t("phaseGps")},
+            {key:"routing",icon:"\ud83d\uddfa",label:t("phaseRouting")},
+            {key:"osm",icon:"\ud83d\udee3\ufe0f",label:t("phaseOsm")},
+            {key:"pitches",icon:"\u26fa",label:t("phasePitches")},
+            {key:"mapillary",icon:"\ud83d\udcf7",label:t("phaseMapillary")},
+            {key:"vision",icon:"\ud83d\udc41\ufe0f",label:t("phaseVision")},
+            {key:"ai",icon:"\ud83e\udd16",label:t("phaseAi")}
+          ].map(function(step,i,arr){
+            const phases=arr.map(s=>s.key);
+            const ci=phases.indexOf(phase);
+            const si=phases.indexOf(step.key);
+            const done=si<ci;
+            const active=si===ci;
+            return(
+              <div key={step.key} style={{display:"flex",alignItems:"center",gap:10,padding:"7px 0",opacity:done?1:active?1:0.35,transition:"opacity .3s"}}>
+                <span style={{fontSize:16,width:24,textAlign:"center"}}>{done?"\u2705":active?step.icon:"\u23f3"}</span>
+                <span style={{fontSize:13,color:done?"var(--text2)":active?"var(--text)":"var(--text3)",fontWeight:active?600:400,flex:1}}>{step.label}</span>
+                {active&&<span style={{width:18,height:18,border:"2.5px solid #fed7aa",borderTopColor:"#f97316",borderRadius:"50%",animation:"spin .7s linear infinite",flexShrink:0}}/>}
+              </div>
+            );
+          })}
         </div>
       )}
-      {/* Riquadro dati tecnici pre-analisi */}
+      {/* Riquadro dati tecnici pre-analisi — collapsed by default */}
       {(routing||extraData.swept)&&(
-        <div style={{background:"#f8fafc",border:"1.5px solid #e2e8f0",borderRadius:12,padding:"10px 14px",fontSize:12}}>
-          <div style={{fontWeight:700,color:"#334155",marginBottom:6,fontSize:13}}>📊 Dati Tecnici Raccolti</div>
+        <details style={{background:"#f8fafc",border:"1.5px solid #e2e8f0",borderRadius:12,padding:"10px 14px",fontSize:12}}>
+          <summary style={{fontWeight:700,color:"#334155",marginBottom:6,fontSize:13,cursor:"pointer"}}>{"\ud83d\udcca"} {t("techData")}</summary>
           {routing&&<div style={{color:"#64748b",marginBottom:4}}>
             <b>🗺 Valhalla/OSM:</b> {routing.ok
               ?(routing.restricted
@@ -2017,9 +2275,6 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
             {!extraData.osm.maxwidths.length&&!extraData.osm.maxheights.length?" dati disponibili":""}
           </div>}
           {extraData.osm&&!extraData.osm.found&&<div style={{color:"#94a3b8",marginBottom:4}}><b>🗄 OSM:</b> nessun dato per questa zona</div>}
-          {extraData.elev&&<div style={{color:"#7c3aed",marginBottom:4}}>
-            <b>🏔 Elevazione:</b> {extraData.elev.elevMin}-{extraData.elev.elevMax}m s.l.m. · dislivello {extraData.elev.deltam}m · pendenza max {extraData.elev.maxGradPct}%
-          </div>}
           {pitchData&&pitchData.found&&<div style={{color:"#b45309",marginBottom:4}}>
             <b>🏕 Piazzole OSM:</b> {pitchData.pitchCount} mappate
             {pitchData.pitchLengths.length?" · lungh. "+pitchData.pitchLengths.join("/")+"m":""}
@@ -2037,7 +2292,7 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
           {orsRoute===null&&phase==="done"&&<div style={{color:"#94a3b8",marginBottom:4}}>
             <b>🛣 ORS HGV:</b> non disponibile
           </div>}
-        </div>
+        </details>
       )}
       {/* Galleria foto Mapillary + analisi visiva */}
       {mapillaryData&&mapillaryData.found&&mapillaryData.thumbUrls&&mapillaryData.thumbUrls.length>0&&(
@@ -2161,95 +2416,91 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
           {analysis.sintesi&&(
             <div style={{fontSize:13,fontWeight:600,color:"#1a1a2e",lineHeight:1.6,marginBottom:2}}>{analysis.sintesi}</div>
           )}
-          {/* Accesso stradale */}
-          {analysis.accesso&&(
-            <div className="v-section">
-              <div className="v-section-title">🛣 Accesso Stradale</div>
-              <div className="v-text">{analysis.accesso}</div>
-            </div>
-          )}
-          {/* Street View ingresso */}
-          {analysis.streetview&&(
-            <div className="v-section">
-              <div className="v-section-title">📷 Street View Ingresso</div>
-              <div className="v-text">{analysis.streetview}</div>
-            </div>
-          )}
-          {/* Ostacoli nascosti (non rilevabili da mappe) */}
-          {analysis.ostacoli&&(
-            <div className="v-section">
-              <div className="v-section-title" style={{color: analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#15803d":"#b45309"}}>
-                {analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"🌿 Ostacoli Nascosti":"🚧 Ostacoli Nascosti (non in mappa)"}
-              </div>
-              <div className="v-text" style={{
-                background: analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#f0fdf4":"#fff7ed",
-                borderRadius:8,padding:"8px 10px",
-                border:"1px solid "+(analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#86efac":"#fed7aa"),
-                color: analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#166534":"#7c2d12"
-              }}>{analysis.ostacoli}</div>
-            </div>
-          )}
-          {/* Swept Path manovra */}
-          {analysis.sweptpath&&(
-            <div className="v-section">
-              <div className="v-section-title">📐 Analisi Manovra (Swept Path)</div>
-              <div className="v-text" style={{color:"#1e3a5f"}}>{analysis.sweptpath}</div>
-            </div>
-          )}
-          {/* Territorio */}
-          {analysis.territorio&&(
-            <div className="v-section">
-              <div className="v-section-title">🛰 Territorio e Pendenza</div>
-              <div className="v-text">{analysis.territorio}</div>
-            </div>
-          )}
-          {/* Piazzole interne */}
-          {analysis.piazzole&&(
-            <div className="v-section">
-              <div className="v-section-title">📐 Piazzole Interne</div>
-              <div className="v-text">{analysis.piazzole}</div>
-            </div>
-          )}
-          {/* Struttura */}
-          {analysis.struttura&&(
-            <div className="v-section">
-              <div className="v-section-title">🏕 La Struttura</div>
-              <div className="v-text">{analysis.struttura}</div>
-            </div>
-          )}
-          {/* Recensioni */}
-          {analysis.recensioni&&(
-            <div className="v-section">
-              <div className="v-section-title">⭐ Recensioni dal Web</div>
-              <div className="v-text" style={{color:"#1e3a5f"}}>{analysis.recensioni}</div>
-            </div>
-          )}
-          {/* Punti critici */}
-          {analysis.critici&&analysis.critici.toLowerCase()!=="nessuno rilevato"&&(
-            <div className="v-section">
-              <div className="v-section-title">⚠️ Punti Critici per {camper.length}m</div>
-              <div className="v-text" style={{color:"#dc2626"}}>{analysis.critici}</div>
-            </div>
-          )}
-          {/* Percorsi Alternativi */}
-          {analysis.percorsiAlternativi&&(
-            <div className="v-section">
-              <div className="v-section-title" style={{color: analysis.percorsiAlternativi.toLowerCase().includes("accesso diretto")?"#15803d":"#b45309"}}>
-                {analysis.percorsiAlternativi.toLowerCase().includes("accesso diretto")?"🟢 Accesso":"🔀 Percorsi Alternativi di Accesso"}
-              </div>
-              <div className="v-text" style={{
-                color: analysis.percorsiAlternativi.toLowerCase().includes("accesso diretto")?"#166534":"#92400e",
-                background: analysis.percorsiAlternativi.toLowerCase().includes("accesso diretto")?"#f0fdf4":"#fffbeb",
-                borderRadius:8,padding:"8px 10px",border:"1px solid "+(analysis.percorsiAlternativi.toLowerCase().includes("accesso diretto")?"#86efac":"#fde68a")
-              }}>{analysis.percorsiAlternativi}</div>
-            </div>
-          )}
-          {/* Consiglio */}
+          {/* Consiglio — always visible */}
           {analysis.consiglio&&(
             <div className="v-section">
-              <div className="v-section-title">💡 Cosa fare prima di partire</div>
+              <div className="v-section-title">{"\ud83d\udca1"} Cosa fare prima di partire</div>
               <div className="v-text" style={{color:"#1e40af"}}>{analysis.consiglio}</div>
             </div>
+          )}
+          {/* Detailed sections — collapsed by default */}
+          {(analysis.accesso||analysis.streetview||analysis.ostacoli||analysis.sweptpath||analysis.territorio||analysis.piazzole||analysis.struttura||analysis.recensioni||analysis.critici||analysis.percorsiAlternativi)&&(
+            <details style={{marginTop:10}}>
+              <summary style={{cursor:"pointer",fontSize:12,fontWeight:700,color:"var(--text2)",padding:"6px 0"}}>{"\ud83d\udcca"} {t("techData")} {"\u2014"} Dettaglio completo analisi</summary>
+              {analysis.accesso&&(
+                <div className="v-section">
+                  <div className="v-section-title">{"\ud83d\udee3"} Accesso Stradale</div>
+                  <div className="v-text">{analysis.accesso}</div>
+                </div>
+              )}
+              {analysis.streetview&&(
+                <div className="v-section">
+                  <div className="v-section-title">{"\ud83d\udcf7"} Street View Ingresso</div>
+                  <div className="v-text">{analysis.streetview}</div>
+                </div>
+              )}
+              {analysis.ostacoli&&(
+                <div className="v-section">
+                  <div className="v-section-title" style={{color: analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#15803d":"#b45309"}}>
+                    {analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"\ud83c\udf3f Ostacoli Nascosti":"\ud83d\udea7 Ostacoli Nascosti (non in mappa)"}
+                  </div>
+                  <div className="v-text" style={{
+                    background: analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#f0fdf4":"#fff7ed",
+                    borderRadius:8,padding:"8px 10px",
+                    border:"1px solid "+(analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#86efac":"#fed7aa"),
+                    color: analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#166534":"#7c2d12"
+                  }}>{analysis.ostacoli}</div>
+                </div>
+              )}
+              {analysis.sweptpath&&(
+                <div className="v-section">
+                  <div className="v-section-title">{"\ud83d\udcd0"} Analisi Manovra (Swept Path)</div>
+                  <div className="v-text" style={{color:"#1e3a5f"}}>{analysis.sweptpath}</div>
+                </div>
+              )}
+              {analysis.territorio&&(
+                <div className="v-section">
+                  <div className="v-section-title">{"\ud83d\udef0"} Territorio e Pendenza</div>
+                  <div className="v-text">{analysis.territorio}</div>
+                </div>
+              )}
+              {analysis.piazzole&&(
+                <div className="v-section">
+                  <div className="v-section-title">{"\ud83d\udcd0"} Piazzole Interne</div>
+                  <div className="v-text">{analysis.piazzole}</div>
+                </div>
+              )}
+              {analysis.struttura&&(
+                <div className="v-section">
+                  <div className="v-section-title">{"\ud83c\udfd5"} La Struttura</div>
+                  <div className="v-text">{analysis.struttura}</div>
+                </div>
+              )}
+              {analysis.recensioni&&(
+                <div className="v-section">
+                  <div className="v-section-title">{"\u2b50"} Recensioni dal Web</div>
+                  <div className="v-text" style={{color:"#1e3a5f"}}>{analysis.recensioni}</div>
+                </div>
+              )}
+              {analysis.critici&&analysis.critici.toLowerCase()!=="nessuno rilevato"&&(
+                <div className="v-section">
+                  <div className="v-section-title">{"\u26a0\ufe0f"} Punti Critici per {camper.length}m</div>
+                  <div className="v-text" style={{color:"#dc2626"}}>{analysis.critici}</div>
+                </div>
+              )}
+              {analysis.percorsiAlternativi&&(
+                <div className="v-section">
+                  <div className="v-section-title" style={{color: analysis.percorsiAlternativi.toLowerCase().includes("accesso diretto")?"#15803d":"#b45309"}}>
+                    {analysis.percorsiAlternativi.toLowerCase().includes("accesso diretto")?"\ud83d\udfe2 Accesso":"\ud83d\udd00 Percorsi Alternativi di Accesso"}
+                  </div>
+                  <div className="v-text" style={{
+                    color: analysis.percorsiAlternativi.toLowerCase().includes("accesso diretto")?"#166534":"#92400e",
+                    background: analysis.percorsiAlternativi.toLowerCase().includes("accesso diretto")?"#f0fdf4":"#fffbeb",
+                    borderRadius:8,padding:"8px 10px",border:"1px solid "+(analysis.percorsiAlternativi.toLowerCase().includes("accesso diretto")?"#86efac":"#fde68a")
+                  }}>{analysis.percorsiAlternativi}</div>
+                </div>
+              )}
+            </details>
           )}
           {/* Fallback: mostra sempre il testo grezzo se le sezioni sono vuote */}
           {!analysis.sintesi&&!analysis.accesso&&!analysis.struttura&&analysis.raw&&(
@@ -2340,16 +2591,10 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
           </button>
         );
       })()}
-      {/* Aggiungi tappa viaggio */}
-      {tripMode&&onAddTrip&&(()=>{
-        const already=(tripStops||[]).some(s=>s.id===poi.id);
-        return(
-          <button className={"btn "+(already?"bgh":"bto")} style={{width:"100%",opacity:already?0.7:1}} disabled={already}
-            onClick={()=>{if(!already)onAddTrip(poi);}}>
-            {already?"✅ "+t("alreadyTrip"):"🗺 "+t("addTrip")}
-          </button>
-        );
-      })()}
+      {/* Salva in Certificati Oversize */}
+      <button className={"btn "+(savedCert?"bgh":"bpur")} style={{width:"100%",opacity:savedCert?0.7:1,background:savedCert?undefined:"linear-gradient(135deg,#1e40af 0%,#7c3aed 100%)",color:"#fff",border:"none"}} onClick={handleSaveCert} disabled={savedCert}>
+        {savedCert?"✅ Salvato nei Certificati":"🏅 Salva nei Certificati Oversize"}
+      </button>
       {/* Naviga */}
       <a href={"https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(poi.name+" "+poi.address)} target="_blank" style={{textDecoration:"none"}}>
         <button className="btn bto" style={{width:"100%"}}>🧭 {t("navigate")}</button>
@@ -2398,7 +2643,7 @@ function ConfrontoScreen({pois,camper,onBack}){
               ["Distanza",r=>r.cached?.routing?.dist?r.cached.routing.dist+"km":"—"],
               ["Tempo",r=>r.cached?.routing?.time?r.cached.routing.time+"min":"—"],
               ["Confidenza",r=>r.cached?.analysis?.confidence?r.cached.analysis.confidence+"%":"—"],
-              ["Distanza",r=>r.poi.distKm<99?r.poi.distKm+"km":"—"],
+              ["Distanza",r=>r.poi.distKm<99?(r.poi.distKm<1?(r.poi.distKm*1000).toFixed(0)+"m":r.poi.distKm.toFixed(1)+"km"):"—"],
             ].map(([label,fn])=>(
               <tr key={label}>
                 <td style={{fontWeight:600,color:"var(--text2)",padding:"4px 6px"}}>{label}</td>
@@ -2433,7 +2678,7 @@ function ConfrontoScreen({pois,camper,onBack}){
   );
 }
 /* ══════════════════ TAB CERCA ══════════════════ */
-function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,onCenterChange,t,lang}){
+function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,onSaveCert,onCenterChange,t,lang}){
   const [q,setQ]=useState("");
   const [loading,setLoading]=useState(false);
   const [center,setCenter]=useState({lat:41.9,lng:12.5});
@@ -2447,9 +2692,6 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,on
   const [compareMode,setCompareMode]=useState(false);
   const [compareList,setCompareList]=useState([]);
   const [showConfronto,setShowConfronto]=useState(false);
-  const [tripMode,setTripMode]=useState(false);
-  const [tripStops,setTripStops]=useState(()=>LS.getJ("oit_trip")||[]);
-  const [tripSummary,setTripSummary]=useState(null);
   /* ─── Autocomplete suggestions (Nominatim) ─── */
   const [suggestions,setSuggestions]=useState([]);
   const [showSugg,setShowSugg]=useState(false);
@@ -2509,7 +2751,7 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,on
 
   if(showConfronto&&compareList.length>=2)return<ConfrontoScreen pois={compareList} camper={camper} onBack={()=>setShowConfronto(false)}/>;
   if(selPoi)return<AnalisiScreen poi={selPoi} camper={camper} ttKey={ttKey} geminiKey={geminiKey} groqKey={groqKey} mapillaryKey={mapillaryKey}
-    onBack={()=>setSelPoi(null)} onSave={onSaveOversize} tripMode={tripMode} tripStops={tripStops} onAddTrip={(p)=>{const n=[...tripStops,p];setTripStops(n);LS.setJ("oit_trip",n);}} t={t}/>;
+    onBack={()=>setSelPoi(null)} onSave={onSaveOversize} onSaveCert={onSaveCert} t={t} lang={lang}/>;
 
   async function cerca(){
     if(!q.trim())return;
@@ -2539,7 +2781,7 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,on
   const filtered=filter==="all"?pois:filter==="sosta"?pois.filter(p=>!p.isCamp&&!p.isDump):filter==="dump"?pois.filter(p=>p.isDump):pois.filter(p=>p.isCamp);
   const mapMarkers=[
     ...(destMk?[destMk]:[]),
-    ...pois.map(p=>({...p,isDest:false,sub:p.address+(p.distKm<99?" · "+p.distKm+"km":""),_markerColor:p.isDump?"#16a34a":p.isCamp?"#8b5cf6":p._source==="park4night"?"#f59e0b":"#3b82f6"}))
+    ...pois.map(p=>({...p,isDest:false,sub:p.address+(p.distKm<99?" · "+(p.distKm<1?(p.distKm*1000).toFixed(0)+"m":p.distKm.toFixed(1)+"km"):""),_markerColor:p.isDump?"#16a34a":p.isCamp?"#8b5cf6":"#3b82f6"}))
   ];
   return(
     <div className="pg">
@@ -2548,69 +2790,6 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,on
         <h2>{t("findStop")}</h2>
         <p>{t("heroDesc",camper.length)}</p>
       </div>
-      {/* Trip Planner Toggle */}
-      <div style={{display:"flex",gap:6}}>
-        <button onClick={()=>{setTripMode(!tripMode);if(!tripMode)setTimeout(()=>{document.querySelector('.pg')?.scrollTo({top:0,behavior:"smooth"});},100);}} style={{
-          flex:1,padding:"8px 12px",borderRadius:10,border:"1.5px solid "+(tripMode?"#f97316":"var(--border2)"),
-          background:tripMode?"#fff7ed":"var(--card)",fontSize:11,fontWeight:700,
-          color:tripMode?"#ea580c":"var(--text2)",cursor:"pointer"
-        }}>
-          🗺 {tripMode?t("closeTrip"):t("tripPlan")}
-          {tripStops.length>0&&!tripMode&&<span style={{marginLeft:4,background:"#f97316",color:"#fff",borderRadius:99,padding:"1px 6px",fontSize:9}}>{tripStops.length}</span>}
-        </button>
-      </div>
-      {/* Trip Mode Panel */}
-      {tripMode&&(
-        <div style={{background:"var(--card)",border:"1.5px solid #fed7aa",borderRadius:12,padding:"12px 14px"}}>
-          <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:13,marginBottom:8,color:"#ea580c"}}>🗺 {t("tripPlan")}</div>
-          {tripStops.length===0&&(
-            <div style={{fontSize:11,color:"var(--text3)",textAlign:"center",padding:"8px 0"}}>
-              Cerca una destinazione e aggiungi le tappe del tuo viaggio.
-            </div>
-          )}
-          <button onClick={()=>{const inp=document.querySelector('.sbar input');if(inp){inp.scrollIntoView({behavior:"smooth",block:"center"});setTimeout(()=>inp.focus(),400);}}} className="btn bto bsm" style={{width:"100%",marginBottom:tripStops.length>0?0:0}}>
-            {t("addStop")}
-          </button>
-          {tripStops.map((stop,i)=>{
-            const cached=LS.getJ("oit_cache_"+stop.id);
-            const hasCache=cached&&(Date.now()-cached.timestamp<7*24*3600*1000);
-            return(
-              <div key={stop.id+i} style={{display:"flex",alignItems:"center",gap:8,padding:"8px 0",borderBottom:i<tripStops.length-1?"1px solid var(--border2)":"none"}}>
-                <div style={{width:24,height:24,borderRadius:"50%",background:"#f97316",color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:800,flexShrink:0}}>{i+1}</div>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{fontWeight:700,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{stop.name}</div>
-                  <div style={{fontSize:10,color:"var(--text3)"}}>
-                    {stop.distKm<99?stop.distKm+"km · ":""}
-                    {hasCache?<span style={{color:"#16a34a"}}>📦 Analizzato ({cached.score?.score||"?"}pts)</span>:<span style={{color:"#94a3b8"}}>{t("notAnalyzed")}</span>}
-                  </div>
-                </div>
-                <div style={{display:"flex",gap:3,flexShrink:0}}>
-                  {i>0&&<button onClick={()=>{const n=[...tripStops];[n[i-1],n[i]]=[n[i],n[i-1]];setTripStops(n);LS.setJ("oit_trip",n);}} style={{background:"none",border:"1px solid var(--border2)",borderRadius:6,cursor:"pointer",padding:"2px 5px",fontSize:10}}>↑</button>}
-                  {i<tripStops.length-1&&<button onClick={()=>{const n=[...tripStops];[n[i],n[i+1]]=[n[i+1],n[i]];setTripStops(n);LS.setJ("oit_trip",n);}} style={{background:"none",border:"1px solid var(--border2)",borderRadius:6,cursor:"pointer",padding:"2px 5px",fontSize:10}}>↓</button>}
-                  <button onClick={()=>{setSelPoi(stop);}} style={{background:"#eff6ff",border:"none",borderRadius:6,cursor:"pointer",padding:"2px 6px",fontSize:10,color:"#1d4ed8",fontWeight:700}}>🤖</button>
-                  <button onClick={()=>{const n=tripStops.filter((_,j)=>j!==i);setTripStops(n);LS.setJ("oit_trip",n);}} style={{background:"#fee2e2",border:"none",borderRadius:6,cursor:"pointer",padding:"2px 6px",fontSize:10,color:"#dc2626"}}>✕</button>
-                </div>
-              </div>
-            );
-          })}
-          {tripStops.length>=2&&(
-            <div style={{marginTop:8,padding:"8px 10px",background:"#fff7ed",borderRadius:8,border:"1px solid #fed7aa"}}>
-              <div style={{fontSize:11,fontWeight:700,color:"#ea580c",marginBottom:4}}>📊 {t("tripSummary")}</div>
-              <div style={{fontSize:11,color:"var(--text2)"}}>
-                🏕 {tripStops.length} {t("stops")}
-                {(()=>{
-                  let analyzed=0,totalScore=0;
-                  tripStops.forEach(s=>{const c=LS.getJ("oit_cache_"+s.id);if(c&&c.score){analyzed++;totalScore+=c.score.score;}});
-                  return analyzed>0?` · 📦 ${analyzed} ${t("analyzed")} · ${t("avgScore")}: ${Math.round(totalScore/analyzed)}/100`:` · ${t("noAnalyzed")}`;
-                })()}
-              </div>
-            </div>
-          )}
-          {tripStops.length>0&&(
-            <button className="btn bred bsm" style={{width:"100%",marginTop:6}} onClick={()=>{setTripStops([]);LS.del("oit_trip");setTripSummary(null);}}>🗑 {t("deleteTrip")}</button>
-          )}
-        </div>
-      )}
       {/* Search with autocomplete */}
       <div style={{position:"relative"}}>
         <div className="sbar">
@@ -2674,9 +2853,6 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,on
           <a href={"https://www.google.com/maps/search/campeggi+aree+sosta+camper/@"+destMk.lat+","+destMk.lng+",12z"} target="_blank" style={{textDecoration:"none",flex:1}}>
             <button className="btn bsm bgh" style={{width:"100%"}}>🗺 Google Maps</button>
           </a>
-          <a href={"https://park4night.com/it/search?lat="+destMk.lat+"&lng="+destMk.lng+"&z=13"} target="_blank" style={{textDecoration:"none",flex:1}}>
-            <button className="btn bsm bgh" style={{width:"100%"}}>🌿 Park4Night</button>
-          </a>
         </div>
       )}
       {/* Mappa */}
@@ -2728,11 +2904,8 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,on
           <div className="card">
             <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:13,marginBottom:10,display:"flex",alignItems:"center",gap:6}}>
               <span style={{fontSize:14}}>📍</span>
-              {tripMode?"Strutture trovate — tocca + Tappa":"Strutture trovate — tocca per analisi AI"}
+              {"Strutture trovate \u2014 tocca per analisi AI"}
             </div>
-            {tripMode&&<div style={{background:"#fff7ed",border:"1px solid #fed7aa",borderRadius:8,padding:"6px 10px",marginBottom:10,fontSize:11,color:"#ea580c",fontWeight:600,textAlign:"center"}}>
-              👆 Tocca <b>+ Tappa</b> accanto a ogni struttura per aggiungerla al viaggio
-            </div>}
             {filtered.map(p=>{
               const isInCompare=compareList.some(c=>c.id===p.id);
               return(
@@ -2742,13 +2915,12 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,on
                     {isInCompare?"✓":""}
                   </div>
                 )}
-                <div className="poi-ico" style={{background:p.isDump?"#dcfce7":p.isCamp?"#fdf4ff":p._source==="park4night"?"#fef3c7":"#eff6ff"}}>
+                <div className="poi-ico" style={{background:p.isDump?"#dcfce7":p.isCamp?"#fdf4ff":"#eff6ff"}}>
                   {p.isDump?"🚰":p.isCamp?"🏕":p.isStellplatz?"🚐":"🅿️"}
                 </div>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{display:"flex",alignItems:"center",gap:6}}>
                     <div style={{fontWeight:700,fontSize:13,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",flex:1}}>{p.name}</div>
-                    {p._source==="park4night"&&<span style={{fontSize:9,background:"#fef3c7",color:"#92400e",borderRadius:4,padding:"1px 5px",fontWeight:700,flexShrink:0}}>P4N</span>}
                     {p._rating&&<span style={{fontSize:9,color:"#f59e0b",fontWeight:700,flexShrink:0}}>★{p._rating}</span>}
                   </div>
                   <div style={{fontSize:11,color:"#64748b",marginTop:2,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{p.address}{p._fee?" · "+({yes:"💰",no:"🆓"}[p._fee]||""):""}{p._capacity?" · "+p._capacity+" posti":""}</div>
@@ -2762,14 +2934,8 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,on
                   </div>
                 </div>
                 <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3}}>
-                  {p.distKm<99&&<span style={{fontSize:10,color:"#94a3b8"}}>{p.distKm}km</span>}
-                  {tripMode&&!tripStops.some(s=>s.id===p.id)?(
-                    <button onClick={e=>{e.stopPropagation();const n=[...tripStops,p];setTripStops(n);LS.setJ("oit_trip",n);}} style={{fontSize:10,color:"#ea580c",fontWeight:700,whiteSpace:"nowrap",background:"#fff7ed",border:"1px solid #fed7aa",borderRadius:6,padding:"3px 8px",cursor:"pointer"}}>+ Tappa</button>
-                  ):tripMode&&tripStops.some(s=>s.id===p.id)?(
-                    <span style={{fontSize:10,color:"#16a34a",fontWeight:700}}>✓ Aggiunta</span>
-                  ):(
-                    <span style={{fontSize:12,color:"#f97316",fontWeight:700,whiteSpace:"nowrap"}}>🤖 Analizza →</span>
-                  )}
+                  {p.distKm<99&&<span style={{fontSize:10,color:"#94a3b8"}}>{p.distKm<1?(p.distKm*1000).toFixed(0)+"m":p.distKm.toFixed(1)+"km"}</span>}
+                  <span style={{fontSize:12,color:"#f97316",fontWeight:700,whiteSpace:"nowrap"}}>{"\ud83e\udd16"} Analizza {"\u2192"}</span>
                 </div>
               </div>
               );
@@ -2865,7 +3031,7 @@ function normalizeRegion(raw){
 }
 async function detectRegion(lat,lng){
   try{
-    const r=await fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat="+lat+"&lon="+lng+"&zoom=5&addressdetails=1&accept-language=it,en",
+    const r=await fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat="+lat+"&lon="+lng+"&zoom=10&addressdetails=1&accept-language=it,en",
       {headers:{"User-Agent":"OversizeInTour/1.0"},signal:AbortSignal.timeout(5000)});
     const d=await r.json();
     const addr=d.address||{};
@@ -2873,8 +3039,9 @@ async function detectRegion(lat,lng){
     const country=normalizeCountryName(rawCountry)||rawCountry;
     const rawRegion=addr.state||addr.region||null;
     const region=(country==="Italia")?normalizeRegion(rawRegion):rawRegion;
-    return{country:country||"Altro",region:region||"Sconosciuta"};
-  }catch(e){return{country:"Altro",region:"Sconosciuta"};}
+    const province=addr.county||addr.province||addr.state_district||null;
+    return{country:country||"Altro",region:region||"Sconosciuta",province:province||null};
+  }catch(e){return{country:"Altro",region:"Sconosciuta",province:null};}
 }
 /* ══════════════════ OVERSIZE CERTIFICATE — Community ══════════════════ */
 function TabCertificate({camper,t,lang}){
@@ -3151,19 +3318,23 @@ function TabOversize({camper,ttKey,externalItems,onRemove,t}){
     detectAll();
     return()=>{cancelled=true;};
   },[allItems.length]);
-  // Group items by country > region
+  // Group items by country > region > province
   const grouped=useMemo(()=>{
     const byCountry={};
     allItems.forEach(item=>{
       const info=regionMap[item.id]||null;
-      // Support old format (string region) and new format ({country,region})
-      let country,region;
-      if(info&&typeof info==="object"){country=info.country||"Altro";region=info.region||"Sconosciuta";}
-      else if(typeof info==="string"){country="Italia";region=info;}
-      else{country="_unknown";region="_unknown";}
+      let country,region,province;
+      if(info&&typeof info==="object"){country=info.country||"Altro";region=info.region||"Sconosciuta";province=info.province||null;}
+      else if(typeof info==="string"){country="Italia";region=info;province=null;}
+      else{country="_unknown";region="_unknown";province=null;}
       if(!byCountry[country])byCountry[country]={};
-      if(!byCountry[country][region])byCountry[country][region]=[];
-      byCountry[country][region].push(item);
+      if(!byCountry[country][region])byCountry[country][region]={_items:[],_provinces:{}};
+      if(province){
+        if(!byCountry[country][region]._provinces[province])byCountry[country][region]._provinces[province]=[];
+        byCountry[country][region]._provinces[province].push(item);
+      }else{
+        byCountry[country][region]._items.push(item);
+      }
     });
     // Sort countries by EU_COUNTRY_ORDER, then alphabetically
     const countryEntries=Object.entries(byCountry).sort(([a],[b])=>{
@@ -3173,7 +3344,6 @@ function TabOversize({camper,ttKey,externalItems,onRemove,t}){
       if(ia>=0)return-1;if(ib>=0)return 1;
       return a.localeCompare(b);
     });
-    // For each country, sort regions (Italy by IT_REGIONS_META order, others alphabetically)
     const itOrder=IT_REGIONS_META.map(([n])=>n);
     return countryEntries.map(([country,regions])=>{
       const regionEntries=Object.entries(regions).sort(([a],[b])=>{
@@ -3184,6 +3354,11 @@ function TabOversize({camper,ttKey,externalItems,onRemove,t}){
           if(ia>=0)return-1;if(ib>=0)return 1;
         }
         return a.localeCompare(b);
+      }).map(([regName,regData])=>{
+        const provinces=Object.entries(regData._provinces||{}).sort(([a],[b])=>a.localeCompare(b));
+        const loose=regData._items||[];
+        const allRegItems=[...loose,...provinces.flatMap(([,items])=>items)];
+        return[regName,allRegItems,provinces];
       });
       return[country,regionEntries];
     });
@@ -3286,7 +3461,7 @@ function TabOversize({camper,ttKey,externalItems,onRemove,t}){
               </div>
               <span style={{fontSize:16,color:"#94a3b8",transition:"transform .2s",transform:isCountryOpen?"rotate(180deg)":"rotate(0)"}}>{"\u25BC"}</span>
             </button>
-            {isCountryOpen&&regions.map(([region,items])=>{
+            {isCountryOpen&&regions.map(([region,items,provinces])=>{
               const isUnknownReg=region==="_unknown";
               const regName=isUnknownReg?"Regione da rilevare":region;
               const regIco=isUnknownReg?"📍":(country==="Italia"?(IT_REGION_ICO[region]||"📍"):"📍");
@@ -3300,13 +3475,37 @@ function TabOversize({camper,ttKey,externalItems,onRemove,t}){
                     <span style={{fontSize:18}}>{regIco}</span>
                     <div style={{flex:1}}>
                       <div style={{fontFamily:"Poppins",fontWeight:600,fontSize:12,color:"#1a1a2e"}}>{regName}</div>
-                      <div style={{fontSize:10,color:"#64748b"}}>{items.length} {items.length===1?"struttura":"strutture"}</div>
+                      <div style={{fontSize:10,color:"#64748b"}}>{items.length} {items.length===1?"struttura":"strutture"}{provinces&&provinces.length>0?" · "+provinces.length+" province":""}</div>
                     </div>
                     <span style={{fontSize:14,color:"#94a3b8",transition:"transform .2s",transform:isRegOpen?"rotate(180deg)":"rotate(0)"}}>{"\u25BC"}</span>
                   </button>
                   {isRegOpen&&(
-                    <div style={{padding:"0 10px 10px",borderTop:"1px solid #e2e8f0"}}>
-                      {items.map(renderItem)}
+                    <div style={{borderTop:"1px solid #e2e8f0"}}>
+                      {provinces&&provinces.length>0?provinces.map(([provName,provItems])=>{
+                        const isProvOpen=openRegions["p_"+country+"_"+region+"_"+provName]!==false;
+                        return(
+                          <div key={"p_"+provName}>
+                            <button onClick={()=>toggleRegion("p_"+country+"_"+region+"_"+provName)} style={{
+                              width:"100%",display:"flex",alignItems:"center",gap:6,padding:"8px 12px 8px 20px",
+                              background:isProvOpen?"#fefce8":"#fafafa",border:"none",borderBottom:"1px solid #f1f5f9",cursor:"pointer",textAlign:"left"
+                            }}>
+                              <span style={{fontSize:14}}>🏛</span>
+                              <div style={{flex:1}}>
+                                <div style={{fontWeight:600,fontSize:11,color:"#334155"}}>{provName}</div>
+                                <div style={{fontSize:9,color:"#94a3b8"}}>{provItems.length} {provItems.length===1?"struttura":"strutture"}</div>
+                              </div>
+                              <span style={{fontSize:12,color:"#cbd5e1",transition:"transform .2s",transform:isProvOpen?"rotate(180deg)":"rotate(0)"}}>{"\u25BC"}</span>
+                            </button>
+                            {isProvOpen&&<div style={{padding:"0 10px 8px"}}>{provItems.map(renderItem)}</div>}
+                          </div>
+                        );
+                      }):<div style={{padding:"0 10px 10px"}}>{items.map(renderItem)}</div>}
+                      {/* Items without province in this region */}
+                      {provinces&&provinces.length>0&&items.filter(it=>!provinces.some(([,pItems])=>pItems.includes(it))).length>0&&(
+                        <div style={{padding:"0 10px 10px"}}>
+                          {items.filter(it=>!provinces.some(([,pItems])=>pItems.includes(it))).map(renderItem)}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -3376,336 +3575,86 @@ async function searchRentalPOIs(_key,lat,lng){
       .sort((a,b)=>a.distKm-b.distKm).slice(0,20);
   }catch(e){return[];}
 }
-function TabNoleggio({ttKey,lastCenter}){
-  const services=[
-    {ico:"🚗",name:"Rentalcars.com",desc:"Comparatore internazionale",url:"https://www.rentalcars.com",bg:"#eff6ff",c:"#1d4ed8",badge:"Top"},
-    {ico:"🚗",name:"AutoEurope",desc:"Specialista Italia",url:"https://www.autoeurope.it",bg:"#fff7ed",c:"#ea580c",badge:"Italia"},
-    {ico:"🛵",name:"Cooltra",desc:"Scooter e moto elettrici",url:"https://cooltra.com",bg:"#fdf4ff",c:"#7c3aed",badge:"Eco"},
-    {ico:"🚲",name:"E-Bike in zona",desc:"Bici elettriche vicino a te",url:"https://www.google.com/maps/search/noleggio+bici+elettrica",bg:"#f0fdf4",c:"#16a34a",badge:"Verde"},
-    {ico:"🤝",name:"GetAround",desc:"Car sharing P2P",url:"https://getaround.com",bg:"#f8fafc",c:"#475569",badge:"P2P"},
-    {ico:"🚐",name:"Furgoni & Van",desc:"Veicoli grandi sostitutivi",url:"https://www.google.com/maps/search/noleggio+furgone",bg:"#fff7ed",c:"#ea580c",badge:"Pesanti"},
-  ];
-  const [rentalPOIs,setRentalPOIs]=React.useState([]);
-  const [loadingPOIs,setLoadingPOIs]=React.useState(false);
-  const [mapCenter,setMapCenter]=React.useState(lastCenter||null);
-  const [selPOI,setSelPOI]=React.useState(null);
-  React.useEffect(()=>{
-    if(lastCenter?.lat){
-      setMapCenter({lat:lastCenter.lat,lng:lastCenter.lng});
-      setLoadingPOIs(true);
-      searchRentalPOIs(null,lastCenter.lat,lastCenter.lng)
-        .then(r=>{setRentalPOIs(r);setLoadingPOIs(false);})
-        .catch(()=>setLoadingPOIs(false));
-    }
-  },[lastCenter?.lat,lastCenter?.lng]);
-  const mapMarkers=rentalPOIs.map(p=>({...p,sub:(p.isMoto?"🛵 ":"🚗 ")+p.address,isDest:false}));
-  return(
-    <div className="pg">
-      <div className="hero" style={{background:"linear-gradient(135deg,#3b82f6,#1d4ed8)"}}>
-        <img src={CAMPER_IMG_HERO} style={{position:"absolute",right:-10,bottom:-5,height:70,opacity:.18,pointerEvents:"none"}} alt=""/>
-        <h2>🚗 Noleggio a Destinazione</h2>
-        <p>Parcheggia il camper e noleggia un'auto piccola per spostarti liberamente.</p>
-      </div>
-      {/* MAPPA noleggi in zona */}
-      {lastCenter?.lat?(
-        <div style={{borderRadius:14,overflow:"hidden",border:"1.5px solid #e2e8f0"}}>
-          {loadingPOIs?(
-            <div style={{height:200,display:"flex",alignItems:"center",justifyContent:"center",background:"#f8fafc",gap:8}}>
-              <span className="spin"/><span style={{fontSize:12,color:"#64748b"}}>Ricerca noleggi in zona...</span>
-            </div>
-          ):(
-            <div>
-              <TomMap ttKey={ttKey} center={mapCenter||{lat:lastCenter.lat,lng:lastCenter.lng}} zoom={13}
-                markers={mapMarkers} height={210}
-                onPoiClick={p=>{setSelPOI(p===selPOI?null:p);setMapCenter({lat:p.lat,lng:p.lng});}}/>
-              {rentalPOIs.length>0&&<div style={{padding:"8px 12px",background:"#f8fafc",borderTop:"1px solid #e2e8f0",fontSize:11,color:"#475569"}}>
-                🔵 Auto · 🟣 Moto/Scooter — {rentalPOIs.length} noleggi trovati entro 20km
-              </div>}
-            </div>
-          )}
-        </div>
-      ):(
-        <div style={{background:"#f8fafc",border:"1.5px dashed #cbd5e1",borderRadius:12,padding:"14px",textAlign:"center",fontSize:12,color:"#94a3b8"}}>
-          📍 Fai prima una ricerca nella scheda <b>Cerca</b> per vedere i noleggi sulla mappa nella tua zona
-        </div>
-      )}
-      {/* Dettaglio POI selezionato */}
-      {selPOI&&(
-        <div style={{background:"#eff6ff",border:"1.5px solid #3b82f6",borderRadius:12,padding:"12px 14px",fontSize:12}}>
-          <div style={{fontWeight:700,fontSize:13,color:"#1d4ed8",marginBottom:4}}>{selPOI.isMoto?"🛵":"🚗"} {selPOI.name}</div>
-          <div style={{color:"#475569",marginBottom:6}}>📍 {selPOI.address} · {selPOI.distKm}km</div>
-          <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-            {selPOI.phone&&<a href={"tel:"+selPOI.phone} style={{textDecoration:"none"}}><button className="btn bsm" style={{background:"#dcfce7",color:"#16a34a",border:"none"}}>📞 Chiama</button></a>}
-            <a href={"https://www.google.com/maps/search/"+encodeURIComponent(selPOI.name+" "+selPOI.address)} target="_blank" style={{textDecoration:"none"}}><button className="btn bsm" style={{background:"#dbeafe",color:"#1d4ed8",border:"none"}}>🗺 Mappa</button></a>
-            {selPOI.website&&<a href={selPOI.website} target="_blank" style={{textDecoration:"none"}}><button className="btn bsm" style={{background:"#f3e8ff",color:"#7c3aed",border:"none"}}>🌐 Sito</button></a>}
-          </div>
-        </div>
-      )}
-      {/* Lista noleggi rilevati */}
-      {rentalPOIs.length>0&&(
-        <div className="card">
-          <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:12,color:"#334155",marginBottom:8}}>📍 Noleggi rilevati in zona</div>
-          {rentalPOIs.slice(0,8).map(p=>(
-            <div key={p.id} className="rent-item" style={{cursor:"pointer",background:selPOI?.id===p.id?"#eff6ff":"transparent"}}
-              onClick={()=>{setSelPOI(p===selPOI?null:p);setMapCenter({lat:p.lat,lng:p.lng});}}>
-              <div style={{width:36,height:36,borderRadius:10,background:p.isMoto?"#f3e8ff":"#eff6ff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{p.isMoto?"🛵":"🚗"}</div>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{fontWeight:700,fontSize:12,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{p.name}</div>
-                <div style={{fontSize:10,color:"#64748b"}}>{p.distKm}km · {p.address.split(",")[0]}</div>
-              </div>
-              <span style={{fontSize:10,background:"#f1f5f9",color:"#475569",padding:"2px 7px",borderRadius:99,fontWeight:600,flexShrink:0}}>{p.distKm}km</span>
-            </div>
-          ))}
-        </div>
-      )}
-      {/* Servizi online */}
-      <div className="card">
-        <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:12,color:"#334155",marginBottom:8}}>🌐 Prenota Online</div>
-        {services.map(s=>(
-          <div key={s.name} className="rent-item">
-            <div style={{width:40,height:40,borderRadius:11,background:s.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{s.ico}</div>
-            <div style={{flex:1}}>
-              <div style={{display:"flex",alignItems:"center",gap:6}}>
-                <span style={{fontWeight:700,fontSize:13}}>{s.name}</span>
-                <span style={{fontSize:10,background:"#f1f5f9",color:"#475569",padding:"1px 7px",borderRadius:99,fontWeight:600}}>{s.badge}</span>
-              </div>
-              <div style={{fontSize:11,color:"#64748b",marginTop:2}}>{s.desc}</div>
-            </div>
-            <a href={s.url} target="_blank" style={{textDecoration:"none",flexShrink:0}}>
-              <button className="btn bgh bsm">Apri →</button>
-            </a>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-/* ══════════════════ TAB ASSISTENZA ══════════════════ */
-/* ─── Assistenza: geocode + OSM helpers ─── */
-async function geocodeZona(zona){
-  try{
-    const r=await fetch(
-      "https://nominatim.openstreetmap.org/search?q="+encodeURIComponent(zona)+"&format=json&limit=1",
-      {headers:{"Accept-Language":"it,en","User-Agent":"OversizeInTour/1.0"},signal:AbortSignal.timeout(8000)}
-    );
-    const d=await r.json();
-    if(d&&d[0])return{lat:parseFloat(d[0].lat),lng:parseFloat(d[0].lon)};
-  }catch(e){}
-  return null;
-}
-function calcDistKm(lat1,lng1,lat2,lng2){
-  const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
-  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
-  return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
-}
-async function searchCentriOSM(lat,lng){
-  const rad=80000;
-  const query=`[out:json][timeout:25];
-(
-  node(around:${rad},${lat},${lng})["shop"~"camper|motorhome|caravan",i];
-  way(around:${rad},${lat},${lng})["shop"~"camper|motorhome|caravan",i];
-  node(around:${rad},${lat},${lng})["name"~"camper|autocaravan|motorhome|roulotte|caravan|wohnmobil|camping.car|autocaravana|husbil",i]["shop"];
-  way(around:${rad},${lat},${lng})["name"~"camper|autocaravan|motorhome|roulotte|caravan|wohnmobil|camping.car|autocaravana|husbil",i]["shop"];
-  node(around:${rad},${lat},${lng})["name"~"camper|autocaravan|motorhome|roulotte|caravan|wohnmobil|camping.car|autocaravana|husbil",i]["craft"];
-  way(around:${rad},${lat},${lng})["name"~"camper|autocaravan|motorhome|roulotte|caravan|wohnmobil|camping.car|autocaravana|husbil",i]["craft"];
-  node(around:${rad},${lat},${lng})["name"~"camper|autocaravan|motorhome|roulotte|caravan|wohnmobil|camping.car|autocaravana|husbil",i]["amenity"="car_repair"];
-);out body center;`;
-  try{
-    const r=await fetch("https://overpass-api.de/api/interpreter",{
-      method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
-      body:"data="+encodeURIComponent(query),signal:AbortSignal.timeout(20000)
-    });
-    const d=await r.json();
-    return(d.elements||[]).map(el=>{
-      const t=el.tags||{};
-      const elLat=el.lat||el.center?.lat;
-      const elLng=el.lon||el.center?.lon;
-      const dist=(elLat&&elLng)?calcDistKm(lat,lng,elLat,elLng):null;
-      return{
-        nome:t.name||t["name:it"]||"",
-        indirizzo:[t["addr:street"],t["addr:housenumber"],t["addr:city"]].filter(Boolean).join(", ")||"",
-        telefono:t.phone||t["contact:phone"]||"",
-        website:t.website||t["contact:website"]||"",
-        dist,lat:elLat,lng:elLng,source:"osm"
-      };
-    }).filter(c=>c.nome&&c.nome.length>2);
-  }catch(e){return[];}
-}
-function TabAssistenza({geminiKey,ttKey,lastCenter}){
-  const [query,setQuery]=React.useState("");
-  const [loading,setLoading]=React.useState(false);
-  const [centri,setCentri]=React.useState([]);
-  const [zona,setZona]=React.useState("");
-  const [error,setError]=React.useState(null);
-  const [autoSearched,setAutoSearched]=React.useState(false);
+function TabNoleggio({t,lang}){
+  const [zona,setZona]=useState("");
+  const [results,setResults]=useState([]);
+  const [loading,setLoading]=useState(false);
+  const [searched,setSearched]=useState(false);
 
-  React.useEffect(()=>{
-    if(lastCenter?.city&&!autoSearched){
-      setAutoSearched(true);
-      setQuery(lastCenter.city);
-      doSearch(lastCenter.city);
-    }
-  },[lastCenter]);
-
-  async function doSearch(z0){
-    var z=(z0||query).trim();
-    if(!z)return;
-    setLoading(true);setCentri([]);setError(null);setZona(z);
-
-    // Step 1: geocodifica zona con Nominatim
-    var coords=await geocodeZona(z);
-
-    // Step 2: cerca su OpenStreetMap/Overpass (dati reali verificati)
-    var osmCentri=[];
-    if(coords){
-      osmCentri=await searchCentriOSM(coords.lat,coords.lng);
-    }
-
-    setCentri(osmCentri.sort(function(a,b){return (a.dist||9999)-(b.dist||9999);}));
+  async function searchRental(){
+    if(!zona.trim())return;
+    setLoading(true);setSearched(true);
+    try{
+      const geo=await fetch("https://nominatim.openstreetmap.org/search?q="+encodeURIComponent(zona.trim())+"&format=json&limit=1",{headers:{"User-Agent":"OversizeInTour/1.0"}});
+      const gd=await geo.json();
+      if(!gd||!gd.length){setResults([]);setLoading(false);return;}
+      const lat=gd[0].lat,lng=gd[0].lon;
+      const q2=`[out:json][timeout:20];(
+        nwr(around:15000,${lat},${lng})["amenity"="car_rental"];
+        nwr(around:15000,${lat},${lng})["shop"="car_rental"];
+        nwr(around:15000,${lat},${lng})["shop"="motorcycle"];
+        nwr(around:15000,${lat},${lng})["amenity"="motorcycle_rental"];
+        nwr(around:15000,${lat},${lng})["shop"="rental"]["rental"~"car|motorcycle|scooter|vehicle"];
+      );out body center 50;`;
+      const r=await fetch("https://overpass-api.de/api/interpreter",{method:"POST",body:"data="+encodeURIComponent(q2),signal:AbortSignal.timeout(25000)});
+      const d=await r.json();
+      const items=(d.elements||[]).map(el=>{
+        const tags=el.tags||{};
+        const lat2=el.lat||el.center?.lat;
+        const lng2=el.lon||el.center?.lon;
+        if(!lat2)return null;
+        const name=tags.name||tags["name:en"]||tags.brand||(tags.amenity==="car_rental"?"Autonoleggio":"Noleggio");
+        const type=tags.amenity==="motorcycle_rental"||tags.shop==="motorcycle"?"\ud83c\udfcd Moto/Scooter":"\ud83d\ude97 Auto";
+        const phone=tags.phone||tags["contact:phone"]||"";
+        const website=tags.website||tags["contact:website"]||"";
+        const addr=[tags["addr:street"],tags["addr:housenumber"],tags["addr:city"]].filter(Boolean).join(", ");
+        const brand=tags.brand||"";
+        const opening=tags.opening_hours||"";
+        return{name,type,phone,website,addr,brand,opening,lat:lat2,lng:lng2};
+      }).filter(Boolean);
+      const dedup=[];
+      for(const it of items){
+        const dup=dedup.some(d2=>Math.abs(d2.lat-it.lat)<0.001&&Math.abs(d2.lng-it.lng)<0.001);
+        if(!dup)dedup.push(it);
+      }
+      setResults(dedup);
+    }catch(e){setResults([]);}
     setLoading(false);
   }
 
-
   return(
-    <div className="pg">
-      <div className="hero" style={{background:"linear-gradient(135deg,#0f766e,#0891b2)"}}>
+    <div style={{padding:"12px 0"}}>
+      <div className="hero" style={{background:"linear-gradient(135deg,#1e40af 0%,#7c3aed 100%)"}}>
+        <h2>{"\ud83d\ude97"} {t("rental")}</h2>
+        <p>{t("rentalDesc")}</p>
         <img src={CAMPER_IMG_HERO} style={{position:"absolute",right:-10,bottom:-5,height:70,opacity:.18,pointerEvents:"none"}} alt=""/>
-        <h2>🔧 Assistenza Camper</h2>
-        <p>Centri specializzati nella tua zona con link al sito ufficiale.</p>
       </div>
 
-      {/* Ricerca */}
-      <div className="card">
-        <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:13,marginBottom:10}}>📍 Zona di ricerca</div>
-        <div style={{display:"flex",gap:8}}>
-          <input
-            style={{flex:1,border:"1.5px solid #e2e8f0",borderRadius:10,padding:"9px 13px",fontSize:13,outline:"none",fontFamily:"Inter"}}
-            placeholder="Es: Roma, München, Lyon, Barcelona..."
-            value={query}
-            onChange={e=>setQuery(e.target.value)}
-            onKeyDown={e=>e.key==="Enter"&&doSearch()}
-          />
-          <button className="btn bgh" style={{flexShrink:0,padding:"9px 16px"}}
-            onClick={()=>doSearch()} disabled={loading||!query.trim()}>
-            {loading?<span className="spin"/>:"🔍 Cerca"}
-          </button>
+      <div style={{padding:"0 16px"}}>
+        <div style={{display:"flex",gap:8,marginBottom:12}}>
+          <input className="inp" placeholder={t("rentalPlaceholder")} value={zona} onChange={e=>setZona(e.target.value)} onKeyDown={e=>e.key==="Enter"&&searchRental()} style={{flex:1}}/>
+          <button className="btn bto" onClick={searchRental} disabled={loading}>{loading?"\u23f3":"\ud83d\udd0d"}</button>
         </div>
-      </div>
-
-      {/* Loading */}
-      {loading&&(
-        <div style={{background:"#f0fdfa",border:"1.5px solid #0891b2",borderRadius:12,padding:"16px",textAlign:"center"}}>
-          <span className="spin" style={{marginRight:8}}/>
-          <span style={{fontSize:13,color:"#0f766e",fontWeight:600}}>Ricerca centri assistenza in corso...</span>
-          <div style={{fontSize:11,color:"#94a3b8",marginTop:5}}>Geocodifica zona → OpenStreetMap/Overpass</div>
-        </div>
-      )}
-
-      {/* Errore */}
-      {error&&<div style={{background:"#fef2f2",border:"1.5px solid #fca5a5",borderRadius:12,padding:"14px",fontSize:12,color:"#dc2626"}}>❌ {error}</div>}
-
-      {/* Lista centri OSM */}
-      {centri.length>0&&(
-        <div>
-          <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:13,padding:"4px 2px 8px",color:"#0f766e"}}>
-            🔧 {centri.length} centri trovati su OpenStreetMap — {zona}
-          </div>
-          {centri.map((c,i)=>{
-            const gmUrl="https://www.google.com/maps/search/"+encodeURIComponent((c.nome||"")+" "+(c.indirizzo||""));
-            return(
-            <div key={i} style={{background:"#fff",border:"1.5px solid #86efac",borderRadius:14,padding:"14px 16px",marginBottom:10,boxShadow:"0 1px 6px rgba(0,0,0,.04)"}}>
-              <div style={{display:"flex",alignItems:"flex-start",gap:10}}>
-                <div style={{width:40,height:40,borderRadius:11,background:"#f0fdf4",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>🔧</div>
-                <div style={{flex:1,minWidth:0}}>
-                  <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2,flexWrap:"wrap"}}>
-                    <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:13,color:"#0f766e"}}>{c.nome}</div>
-                    {c.dist!=null&&<span style={{fontSize:10,color:"#64748b"}}>📍 {c.dist} km</span>}
-                  </div>
-                  {c.indirizzo&&<div style={{fontSize:11,color:"#64748b",marginBottom:6}}>{c.indirizzo}</div>}
-                  <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-                    {c.telefono&&c.telefono.length>3&&(
-                      <a href={"tel:"+c.telefono.replace(/[\s\-()+]/g,"")} style={{textDecoration:"none"}}>
-                        <button className="btn bsm" style={{background:"#dcfce7",color:"#16a34a",border:"none",fontWeight:600}}>📞 {c.telefono}</button>
-                      </a>
-                    )}
-                    {c.website&&c.website.length>4&&(
-                      <a href={c.website.startsWith("http")?c.website:"https://"+c.website} target="_blank" rel="noopener" style={{textDecoration:"none"}}>
-                        <button className="btn bsm" style={{background:"#eff6ff",color:"#1d4ed8",border:"none",fontWeight:600}}>🌐 Sito</button>
-                      </a>
-                    )}
-                    <a href={gmUrl} target="_blank" style={{textDecoration:"none"}}>
-                      <button className="btn bsm" style={{background:"#fff7ed",color:"#ea580c",border:"none",fontWeight:600}}>🗺 Google Maps</button>
-                    </a>
-                  </div>
-                </div>
+        {loading&&<div style={{textAlign:"center",padding:30,color:"var(--text2)"}}><div style={{fontSize:28,marginBottom:8}}>{"\ud83d\udd0d"}</div>{t("searching")}</div>}
+        {!loading&&searched&&results.length===0&&<div style={{textAlign:"center",padding:30,color:"var(--text2)"}}><div style={{fontSize:28,marginBottom:8}}>{"\ud83d\ude15"}</div>{t("noRental")}</div>}
+        {results.map((r2,i)=>(
+          <div key={i} className="card" style={{marginBottom:10}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+              <div>
+                <div style={{fontWeight:700,fontSize:14,color:"var(--text)"}}>{r2.name}</div>
+                <div style={{fontSize:11,color:"var(--accent)",fontWeight:600,marginTop:2}}>{r2.type}{r2.brand?" \u00b7 "+r2.brand:""}</div>
               </div>
             </div>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Link ricerca Google per la zona */}
-      {zona&&!loading&&(
-        <div className="card" style={{borderColor:"#bfdbfe"}}>
-          <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:12,color:"#1d4ed8",marginBottom:10}}>
-            🔍 Cerca su Google vicino a {zona}
-          </div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-            {[
-              {label:"🔧 Officine camper",q:"motorhome repair workshop camper "+zona},
-              {label:"🚐 Assistenza camper",q:"motorhome service Wohnmobil Werkstatt camper "+zona},
-              {label:"🏗 Carrozzeria camper",q:"motorhome body repair carrosserie camping-car "+zona},
-              {label:"⚡ Elettrauto camper",q:"motorhome electrician auto electricien "+zona},
-              {label:"🔩 Gas/acqua camper",q:"motorhome gas water repair LPG camper "+zona},
-              {label:"🚗 Fiat Ducato",q:"Fiat Ducato service center "+zona},
-            ].map(function(item){
-              var gmUrl="https://www.google.com/maps/search/"+encodeURIComponent(item.q);
-              var gUrl="https://www.google.com/search?q="+encodeURIComponent(item.q);
-              return(
-                <a key={item.q} href={gmUrl} target="_blank" rel="noopener" style={{textDecoration:"none"}}>
-                  <button className="btn bsm" style={{background:"#eff6ff",color:"#1d4ed8",border:"1px solid #bfdbfe",fontWeight:600}}>
-                    {item.label}
-                  </button>
-                </a>
-              );
-            })}
-          </div>
-          <div style={{marginTop:8,fontSize:10,color:"#94a3b8"}}>
-            I link aprono Google Maps con la ricerca già impostata sulla zona. I risultati sono reali e aggiornati.
-          </div>
-        </div>
-      )}
-
-      {/* Ricerche rapide */}
-      {!loading&&centri.length===0&&!error&&(
-        <div className="card">
-          <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:12,color:"#334155",marginBottom:8}}>💡 Cerca per città</div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
-            {["Roma","Milano","Firenze","Torino","Bologna","Napoli","Venezia","Verona","Padova","Bari"].map(c=>(
-              <button key={c} className="btn bsm"
-                style={{background:"#f0fdfa",color:"#0f766e",border:"1px solid #99f6e4"}}
-                onClick={()=>{setQuery(c);doSearch(c);}}>📍 {c}</button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Numeri utili */}
-      <div className="card">
-        <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:12,marginBottom:8}}>📞 Soccorso Immediato</div>
-        {[
-          {ico:"🚨",name:"Soccorso ACI",num:"803 116",desc:"Assistenza stradale 24h"},
-          {ico:"🇪🇺",name:"Emergenza Europa",num:"112",desc:"Numero unico emergenze"},
-        ].map(n=>(
-          <div key={n.name} className="rent-item">
-            <div style={{width:38,height:38,borderRadius:10,background:"#fef2f2",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,flexShrink:0}}>{n.ico}</div>
-            <div style={{flex:1}}><div style={{fontWeight:700,fontSize:12}}>{n.name}</div><div style={{fontSize:11,color:"#64748b"}}>{n.desc}</div></div>
-            <a href={"tel:"+n.num.replace(/\s/g,"")} style={{textDecoration:"none"}}>
-              <button className="btn bsm" style={{background:"#dcfce7",color:"#16a34a",border:"none",fontWeight:600}}>📞 {n.num}</button>
-            </a>
+            {r2.addr&&<div style={{fontSize:11,color:"var(--text2)",marginTop:4}}>{"\ud83d\udccd"} {r2.addr}</div>}
+            {r2.phone&&<div style={{fontSize:11,color:"var(--text2)",marginTop:2}}>{"\ud83d\udcde"} <a href={"tel:"+r2.phone} style={{color:"var(--accent)"}}>{r2.phone}</a></div>}
+            {r2.opening&&<div style={{fontSize:11,color:"var(--text2)",marginTop:2}}>{"\ud83d\udd50"} {r2.opening}</div>}
+            <div style={{display:"flex",gap:6,marginTop:8}}>
+              {r2.website&&<a href={r2.website} target="_blank" rel="noreferrer" className="btn bgh bsm">{"\ud83c\udf10"} Web</a>}
+              <a href={"https://www.google.com/maps/dir/?api=1&destination="+r2.lat+","+r2.lng} target="_blank" rel="noreferrer" className="btn bto bsm">{"\ud83d\udccd"} {t("navigate").split(" ").slice(-2).join(" ")}</a>
+            </div>
           </div>
         ))}
+        {!loading&&results.length>0&&<div style={{fontSize:11,color:"var(--text3)",textAlign:"center",marginTop:10}}>{"\ud83d\udcca"} {results.length} {t("rentalFound")}</div>}
       </div>
     </div>
   );
@@ -3790,10 +3739,10 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,mapillaryKey,ttKey,onRes
         </div>
         <div style={{display:"flex",gap:5,marginTop:5,flexWrap:"wrap"}}>
           <span style={{background:"rgba(249,115,22,.25)",borderRadius:99,padding:"3px 10px",fontSize:11,fontWeight:700}}>
-            📐 Interasse: {camper.wheelbase?camper.wheelbase+"m":"≈"+(camper.length*0.55).toFixed(2)+"m¹"}
+            📐 {t("wheelbase")}: {camper.wheelbase?camper.wheelbase+"m":"≈"+(camper.length*0.55).toFixed(2)+"m¹"}
           </span>
           <span style={{background:"rgba(249,115,22,.25)",borderRadius:99,padding:"3px 10px",fontSize:11,fontWeight:700}}>
-            ↩ Sbalzo post.: {camper.rearOverhang?camper.rearOverhang+"m":"≈"+(camper.length*0.22).toFixed(2)+"m¹"}
+            ↩ {t("rearOverhang")}: {camper.rearOverhang?camper.rearOverhang+"m":"≈"+(camper.length*0.22).toFixed(2)+"m¹"}
           </span>
         </div>
       </div>
@@ -3869,10 +3818,10 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,mapillaryKey,ttKey,onRes
       <div className="card">
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
           <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:13}}>📐 {t("myVehicle")}</div>
-          {!editing&&<button className="btn bgh bsm" onClick={()=>{setD({...camper});setEditing(true);}}>✏️ Modifica</button>}
+          {!editing&&<button className="btn bgh bsm" onClick={()=>{setD({...camper});setEditing(true);}}>✏️ {t("editKeys").split(" ")[0]}</button>}
         </div>
         {!editing?(
-          [["Lunghezza",camper.length+"m"],["Larghezza",camper.width+"m"],["Altezza",camper.height+"m"],["Peso",camper.weight+"t"],["Interasse",(camper.wheelbase||"auto")+"m"],["Sbalzo post.",(camper.rearOverhang||"auto")+"m"],["Modello",camper.model]].map(([k,v])=>(
+          [[t("length"),camper.length+"m"],[t("width"),camper.width+"m"],[t("height"),camper.height+"m"],[t("weight"),camper.weight+"t"],[t("wheelbase"),(camper.wheelbase||"auto")+"m"],[t("rearOverhang"),(camper.rearOverhang||"auto")+"m"],[t("model"),camper.model]].map(([k,v])=>(
             <div key={k} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid #f1f5f9"}}>
               <span style={{fontSize:13,color:"#64748b"}}>{k}</span>
               <span style={{fontSize:13,fontWeight:700,color:"#f97316"}}>{v}</span>
@@ -3880,28 +3829,28 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,mapillaryKey,ttKey,onRes
           ))
         ):(
           <div style={{display:"flex",flexDirection:"column",gap:10}}>
-            <div className="igrp"><div className="ilab">Nome</div><input className="inp" value={d.name} onChange={e=>setD({...d,name:e.target.value})}/></div>
-            <div className="igrp"><div className="ilab">Modello</div><input className="inp" value={d.model} onChange={e=>setD({...d,model:e.target.value})}/></div>
+            <div className="igrp"><div className="ilab">{t("model")}</div><input className="inp" value={d.name} onChange={e=>setD({...d,name:e.target.value})}/></div>
+            <div className="igrp"><div className="ilab">{t("model")}</div><input className="inp" value={d.model} onChange={e=>setD({...d,model:e.target.value})}/></div>
             <div className="irow">
-              <div className="igrp"><div className="ilab">Lunghezza (m)</div><input className="inp" type="number" step="0.1" min="8" max="12" value={d.length} onChange={e=>setD({...d,length:+e.target.value})}/></div>
-              <div className="igrp"><div className="ilab">Larghezza (m)</div><input className="inp" type="number" step="0.05" min="2" max="3" value={d.width} onChange={e=>setD({...d,width:+e.target.value})}/></div>
+              <div className="igrp"><div className="ilab">{t("length")} (m)</div><input className="inp" type="number" step="0.1" min="8" max="12" value={d.length} onChange={e=>setD({...d,length:+e.target.value})}/></div>
+              <div className="igrp"><div className="ilab">{t("width")} (m)</div><input className="inp" type="number" step="0.05" min="2" max="3" value={d.width} onChange={e=>setD({...d,width:+e.target.value})}/></div>
             </div>
             <div className="irow">
-              <div className="igrp"><div className="ilab">Altezza (m)</div><input className="inp" type="number" step="0.1" min="3" max="4" value={d.height} onChange={e=>setD({...d,height:+e.target.value})}/></div>
-              <div className="igrp"><div className="ilab">Peso (t)</div><input className="inp" type="number" step="0.5" min="5" max="18" value={d.weight} onChange={e=>setD({...d,weight:+e.target.value})}/></div>
+              <div className="igrp"><div className="ilab">{t("height")} (m)</div><input className="inp" type="number" step="0.1" min="3" max="4" value={d.height} onChange={e=>setD({...d,height:+e.target.value})}/></div>
+              <div className="igrp"><div className="ilab">{t("weight")} (t)</div><input className="inp" type="number" step="0.5" min="5" max="18" value={d.weight} onChange={e=>setD({...d,weight:+e.target.value})}/></div>
             </div>
             <div style={{fontSize:11,color:"#64748b",background:"#f8fafc",borderRadius:8,padding:"7px 10px",marginTop:2}}>
               📐 <b>Dati per Swept Path</b> — inserisci i valori reali dal libretto di circolazione
             </div>
             <div className="irow">
               <div className="igrp">
-                <div className="ilab">Interasse (m)</div>
+                <div className="ilab">{t("wheelbase")} (m)</div>
                 <input className="inp" type="number" step="0.01" min="3" max="9"
                   placeholder={"≈"+(d.length*0.55).toFixed(2)+" (stima)"}
                   value={d.wheelbase||""} onChange={e=>setD({...d,wheelbase:+e.target.value||null})}/>
               </div>
               <div className="igrp">
-                <div className="ilab">Sbalzo post. (m)</div>
+                <div className="ilab">{t("rearOverhang")} (m)</div>
                 <input className="inp" type="number" step="0.01" min="0.5" max="4"
                   placeholder={"≈"+(d.length*0.22).toFixed(2)+" (stima)"}
                   value={d.rearOverhang||""} onChange={e=>setD({...d,rearOverhang:+e.target.value||null})}/>
@@ -3961,13 +3910,13 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,mapillaryKey,ttKey,onRes
         <details style={{marginBottom:8}}>
           <summary style={{fontSize:12,fontWeight:600,color:"var(--text2)",cursor:"pointer",padding:"6px 0"}}>{t("privacy")}</summary>
           <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.7,padding:"8px 0"}}>
-            Oversize in Tour rispetta la tua privacy. Tutti i dati (chiavi API, configurazione camper, ricerche, analisi) sono salvati esclusivamente in locale sul tuo dispositivo tramite localStorage. Nessun dato personale viene trasmesso ai nostri server. Le chiamate API (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) sono effettuate direttamente dal tuo browser verso i rispettivi servizi. Se attivi Firebase, i dati dei certificati community vengono condivisi con altri utenti tramite il database configurato. Puoi cancellare tutti i dati in qualsiasi momento resettando l'app.
+            {t("privacyText")}
           </div>
         </details>
         <details>
           <summary style={{fontSize:12,fontWeight:600,color:"var(--text2)",cursor:"pointer",padding:"6px 0"}}>{t("terms")}</summary>
           <div style={{fontSize:11,color:"var(--text3)",lineHeight:1.7,padding:"8px 0"}}>
-            Oversize in Tour fornisce analisi indicative basate su dati OpenStreetMap, algoritmi di routing e modelli AI. I risultati NON sostituiscono la verifica sul posto. L'utente è responsabile di verificare personalmente l'accessibilità delle strutture. L'app è fornita "as is" senza garanzie di alcun tipo. Non ci assumiamo responsabilità per eventuali danni derivanti dall'uso delle informazioni fornite. Le chiavi API sono di proprietà e responsabilità dell'utente. L'uso dell'app implica l'accettazione di questi termini.
+            {t("termsText")}
           </div>
         </details>
       </div>
@@ -3980,6 +3929,7 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,mapillaryKey,ttKey,onRes
 function Setup({onReady}){
   const [gk,setGk]=useState("");
   const [groqK,setGroqK]=useState("");
+  const [cereK,setCereK]=useState("");
   const [mlyK,setMlyK]=useState("");
   return(
     <div className="setup-wrap">
@@ -3996,6 +3946,13 @@ function Setup({onReady}){
         </div>
         <div className="ilab">Chiave Groq <span style={{color:"#94a3b8",fontWeight:400}}>(consigliata · gratuita)</span></div>
         <input className="kinp" type="password" placeholder="gsk_... oppure lascia vuoto" value={groqK} onChange={e=>setGroqK(e.target.value)}/>
+        <div className="ibox" style={{background:"#fef2f2",border:"1px solid #fecaca",color:"#991b1b",marginTop:8}}>
+          🔴 <b>Cerebras AI</b> — <span style={{fontWeight:700}}>Opzionale · Gratuita · Velocissima</span><br/>
+          Llama 3.3 70B — secondo parere AI per verdetto a maggioranza.<br/>
+          <a href="https://cloud.cerebras.ai/" target="_blank" style={{color:"#f97316",fontWeight:700}}>cloud.cerebras.ai</a> → API Keys
+        </div>
+        <div className="ilab">Chiave Cerebras <span style={{color:"#94a3b8",fontWeight:400}}>(opzionale · gratuita)</span></div>
+        <input className="kinp" type="password" placeholder="csk-... oppure lascia vuoto" value={cereK} onChange={e=>setCereK(e.target.value)}/>
         <div className="ibox" style={{background:"#f0fdf4",border:"1px solid #bbf7d0",color:"#15803d",marginTop:8}}>
           🟢 <b>Google Gemini</b> — <span style={{fontWeight:700}}>Opzionale · Google Search grounding</span><br/>
           Aggiunge ricerca web in tempo reale. Puoi aggiungerla dopo.<br/>
@@ -4014,7 +3971,7 @@ function Setup({onReady}){
           🗺 Mappe e ricerca strutture tramite <b>OpenStreetMap</b> — completamente gratuito, nessuna chiave richiesta.
         </div>
         <button className="btn bto" style={{width:"100%",fontSize:14,padding:"13px",marginTop:12}}
-          onClick={()=>onReady("",gk.trim(),groqK.trim(),mlyK.trim())}>✅ Avvia l'app</button>
+          onClick={()=>onReady("",gk.trim(),groqK.trim(),mlyK.trim(),cereK.trim())}>✅ Avvia l'app</button>
         <p style={{textAlign:"center",fontSize:11,color:"#94a3b8",marginTop:10}}>Le chiavi sono salvate solo sul tuo dispositivo</p>
       </div>
     </div>
@@ -4059,13 +4016,37 @@ function App(){
   function removeOversize(id){
     setOversizeItems(prev=>{const u=prev.filter(i=>i.id!==id);LS.setJ("oit_oversize_ai",u);return u;});
   }
+  async function handleSaveCert(poi,analysis){
+    const maxSizeCat=camper.length<=9.5?"9.5":camper.length<=10.5?"10.5":"12";
+    let country="Italia";
+    try{const geo=await detectRegion(poi.lat,poi.lng);country=geo.country||"Italia";}catch(e){}
+    const item={
+      id:"cert_ai_"+poi.id+"_"+Date.now(),
+      name:poi.name,address:poi.address,
+      country:country,
+      maxSize:maxSizeCat,
+      type:poi.isCamp?"campeggio":poi.isDump?"scarico":"area sosta",
+      note:(analysis?.verdict==="ok"?"Adatto":analysis?.verdict==="warn"?"Con attenzione":"Non adatto")+" — "+(analysis?.sintesi||"").substring(0,150),
+      website:poi.website||"",
+      lat:poi.lat||null,lng:poi.lng||null,
+      addedBy:"ai_analysis",
+      addedAt:Date.now(),
+      votes:1,voters:["me"],
+      verdict:analysis?.verdict||"ok"
+    };
+    const existing=LS.getJ("oit_cert_community")||[];
+    if(existing.find(i=>i.name===item.name&&i.address===item.address))return;
+    const updated=[item,...existing];
+    LS.setJ("oit_cert_community",updated);
+    if(FB.ready())FB.push("certificates",item);
+  }
   if(setup)return<Setup onReady={handleReady}/>;
   const NAV=[
-    {id:"cerca",      label:"Cerca",      d:"M11 17a6 6 0 1 0 0-12 6 6 0 0 0 0 12zm10 4-4.35-4.35"},
-    {id:"certificate",label:"Certificate",d:"M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 4.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 4.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-4.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-4.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z"},
-    {id:"assistenza", label:"Assistenza", d:"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"},
-    {id:"preferiti",  label:"Preferiti",  d:"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"},
-    {id:"profilo",    label:"Profilo",    d:"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"},
+    {id:"cerca",      labelKey:"navSearch", d:"M11 17a6 6 0 1 0 0-12 6 6 0 0 0 0 12zm10 4-4.35-4.35"},
+    {id:"certificate",labelKey:"navCert",   d:"M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 0 0 1.946-.806 3.42 3.42 0 0 1 4.438 0 3.42 3.42 0 0 0 1.946.806 3.42 3.42 0 0 1 3.138 3.138 3.42 3.42 0 0 0 .806 1.946 3.42 3.42 0 0 1 0 4.438 3.42 3.42 0 0 0-.806 1.946 3.42 3.42 0 0 1-3.138 3.138 3.42 3.42 0 0 0-1.946.806 3.42 3.42 0 0 1-4.438 0 3.42 3.42 0 0 0-1.946-.806 3.42 3.42 0 0 1-3.138-3.138 3.42 3.42 0 0 0-.806-1.946 3.42 3.42 0 0 1 0-4.438 3.42 3.42 0 0 0 .806-1.946 3.42 3.42 0 0 1 3.138-3.138z"},
+    {id:"noleggio", labelKey:"navRental", d:"M5 17h2m10 0h2M3 11l1.5-5h11l1.5 5M5 17a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm10 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"},
+    {id:"preferiti",  labelKey:"navFav",   d:"M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"},
+    {id:"profilo",    labelKey:"navProfile",d:"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"},
   ];
   return(
     <div className="shell">
@@ -4102,16 +4083,16 @@ function App(){
           {NAV.map(n=><div key={n.id} className={"tl"+(tab===n.id?" on":"")}/>)}
         </div>
       </header>
-      {tab==="cerca"      &&<TabCerca      camper={camper} ttKey={tk} geminiKey={gk} groqKey={groqK} mapillaryKey={mlyK} onSaveOversize={handleSaveOversize} onCenterChange={setLastCenter} t={t} lang={lang}/>}
+      {tab==="cerca"      &&<TabCerca      camper={camper} ttKey={tk} geminiKey={gk} groqKey={groqK} mapillaryKey={mlyK} onSaveOversize={handleSaveOversize} onSaveCert={handleSaveCert} onCenterChange={setLastCenter} t={t} lang={lang}/>}
       {tab==="certificate"&&<TabCertificate camper={camper} t={t} lang={lang}/>}
-      {tab==="assistenza" &&<TabAssistenza geminiKey={gk} ttKey={tk} lastCenter={lastCenter}/>}
+      {tab==="noleggio"   &&<TabNoleggio t={t} lang={lang}/>}
       {tab==="preferiti"  &&<TabOversize   camper={camper} ttKey={tk} externalItems={oversizeItems} onRemove={removeOversize} t={t}/>}
       {tab==="profilo"    &&<TabProfilo    camper={camper} setCamper={saveCamper} geminiKey={gk} groqKey={groqK} mapillaryKey={mlyK} ttKey={tk} onReset={reset} onSaveKeys={(g,grq,mly)=>{if(g!==undefined){LS.set("oit_gk",g);setGk(g);}if(grq!==undefined){LS.set("oit_groq",grq);setGroqK(grq);}if(mly!==undefined){LS.set("oit_mly",mly);setMlyK(mly);}}} t={t} lang={lang} changeLang={changeLang}/>}
       <nav className="bnav">
         {NAV.map(n=>(
           <button key={n.id} className={"nv"+(tab===n.id?" on":"")} onClick={()=>setTab(n.id)}>
             <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d={n.d}/></svg>
-            {n.label}{tab===n.id&&<div className="dot"/>}
+            {t(n.labelKey)}{tab===n.id&&<div className="dot"/>}
           </button>
         ))}
       </nav>
