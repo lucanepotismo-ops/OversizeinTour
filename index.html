@@ -17,12 +17,12 @@
 :root {
   --bg: #f5f7fa; --bg2: #fff; --text: #1a1a2e; --text2: #64748b; --text3: #94a3b8;
   --border: #eaecf0; --border2: #e2e8f0; --card: #fff; --card-shadow: rgba(0,0,0,.04);
-  --hero-from: #f97316; --hero-to: #dc2626;
+  --hero-from: #c9a227; --hero-to: #8b6914;
 }
 [data-theme="dark"] {
   --bg: #0f172a; --bg2: #1e293b; --text: #f1f5f9; --text2: #94a3b8; --text3: #64748b;
   --border: #334155; --border2: #475569; --card: #1e293b; --card-shadow: rgba(0,0,0,.3);
-  --hero-from: #c2410c; --hero-to: #991b1b;
+  --hero-from: #92740a; --hero-to: #5c4a08;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);font-family:Inter,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
@@ -30,43 +30,43 @@ body{background:var(--bg);font-family:Inter,sans-serif;color:var(--text);-webkit
 .hdr{background:var(--bg2);padding:12px 16px 9px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:300;box-shadow:0 1px 8px rgba(0,0,0,.06)}
 .hdr-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
 .logo{font-family:Poppins,sans-serif;font-size:17px;font-weight:800;color:#1a1a2e}
-.logo em{color:#f97316;font-style:normal}
-.chip{display:flex;align-items:center;gap:5px;background:#fff7ed;border:1.5px solid #fed7aa;border-radius:20px;padding:5px 11px;cursor:pointer}
-.chip span{font-size:11px;font-weight:700;color:#ea580c}
+.logo em{color:#b8860b;font-style:normal;text-shadow:0 1px 2px rgba(184,134,11,.2)}
+.chip{display:flex;align-items:center;gap:5px;background:#fefce8;border:1.5px solid #d4a017;border-radius:20px;padding:5px 11px;cursor:pointer}
+.chip span{font-size:11px;font-weight:700;color:#996515}
 .tbar{display:flex;gap:2px}
 .tl{flex:1;height:3px;border-radius:99px;background:#e2e8f0;transition:background .2s}
-.tl.on{background:#f97316}
+.tl.on{background:#b8860b}
 .pg{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;padding-bottom:90px}
 .bnav{background:var(--bg2);border-top:1px solid var(--border);display:flex;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;z-index:300;padding:5px 0 11px}
 .nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:5px 3px;color:#94a3b8;font-size:9px;font-weight:600}
-.nv.on{color:#f97316}
-.dot{width:4px;height:4px;border-radius:50%;background:#f97316;margin-top:1px}
+.nv.on{color:#b8860b}
+.dot{width:4px;height:4px;border-radius:50%;background:#b8860b;margin-top:1px}
 .card{background:var(--card);border-radius:16px;padding:15px;border:1px solid var(--border);box-shadow:0 1px 6px var(--card-shadow)}
 .btn{border:none;border-radius:12px;padding:11px 16px;font-family:Poppins,sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;line-height:1.2}
-.bto{background:#f97316;color:#fff}
-.bto:hover{background:#ea580c;box-shadow:0 4px 14px rgba(249,115,22,.3);transform:translateY(-1px)}
-.bto:disabled{background:#fed7aa;cursor:not-allowed;transform:none;box-shadow:none}
+.bto{background:#b8860b;color:#fff}
+.bto:hover{background:#996515;box-shadow:0 4px 14px rgba(249,115,22,.3);transform:translateY(-1px)}
+.bto:disabled{background:#d4a017;cursor:not-allowed;transform:none;box-shadow:none}
 .bgh{background:var(--bg);color:var(--text2);border:1.5px solid var(--border2)}
 .bgh:hover{background:#f1f5f9}
 .bgrn{background:#dcfce7;color:#16a34a;border:1.5px solid #86efac}
 .bred{background:#fee2e2;color:#dc2626;border:1.5px solid #fca5a5}
 .bsm{padding:6px 12px;font-size:11px;border-radius:9px}
 .inp{width:100%;border:1.5px solid var(--border2);border-radius:11px;padding:10px 12px;font-family:Inter,sans-serif;font-size:14px;color:var(--text);outline:none;background:var(--bg2);transition:border-color .2s}
-.inp:focus{border-color:#f97316}
+.inp:focus{border-color:#b8860b}
 .ilab{font-size:11px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
 .irow{display:flex;gap:9px}
 .igrp{display:flex;flex-direction:column;flex:1}
 .sbar{display:flex;gap:8px;background:var(--card);border-radius:14px;border:1.5px solid var(--border2);padding:10px 13px;align-items:center;box-shadow:0 1px 4px var(--card-shadow)}
 .sbar input{flex:1;border:none;outline:none;font-family:Inter,sans-serif;font-size:14px;color:var(--text);background:transparent}
 .sbar input::placeholder{color:#adb5bd}
-.hero{background:linear-gradient(135deg,#f97316,#dc2626);border-radius:16px;padding:16px;color:#fff;position:relative;overflow:hidden}
+.hero{background:linear-gradient(135deg,#c9a227,#8b6914);border-radius:16px;padding:16px;color:#fff;position:relative;overflow:hidden}
 .hero::after{content:none}
 .hero h2{font-family:Poppins,sans-serif;font-size:18px;font-weight:800;line-height:1.25}
 .hero p{font-size:12px;opacity:.88;margin-top:4px;line-height:1.5}
 .mwrap{border-radius:14px;overflow:hidden;border:1.5px solid #e2e8f0}
 .poi-row{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;border:1.5px solid var(--border2);cursor:pointer;transition:all .2s;background:var(--card);margin-bottom:8px}
 .poi-row:last-child{margin-bottom:0}
-.poi-row:hover{border-color:#f97316;background:#fff7ed}
+.poi-row:hover{border-color:#b8860b;background:#fefce8}
 .poi-ico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 /* Verdetto AI */
 .v-card{border-radius:16px;padding:16px;margin-bottom:0}
@@ -89,10 +89,12 @@ body{background:var(--bg);font-family:Inter,sans-serif;color:var(--text);-webkit
 .rent-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f1f5f9}
 .rent-item:last-child{border:none;padding-bottom:0}
 @keyframes spin{to{transform:rotate(360deg)}}
+.cert-tooltip{font-family:Poppins,sans-serif!important;font-size:11px!important;font-weight:700!important;padding:4px 10px!important;border-radius:8px!important;background:#7c3aed!important;color:#fff!important;border:none!important;box-shadow:0 2px 8px rgba(124,58,237,.3)!important;}
+.cert-tooltip::before{border-top-color:#7c3aed!important;}
 .poi-tooltip{font-family:Inter,system-ui,sans-serif!important;font-size:12px!important;font-weight:600!important;padding:4px 8px!important;border-radius:6px!important;box-shadow:0 2px 8px rgba(0,0,0,.15)!important;max-width:200px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
 @keyframes driveAcross{0%{left:-60px}100%{left:calc(100% + 60px)}}
 @keyframes progressPulse{0%{width:15%}50%{width:85%}100%{width:15%}}
-.spin{width:15px;height:15px;border:2.5px solid rgba(249,115,22,.2);border-top-color:#f97316;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0}
+.spin{width:15px;height:15px;border:2.5px solid rgba(249,115,22,.2);border-top-color:#b8860b;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;flex-shrink:0}
 @keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .fade{animation:fu .3s ease both}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
@@ -100,12 +102,12 @@ body{background:var(--bg);font-family:Inter,sans-serif;color:var(--text);-webkit
 .setup-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
 .setup-card{background:var(--card);border-radius:20px;padding:24px;width:100%;max-width:390px;box-shadow:0 4px 24px var(--card-shadow)}
 .kinp{width:100%;border:2px solid #e2e8f0;border-radius:12px;padding:10px 14px;font-family:Inter,sans-serif;font-size:13px;outline:none;margin-bottom:9px;transition:border-color .2s}
-.kinp:focus{border-color:#f97316}
+.kinp:focus{border-color:#b8860b}
 .ibox{border-radius:10px;padding:10px 12px;font-size:12px;margin-bottom:10px;line-height:1.6}
 .src-logo{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700}
 .src-gm{background:#e8f0fe;color:#1a73e8}
 .src-p4n{background:#f3e8ff;color:#7c3aed}
-.src-tt{background:#fff7ed;color:#ea580c}
+.src-tt{background:#fefce8;color:#996515}
 </style>
 </head>
 <body>
@@ -170,6 +172,17 @@ const I18N={
     rental:"Noleggio Auto & Moto",rentalDesc:"Trova autonoleggi e noleggio moto nella tua zona di viaggio.",rentalPlaceholder:"Inserisci citt\u00e0 o zona...",noRental:"Nessun noleggio trovato in zona",rentalFound:"noleggi trovati",
     wheelbase:"Interasse",rearOverhang:"Sbalzo post.",length:"Lunghezza",width:"Larghezza",height:"Altezza",weight:"Peso",model:"Modello",
     rearOverhangCorner:"Sbalzo posteriore in curva",
+    certSuitableFor:"Adatto per quale misura?",certSizeCascade:"Se accetta camper da 12m, automaticamente accetta anche 10.5m e 9.5m",
+    certNotes:"Note della community",certAddNote:"Scrivi una nota...",certSendNote:"Invia",certNoNotes:"Nessuna nota ancora. Sii il primo a condividere la tua esperienza!",
+    certServices:"Servizi disponibili",certElectricity:"Corrente elettrica",certAmps:"Ampere",certSetAmps:"Imposta",certNoElectricity:"No corrente",certElectricityAvail:"Corrente disponibile",certElectricityNo:"Nessuna corrente",
+    certWater:"Carico acqua",certWaterYes:"Sì, carico acqua disponibile",certWaterNo:"No carico acqua",
+    certBlackWater:"Scarico acque nere",certBlackYes:"Sì, scarico nere disponibile",certBlackNo:"No scarico nere",
+    certGreyWater:"Scarico acque grigie",certGreyYes:"Sì, scarico grigie disponibile",certGreyNo:"No scarico grigie",
+    certNotSet:"Non specificato",
+    certYourFits:"Il tuo camper ({0}m) ci sta!",certTooLarge:"Troppo grande ({0}m)",
+    certVote:"Vota",certWebsite:"Sito web",certMap:"Mappa",certNavigate:"Naviga",certRemove:"Rimuovi",certRemoveConfirm:"Rimuovere questa certificazione?",
+    certAdded:"Aggiunto",certMax:"Max",certBackToList:"Torna all'elenco",certByRegion:"Per Regione",certList:"Lista",
+    certDetectingRegions:"Rilevamento regioni in corso...",
     privacyText:"Oversize in Tour rispetta la tua privacy. Tutti i dati (chiavi API, configurazione camper, ricerche, analisi) sono salvati esclusivamente in locale sul tuo dispositivo tramite localStorage. Nessun dato personale viene trasmesso ai nostri server. Le chiamate API (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) sono effettuate direttamente dal tuo browser verso i rispettivi servizi. Se attivi Firebase, i dati dei certificati community vengono condivisi con altri utenti tramite il database configurato. Puoi cancellare tutti i dati in qualsiasi momento resettando l'app.",
     termsText:"Oversize in Tour fornisce analisi indicative basate su dati OpenStreetMap, algoritmi di routing e modelli AI. I risultati NON sostituiscono la verifica sul posto. L'utente è responsabile di verificare personalmente l'accessibilità delle strutture. L'app è fornita \"as is\" senza garanzie di alcun tipo. Non ci assumiamo responsabilità per eventuali danni derivanti dall'uso delle informazioni fornite. Le chiavi API sono di proprietà e responsabilità dell'utente. L'uso dell'app implica l'accettazione di questi termini.",
   },
@@ -218,6 +231,17 @@ const I18N={
     rental:"Car & Motorcycle Rental",rentalDesc:"Find car and motorcycle rentals in your travel area.",rentalPlaceholder:"Enter city or area...",noRental:"No rentals found in area",rentalFound:"rentals found",
     wheelbase:"Wheelbase",rearOverhang:"Rear overhang",length:"Length",width:"Width",height:"Height",weight:"Weight",model:"Model",
     rearOverhangCorner:"Rear overhang in turn",
+    certSuitableFor:"Suitable for which size?",certSizeCascade:"If it accepts 12m campers, it automatically accepts 10.5m and 9.5m too",
+    certNotes:"Community notes",certAddNote:"Write a note...",certSendNote:"Send",certNoNotes:"No notes yet. Be the first to share your experience!",
+    certServices:"Available services",certElectricity:"Electricity",certAmps:"Amps",certSetAmps:"Set",certNoElectricity:"No electricity",certElectricityAvail:"Electricity available",certElectricityNo:"No electricity",
+    certWater:"Fresh water",certWaterYes:"Yes, water fill available",certWaterNo:"No water fill",
+    certBlackWater:"Black water dump",certBlackYes:"Yes, black water dump available",certBlackNo:"No black water dump",
+    certGreyWater:"Grey water dump",certGreyYes:"Yes, grey water dump available",certGreyNo:"No grey water dump",
+    certNotSet:"Not specified",
+    certYourFits:"Your camper ({0}m) fits!",certTooLarge:"Too large ({0}m)",
+    certVote:"Vote",certWebsite:"Website",certMap:"Map",certNavigate:"Navigate",certRemove:"Remove",certRemoveConfirm:"Remove this certification?",
+    certAdded:"Added",certMax:"Max",certBackToList:"Back to list",certByRegion:"By Region",certList:"List",
+    certDetectingRegions:"Detecting regions...",
     privacyText:"Oversize in Tour respects your privacy. All data (API keys, camper configuration, searches, analyses) is saved exclusively on your device via localStorage. No personal data is transmitted to our servers. API calls (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) are made directly from your browser to the respective services. If you enable Firebase, community certificate data is shared with other users via the configured database. You can delete all data at any time by resetting the app.",
     termsText:"Oversize in Tour provides indicative analyses based on OpenStreetMap data, routing algorithms and AI models. Results do NOT replace on-site verification. The user is responsible for personally verifying the accessibility of structures. The app is provided \"as is\" without warranties of any kind. We assume no liability for any damages arising from the use of the information provided. API keys are the property and responsibility of the user. Use of the app implies acceptance of these terms.",
   },
@@ -266,6 +290,17 @@ const I18N={
     rental:"Auto- & Motorradverleih",rentalDesc:"Finde Auto- und Motorradverleih in deiner Reiseregion.",rentalPlaceholder:"Stadt oder Gebiet eingeben...",noRental:"Keine Vermietungen in der Umgebung gefunden",rentalFound:"Vermietungen gefunden",
     wheelbase:"Radstand",rearOverhang:"Hecküberhang",length:"Länge",width:"Breite",height:"Höhe",weight:"Gewicht",model:"Modell",
     rearOverhangCorner:"Hecküberhang in der Kurve",
+    certSuitableFor:"Geeignet für welche Größe?",certSizeCascade:"Wenn 12m Wohnmobile akzeptiert werden, dann automatisch auch 10.5m und 9.5m",
+    certNotes:"Community-Notizen",certAddNote:"Schreibe eine Notiz...",certSendNote:"Senden",certNoNotes:"Noch keine Notizen. Sei der Erste, der seine Erfahrung teilt!",
+    certServices:"Verfügbare Dienste",certElectricity:"Stromanschluss",certAmps:"Ampere",certSetAmps:"Festlegen",certNoElectricity:"Kein Strom",certElectricityAvail:"Strom verfügbar",certElectricityNo:"Kein Strom",
+    certWater:"Frischwasser",certWaterYes:"Ja, Frischwasser verfügbar",certWaterNo:"Kein Frischwasser",
+    certBlackWater:"Schwarzwasser-Entsorgung",certBlackYes:"Ja, Schwarzwasser-Entsorgung verfügbar",certBlackNo:"Keine Schwarzwasser-Entsorgung",
+    certGreyWater:"Grauwasser-Entsorgung",certGreyYes:"Ja, Grauwasser-Entsorgung verfügbar",certGreyNo:"Keine Grauwasser-Entsorgung",
+    certNotSet:"Nicht angegeben",
+    certYourFits:"Dein Wohnmobil ({0}m) passt!",certTooLarge:"Zu groß ({0}m)",
+    certVote:"Abstimmen",certWebsite:"Webseite",certMap:"Karte",certNavigate:"Navigieren",certRemove:"Entfernen",certRemoveConfirm:"Diese Zertifizierung entfernen?",
+    certAdded:"Hinzugefügt",certMax:"Max",certBackToList:"Zurück zur Liste",certByRegion:"Nach Region",certList:"Liste",
+    certDetectingRegions:"Regionen werden ermittelt...",
     privacyText:"Oversize in Tour respektiert deine Privatsphäre. Alle Daten (API-Schlüssel, Wohnmobil-Konfiguration, Suchen, Analysen) werden ausschließlich lokal auf deinem Gerät über localStorage gespeichert. Keine personenbezogenen Daten werden an unsere Server übertragen. API-Aufrufe (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) werden direkt von deinem Browser an die jeweiligen Dienste gesendet. Wenn du Firebase aktivierst, werden Community-Zertifikatsdaten über die konfigurierte Datenbank mit anderen Nutzern geteilt. Du kannst alle Daten jederzeit durch Zurücksetzen der App löschen.",
     termsText:"Oversize in Tour liefert indikative Analysen basierend auf OpenStreetMap-Daten, Routing-Algorithmen und KI-Modellen. Die Ergebnisse ersetzen NICHT die Überprüfung vor Ort. Der Nutzer ist verantwortlich für die persönliche Überprüfung der Zugänglichkeit der Anlagen. Die App wird \"wie besehen\" ohne jegliche Garantie bereitgestellt. Wir übernehmen keine Haftung für Schäden, die aus der Nutzung der bereitgestellten Informationen entstehen. API-Schlüssel liegen in der Eigenverantwortung des Nutzers. Die Nutzung der App impliziert die Akzeptanz dieser Bedingungen.",
   },
@@ -314,6 +349,17 @@ const I18N={
     rental:"Location Voitures & Motos",rentalDesc:"Trouvez des locations de voitures et motos dans votre zone de voyage.",rentalPlaceholder:"Entrez ville ou zone...",noRental:"Aucune location trouv\u00e9e dans la zone",rentalFound:"locations trouv\u00e9es",
     wheelbase:"Empattement",rearOverhang:"Porte-à-faux AR",length:"Longueur",width:"Largeur",height:"Hauteur",weight:"Poids",model:"Modèle",
     rearOverhangCorner:"Porte-à-faux arrière en virage",
+    certSuitableFor:"Adapté à quelle taille?",certSizeCascade:"S'il accepte les camping-cars de 12m, il accepte automatiquement aussi 10.5m et 9.5m",
+    certNotes:"Notes de la communauté",certAddNote:"Écrire une note...",certSendNote:"Envoyer",certNoNotes:"Pas encore de notes. Soyez le premier à partager votre expérience!",
+    certServices:"Services disponibles",certElectricity:"Électricité",certAmps:"Ampères",certSetAmps:"Définir",certNoElectricity:"Pas d'électricité",certElectricityAvail:"Électricité disponible",certElectricityNo:"Pas d'électricité",
+    certWater:"Remplissage eau",certWaterYes:"Oui, eau potable disponible",certWaterNo:"Pas de remplissage eau",
+    certBlackWater:"Vidange eaux noires",certBlackYes:"Oui, vidange eaux noires disponible",certBlackNo:"Pas de vidange eaux noires",
+    certGreyWater:"Vidange eaux grises",certGreyYes:"Oui, vidange eaux grises disponible",certGreyNo:"Pas de vidange eaux grises",
+    certNotSet:"Non spécifié",
+    certYourFits:"Votre camping-car ({0}m) passe!",certTooLarge:"Trop grand ({0}m)",
+    certVote:"Voter",certWebsite:"Site web",certMap:"Carte",certNavigate:"Naviguer",certRemove:"Supprimer",certRemoveConfirm:"Supprimer cette certification?",
+    certAdded:"Ajouté",certMax:"Max",certBackToList:"Retour à la liste",certByRegion:"Par Région",certList:"Liste",
+    certDetectingRegions:"Détection des régions en cours...",
     privacyText:"Oversize in Tour respecte votre vie privée. Toutes les données (clés API, configuration du camping-car, recherches, analyses) sont sauvegardées exclusivement sur votre appareil via localStorage. Aucune donnée personnelle n'est transmise à nos serveurs. Les appels API (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) sont effectués directement depuis votre navigateur vers les services respectifs. Si vous activez Firebase, les données des certificats communautaires sont partagées avec d'autres utilisateurs via la base de données configurée. Vous pouvez supprimer toutes les données à tout moment en réinitialisant l'application.",
     termsText:"Oversize in Tour fournit des analyses indicatives basées sur les données OpenStreetMap, des algorithmes de routage et des modèles IA. Les résultats NE remplacent PAS la vérification sur place. L'utilisateur est responsable de vérifier personnellement l'accessibilité des structures. L'application est fournie \"telle quelle\" sans aucune garantie. Nous déclinons toute responsabilité pour les dommages résultant de l'utilisation des informations fournies. Les clés API sont la propriété et la responsabilité de l'utilisateur. L'utilisation de l'app implique l'acceptation de ces conditions.",
   },
@@ -362,6 +408,17 @@ const I18N={
     rental:"Alquiler Coches & Motos",rentalDesc:"Encuentra alquileres de coches y motos en tu zona de viaje.",rentalPlaceholder:"Introduce ciudad o zona...",noRental:"No se encontraron alquileres en la zona",rentalFound:"alquileres encontrados",
     wheelbase:"Distancia entre ejes",rearOverhang:"Voladizo trasero",length:"Longitud",width:"Anchura",height:"Altura",weight:"Peso",model:"Modelo",
     rearOverhangCorner:"Voladizo trasero en curva",
+    certSuitableFor:"¿Apto para qué tamaño?",certSizeCascade:"Si acepta autocaravanas de 12m, automáticamente acepta también 10.5m y 9.5m",
+    certNotes:"Notas de la comunidad",certAddNote:"Escribe una nota...",certSendNote:"Enviar",certNoNotes:"Aún no hay notas. ¡Sé el primero en compartir tu experiencia!",
+    certServices:"Servicios disponibles",certElectricity:"Electricidad",certAmps:"Amperios",certSetAmps:"Establecer",certNoElectricity:"Sin electricidad",certElectricityAvail:"Electricidad disponible",certElectricityNo:"Sin electricidad",
+    certWater:"Carga de agua",certWaterYes:"Sí, carga de agua disponible",certWaterNo:"Sin carga de agua",
+    certBlackWater:"Desagüe aguas negras",certBlackYes:"Sí, desagüe aguas negras disponible",certBlackNo:"Sin desagüe aguas negras",
+    certGreyWater:"Desagüe aguas grises",certGreyYes:"Sí, desagüe aguas grises disponible",certGreyNo:"Sin desagüe aguas grises",
+    certNotSet:"No especificado",
+    certYourFits:"Tu autocaravana ({0}m) cabe!",certTooLarge:"Demasiado grande ({0}m)",
+    certVote:"Votar",certWebsite:"Sitio web",certMap:"Mapa",certNavigate:"Navegar",certRemove:"Eliminar",certRemoveConfirm:"¿Eliminar esta certificación?",
+    certAdded:"Añadido",certMax:"Máx",certBackToList:"Volver a la lista",certByRegion:"Por Región",certList:"Lista",
+    certDetectingRegions:"Detectando regiones...",
     privacyText:"Oversize in Tour respeta tu privacidad. Todos los datos (claves API, configuración de la autocaravana, búsquedas, análisis) se guardan exclusivamente en tu dispositivo mediante localStorage. Ningún dato personal se transmite a nuestros servidores. Las llamadas API (Overpass/OSM, Nominatim, Open-Meteo, Groq, Gemini, Mapillary) se realizan directamente desde tu navegador a los respectivos servicios. Si activas Firebase, los datos de certificados comunitarios se comparten con otros usuarios a través de la base de datos configurada. Puedes eliminar todos los datos en cualquier momento restableciendo la app.",
     termsText:"Oversize in Tour proporciona análisis indicativos basados en datos de OpenStreetMap, algoritmos de enrutamiento y modelos de IA. Los resultados NO sustituyen la verificación in situ. El usuario es responsable de verificar personalmente la accesibilidad de las estructuras. La app se proporciona \"tal cual\" sin garantías de ningún tipo. No asumimos responsabilidad por daños derivados del uso de la información proporcionada. Las claves API son propiedad y responsabilidad del usuario. El uso de la app implica la aceptación de estos términos.",
   }
@@ -489,9 +546,28 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
   const A=`around:${R},${lat},${lng}`;
   const degR=R/111000;/* approx degrees for bbox */
 
-  /* ═══════ SOURCE 1: Overpass/OSM — race 3 servers ═══════ */
-  const q1=`[out:json][timeout:15];(nwr(${A})["tourism"~"camp_site|caravan_site|camp_pitch"];nwr(${A})["amenity"~"campervan_site|camping|sanitary_dump_station"];nwr(${A})["motorhome"~"yes|designated"];);out body center 100;`;
-  const q2=`[out:json][timeout:12];(nwr(${A})["amenity"="parking"]["caravans"~"yes|designated"];nwr(${A})["amenity"="parking"]["motorhome"~"yes|designated"];nwr(${A})["overnight_parking"="yes"];nwr(${A})["amenity"="parking"]["overnight"~"yes|only"];nwr(${A})["amenity"="parking"]["name"~"camper|sosta|stellplatz|aire|wohnmobil|motorhome|caravan",i];nwr(${A})["club"="caravanning"];);out body center 50;`;
+  /* ═══════ SOURCE 1: Overpass/OSM — single mega-query, race 3 servers ═══════ */
+  const qAll=`[out:json][timeout:25];(
+    nwr(${A})["tourism"~"camp_site|caravan_site|camp_pitch"];
+    nwr(${A})["leisure"="camp_site"];
+    nwr(${A})["amenity"~"campervan_site|camping|sanitary_dump_station"];
+    nwr(${A})["motorhome"~"yes|designated"];
+    nwr(${A})["tourism"="hotel"]["tents"="yes"];
+    nwr(${A})["tourism"="resort"]["caravans"="yes"];
+    nwr(${A})["landuse"="recreation_ground"]["camping"="yes"];
+    nwr(${A})["amenity"="parking"]["caravans"~"yes|designated"];
+    nwr(${A})["amenity"="parking"]["motorhome"~"yes|designated"];
+    nwr(${A})["overnight_parking"="yes"];
+    nwr(${A})["amenity"="parking"]["overnight"~"yes|only"];
+    nwr(${A})["amenity"="parking"]["name"~"camper|sosta|stellplatz|aire|wohnmobil|motorhome|caravan",i];
+    nwr(${A})["club"="caravanning"];
+    nwr(${A})["amenity"="parking"]["tourism"~"camp_site|caravan_site"];
+    nwr(${A})["tourism"="alpine_hut"]["caravans"~"yes|designated"];
+    nwr(${A})["tourism"="hostel"]["caravans"~"yes|designated"];
+    nwr(${A})["tourism"="guest_house"]["tents"="yes"];
+    nwr(${A})["name"~"camp|camping|campeggio|campground|kemping|stellplatz|wohnmobil|caravan|camper|sosta camper",i]["tourism"];
+    nwr(${A})["name"~"camp|camping|campeggio|campground|kemping|stellplatz|wohnmobil|caravan|camper|sosta camper",i]["leisure"];
+  );out body center 800;`;
   const SERVERS=["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://overpass.private.coffee/api/interpreter"];
 
   async function fetchOvp(query,srv,timeout){
@@ -506,16 +582,19 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
     }catch(e){console.warn("[OVP] "+srv+" fail:",e.message);return[];}
   }
   async function fetchOverpass(){
-    const raceQ1=SERVERS.map(s=>fetchOvp(q1,s,15000).then(r=>r.length>0?r:Promise.reject("empty")));
-    let r1=[];
-    try{r1=await Promise.any(raceQ1);}catch(e){console.warn("[OVP] q1 all failed");}
-    if(r1.length>0)console.log("[OVP] q1 OK: "+r1.length);
-    /* q2: race first 2 servers */
-    const raceQ2=[SERVERS[0],SERVERS[1]].map(s=>fetchOvp(q2,s,10000).then(r=>r.length>0?r:Promise.reject("empty")));
-    let r2=[];
-    try{r2=await Promise.any(raceQ2);}catch(e){}
-    if(r2.length>0)console.log("[OVP] q2 OK: "+r2.length);
-    return[...r1,...r2];
+    /* Single combined query raced across 3 servers */
+    const race=SERVERS.map(s=>fetchOvp(qAll,s,22000).then(r=>r.length>0?r:Promise.reject("empty")));
+    let results=[];
+    try{results=await Promise.any(race);}catch(e){console.warn("[OVP] all servers failed");}
+    /* Deduplicate by element type+id */
+    const seen=new Set();
+    const unique=[];
+    for(const el of results){
+      const k=el.type+"_"+el.id;
+      if(!seen.has(k)){seen.add(k);unique.push(el);}
+    }
+    console.log("[OVP] OK: "+unique.length+" unique elements");
+    return unique;
   }
 
   /* ═══════ SOURCE 2: OpenCampingMap — GeoJSON, CORS enabled ═══════ */
@@ -528,7 +607,7 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
       const geo=await r.json();
       if(!geo||!geo.features){console.warn("[OCM] no features");return[];}
       console.log("[OCM] OK: "+geo.features.length+" features");
-      return geo.features.slice(0,100).map(function(f){
+      return geo.features.slice(0,300).map(function(f){
         const p=f.properties||{};
         const g=f.geometry;
         if(!g||!g.coordinates)return null;
@@ -579,7 +658,7 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
         const lieux=Array.isArray(d)?d:(d&&d.lieux?d.lieux:[]);
         if(!lieux.length){console.warn("[P4N] 0 lieux");continue;}
         console.log("[P4N] OK: "+lieux.length+" lieux via "+url.split("/")[2]);
-        return lieux.slice(0,80).map(function(p){
+        return lieux.slice(0,200).map(function(p){
           const pLat=parseFloat(p.latitude),pLng=parseFloat(p.longitude);
           if(!pLat||!pLng)return null;
           const pName=p.titre||p.description_fr||p.description_en||"";
@@ -611,7 +690,7 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
         let arr;try{arr=JSON.parse(txt);}catch(pe){continue;}
         if(!Array.isArray(arr)||!arr.length){console.warn("[IOV] empty");continue;}
         console.log("[IOV] OK: "+arr.length+" places");
-        return arr.slice(0,80).map(function(p){
+        return arr.slice(0,200).map(function(p){
           const pLat=parseFloat(p.latitude||p.lat);
           const pLng=parseFloat(p.longitude||p.lng||p.lon);
           if(!pLat||!pLng)return null;
@@ -632,38 +711,45 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
     return[];
   }
 
-  /* ═══════ SOURCE 5: Nominatim — keyword search ═══════ */
+  /* ═══════ SOURCE 5: Nominatim — keyword search (expanded, parallel batches) ═══════ */
   async function fetchNominatim(){
-    const kws=["campeggio","area sosta camper","campsite","Stellplatz","aire de camping-car"];
+    const kws=["campeggio","area sosta camper","campsite","camping","Stellplatz","Wohnmobilstellplatz","aire de camping-car","camper park","campground","holiday park","RV park","kemping","caravan park"];
     const results=[];
-    const vb=(lng-0.35)+","+(lat+0.25)+","+(lng+0.35)+","+(lat-0.25);
-    for(let i=0;i<kws.length;i++){
-      if(i>0)await new Promise(r=>setTimeout(r,900));
-      try{
-        const r=await fetch("https://nominatim.openstreetmap.org/search?q="+encodeURIComponent(kws[i])+"&format=json&limit=12&addressdetails=1&viewbox="+vb+"&bounded=1",
-          {headers:{"User-Agent":"OversizeInTour/1.0","Accept-Language":"it,en,de,fr,es"},signal:AbortSignal.timeout(5000)});
-        if(!r.ok)continue;
-        const batch=await r.json();
-        console.log("[NOM] '"+kws[i]+"' → "+((batch||[]).length)+" hits");
-        for(const item of(batch||[])){
-          const nLat=parseFloat(item.lat),nLng=parseFloat(item.lon);
-          if(!nLat||!nLng)continue;
-          const dist=calcDistKm(lat,lng,nLat,nLng);
-          if(dist>35)continue;
-          const raw=item.display_name||"";const short=raw.split(",")[0].trim();
-          const city=item.address?(item.address.city||item.address.town||item.address.village||""):"";
-          const dup=results.some(m=>calcDistKm(m.lat,m.lng,nLat,nLng)<0.1);
-          if(!dup)results.push({id:"nom_"+item.place_id,name:short||"Area sosta",address:raw.split(",").slice(1,3).join(",").trim(),city,lat:nLat,lng:nLng,distKm:dist,website:null,phone:null,isCamp:/(camp|camping|campeggio)/i.test(raw),isDump:false,isStellplatz:/(stell|sosta|parking|aire)/i.test(raw),isOvernight:false,cat:/(camp)/i.test(raw)?"camp_site":"area sosta",_source:"nominatim",_capacity:null,_fee:null});
-        }
-        if(results.length>=20)break;
-      }catch(e){continue;}
+    const vb=(lng-degR)+","+(lat+degR)+","+(lng+degR)+","+(lat-degR);/* match Overpass radius */
+    /* Run in 2 parallel batches to respect Nominatim rate limit */
+    async function fetchBatch(kwBatch,delayMs){
+      if(delayMs>0)await new Promise(r=>setTimeout(r,delayMs));
+      for(let i=0;i<kwBatch.length;i++){
+        if(i>0)await new Promise(r=>setTimeout(r,1100));
+        try{
+          const r=await fetch("https://nominatim.openstreetmap.org/search?q="+encodeURIComponent(kwBatch[i])+"&format=json&limit=30&addressdetails=1&viewbox="+vb+"&bounded=1",
+            {headers:{"User-Agent":"OversizeInTour/1.0","Accept-Language":"it,en,de,fr,es"},signal:AbortSignal.timeout(6000)});
+          if(!r.ok)continue;
+          const batch=await r.json();
+          console.log("[NOM] '"+kwBatch[i]+"' → "+((batch||[]).length)+" hits");
+          for(const item of(batch||[])){
+            const nLat=parseFloat(item.lat),nLng=parseFloat(item.lon);
+            if(!nLat||!nLng)continue;
+            const dist=calcDistKm(lat,lng,nLat,nLng);
+            if(dist>35)continue;
+            const raw=item.display_name||"";const short=raw.split(",")[0].trim();
+            const city=item.address?(item.address.city||item.address.town||item.address.village||""):"";
+            const dup=results.some(m=>calcDistKm(m.lat,m.lng,nLat,nLng)<0.08);
+            if(!dup)results.push({id:"nom_"+item.place_id,name:short||"Area sosta",address:raw.split(",").slice(1,3).join(",").trim(),city,lat:nLat,lng:nLng,distKm:dist,website:null,phone:null,isCamp:/(camp|camping|campeggio|kemping|holiday)/i.test(raw),isDump:false,isStellplatz:/(stell|sosta|parking|aire|wohnmobil)/i.test(raw),isOvernight:false,cat:/(camp|camping|campeggio|kemping|campground|holiday)/i.test(raw)?"camp_site":"area sosta",_source:"nominatim",_capacity:null,_fee:null});
+          }
+        }catch(e){continue;}
+      }
     }
+    /* Split keywords into 2 batches — first batch starts immediately, second after 500ms */
+    const mid=Math.ceil(kws.length/2);
+    await Promise.all([fetchBatch(kws.slice(0,mid),0),fetchBatch(kws.slice(mid),500)]);
+    console.log("[NOM] TOTAL: "+results.length+" unique");
     return results;
   }
 
   /* ═══════ LAUNCH: ALL 5 sources in parallel + 25s master timeout ═══════ */
   let ovpElements=[],ocmResults=[],p4nResults=[],iovResults=[],nomResults=[];
-  const masterTimeout=new Promise(r=>setTimeout(()=>r("TIMEOUT"),25000));
+  const masterTimeout=new Promise(r=>setTimeout(()=>r("TIMEOUT"),35000));
   const allSources=Promise.all([
     fetchOverpass().then(r=>{ovpElements=r;}).catch(()=>{}),
     fetchOpenCampingMap().then(r=>{ocmResults=r;}).catch(()=>{}),
@@ -696,9 +782,9 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
       if(rawName&&BLACKLIST.test(rawName)&&!/(camp|sosta|stell|wohnmobil|motorhome|caravan|camper|aire)/i.test(rawName+" "+(t.tourism||"")+" "+(t.amenity||"")))return null;
       const addr=[t["addr:street"],t["addr:housenumber"],t["addr:city"],t["addr:postcode"]].filter(Boolean).join(", ");
       const distKm=calcDistKm(lat,lng,elLat,elLng);
-      const isCamp=/(camp_site|camping)/i.test(t.tourism||t.amenity||"");
+      const isCamp=/(camp_site|camping)/i.test(t.tourism||t.amenity||t.leisure||"")||/(camp|camping|campeggio|campground)/i.test(rawName);
       const isDump=t.amenity==="sanitary_dump_station"||t.waterway==="sanitary_dump_station";
-      const isStellplatz=t.motorhome==="designated"||t.caravan_site==="motorhome_stopover"||t.parking==="motorhome";
+      const isStellplatz=t.motorhome==="designated"||t.caravan_site==="motorhome_stopover"||t.parking==="motorhome"||/(stellplatz|wohnmobil|sosta camper)/i.test(rawName);
       const isOvernight=t.overnight_parking==="yes"||t.overnight==="yes";
       const cat=isDump?"dump_station":isStellplatz?"stellplatz":isOvernight?"overnight":isCamp?"camp_site":(t.tourism||t.amenity||(t.motorhome?"area sosta":"area sosta"));
       return{
@@ -722,14 +808,16 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
     return!osmIds.has(rawId);
   });
 
-  /* ── SMART MERGE & DEDUPLICATE all sources (150m proximity) ── */
+  /* ── SMART MERGE & DEDUPLICATE all sources (80m proximity + name match) ── */
   /* Priority: OSM > OpenCampingMap > Park4Night > iOverlander > Nominatim */
   const allResults=[...osmResults,...ocmFiltered,...p4nResults,...iovResults,...nomResults];
   const dedup=[];
   for(const r of allResults){
     let existing=null;
     for(const m of dedup){
-      if(calcDistKm(m.lat,m.lng,r.lat,r.lng)<0.15){existing=m;break;}
+      const dist=calcDistKm(m.lat,m.lng,r.lat,r.lng);
+      /* Merge if <80m, or <200m with similar name */
+      if(dist<0.08||(dist<0.2&&m.name&&r.name&&m.name.toLowerCase().split(/\s/)[0]===r.name.toLowerCase().split(/\s/)[0])){existing=m;break;}
     }
     if(!existing){dedup.push(r);continue;}
     /* Merge: enrich existing with data from secondary source */
@@ -756,7 +844,7 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
     return true;
   });
 
-  const finalResult=finalDedup.sort(function(a,b){return a.distKm-b.distKm;}).slice(0,200);
+  const finalResult=finalDedup.sort(function(a,b){return a.distKm-b.distKm;}).slice(0,500);
   console.log("[POI] FINAL: "+finalResult.length+" unique (OSM="+osmResults.length+" OCM="+ocmFiltered.length+" P4N="+p4nResults.length+" IOV="+iovResults.length+" NOM="+nomResults.length+")");
   if(finalResult.length>0)OCache.savePOIs(cacheKeyPOI,finalResult);
   return finalResult;
@@ -1860,10 +1948,10 @@ function TomMap({center,zoom,markers,routePts,onPoiClick,height}){
     mks.current=[];
     (markers||[]).forEach(m=>{
       const s=m.isDest?34:m.isOversize?28:26;
-      const bg=m.isDest?"#f97316":m.isOversize?"#16a34a":m._markerColor||(m.isCamp?"#8b5cf6":"#3b82f6");
+      const bg=m.isDest?"#b8860b":m.isOversize?"#16a34a":m._markerColor||(m.isCamp?"#8b5cf6":"#3b82f6");
       const html=`<div style="width:${s}px;height:${s}px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${bg};border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:${m.isDest?"default":"pointer"}"></div>`;
       const icon=window.L.divIcon({html,className:"",iconSize:[s,s],iconAnchor:[s/2,s]});
-      const wb=m.website?`<br><a href="${m.website}" target="_blank" onclick="event.stopPropagation()" style="color:#f97316;font-size:10px;font-weight:700">🌐 Sito web</a>`:"";
+      const wb=m.website?`<br><a href="${m.website}" target="_blank" onclick="event.stopPropagation()" style="color:#b8860b;font-size:10px;font-weight:700">🌐 Sito web</a>`:"";
       const gm=`<br><a href="https://www.google.com/maps/search/${encodeURIComponent((m.name||"")+" "+(m.sub||""))}" target="_blank" onclick="event.stopPropagation()" style="color:#1a73e8;font-size:10px;font-weight:700">🗺 Google Maps</a>`;
       const popup=window.L.popup({offset:[0,-s],maxWidth:200}).setContent(
         `<div style="font-family:Inter,sans-serif;padding:4px"><b style="font-size:12px">${m.name||""}</b><div style="font-size:10px;color:#666;margin:2px 0">${m.sub||""}</div><div style="margin-top:4px">${wb}${gm}</div></div>`
@@ -1878,7 +1966,7 @@ function TomMap({center,zoom,markers,routePts,onPoiClick,height}){
     if(!map.current||!window.L)return;
     if(poly.current){poly.current.remove();poly.current=null;}
     if(!routePts?.length)return;
-    poly.current=window.L.polyline(routePts.map(p=>[p.lat,p.lng]),{color:"#f97316",weight:4,opacity:.85}).addTo(map.current);
+    poly.current=window.L.polyline(routePts.map(p=>[p.lat,p.lng]),{color:"#b8860b",weight:4,opacity:.85}).addTo(map.current);
   },[routePts]);
   return<div ref={ref} style={{width:"100%",height:height||200}}/>;
 }
@@ -2148,7 +2236,7 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,ma
         <div style={{display:"flex",alignItems:"center",gap:8,background:"#fef3c7",border:"1.5px solid #fde68a",borderRadius:10,padding:"8px 12px"}}>
           <span style={{fontSize:12}}>📦 {t("cachedData")}</span>
           <span style={{fontSize:10,color:"#92400e"}}>Caricati da {new Date(cachedData?.timestamp).toLocaleDateString("it-IT")}</span>
-          <button className="btn bsm" style={{marginLeft:"auto",background:"#fff7ed",color:"#ea580c",border:"1px solid #fed7aa",fontSize:10}} onClick={()=>{setUsedCache(false);setPhase("gps");setAnalysis(null);setScoreResult(null);run();}}>🔄 {t("reanalyze")}</button>
+          <button className="btn bsm" style={{marginLeft:"auto",background:"#fefce8",color:"#996515",border:"1px solid #d4a017",fontSize:10}} onClick={()=>{setUsedCache(false);setPhase("gps");setAnalysis(null);setScoreResult(null);run();}}>🔄 {t("reanalyze")}</button>
         </div>
       )}
       {cachedData&&!usedCache&&phase!=="done"&&(
@@ -2163,7 +2251,7 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,ma
           <button className="btn bsm" style={{background:"#e8f0fe",color:"#1a73e8",border:"none",fontFamily:"Inter",fontWeight:700}}>🗺 Google Maps</button>
         </a>
         <a href={webUrl} target="_blank" style={{textDecoration:"none"}}>
-          <button className="btn bsm" style={{background:"#fff7ed",color:"#ea580c",border:"none",fontFamily:"Inter",fontWeight:700}}>{poi.website?"🌐 Sito":"🔍 Cerca"}</button>
+          <button className="btn bsm" style={{background:"#fefce8",color:"#996515",border:"none",fontFamily:"Inter",fontWeight:700}}>{poi.website?"🌐 Sito":"🔍 Cerca"}</button>
         </a>
         <button className="btn bsm" style={{background:showMapillary?"#fef9c3":"#f0fdf4",color:showMapillary?"#a16207":"#15803d",border:"1.5px solid "+(showMapillary?"#fde047":"#86efac"),fontFamily:"Inter",fontWeight:700}} onClick={()=>setShowMapillary(v=>!v)}>
           📸 {showMapillary?"Chiudi Foto Stradale":"Foto Stradale"}
@@ -2224,7 +2312,7 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,ma
           </div>
           <div style={{display:"flex",gap:4,overflowX:"auto"}}>
             {weatherData.daily.map((d,i)=>(
-              <div key={i} style={{flex:"0 0 auto",minWidth:58,textAlign:"center",padding:"6px 4px",background:i===0?"#fff7ed":"var(--bg)",borderRadius:8,border:i===0?"1.5px solid #fed7aa":"1px solid var(--border)"}}>
+              <div key={i} style={{flex:"0 0 auto",minWidth:58,textAlign:"center",padding:"6px 4px",background:i===0?"#fefce8":"var(--bg)",borderRadius:8,border:i===0?"1.5px solid #d4a017":"1px solid var(--border)"}}>
                 <div style={{fontSize:9,color:"var(--text3)",fontWeight:600}}>{new Date(d.date).toLocaleDateString("it-IT",{weekday:"short"})}</div>
                 <div style={{fontSize:18,margin:"2px 0"}}>{d.icon}</div>
                 <div style={{fontSize:10,fontWeight:700,color:"var(--text)"}}>{Math.round(d.max)}°</div>
@@ -2272,7 +2360,7 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,ma
               <div key={step.key} style={{display:"flex",alignItems:"center",gap:10,padding:"7px 0",opacity:done?1:active?1:0.35,transition:"opacity .3s"}}>
                 <span style={{fontSize:16,width:24,textAlign:"center"}}>{done?"\u2705":active?step.icon:"\u23f3"}</span>
                 <span style={{fontSize:13,color:done?"var(--text2)":active?"var(--text)":"var(--text3)",fontWeight:active?600:400,flex:1}}>{step.label}</span>
-                {active&&<span style={{width:18,height:18,border:"2.5px solid #fed7aa",borderTopColor:"#f97316",borderRadius:"50%",animation:"spin .7s linear infinite",flexShrink:0}}/>}
+                {active&&<span style={{width:18,height:18,border:"2.5px solid #d4a017",borderTopColor:"#b8860b",borderRadius:"50%",animation:"spin .7s linear infinite",flexShrink:0}}/>}
               </div>
             );
           })}
@@ -2495,9 +2583,9 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,ma
                     {analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"\ud83c\udf3f Ostacoli Nascosti":"\ud83d\udea7 Ostacoli Nascosti (non in mappa)"}
                   </div>
                   <div className="v-text" style={{
-                    background: analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#f0fdf4":"#fff7ed",
+                    background: analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#f0fdf4":"#fefce8",
                     borderRadius:8,padding:"8px 10px",
-                    border:"1px solid "+(analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#86efac":"#fed7aa"),
+                    border:"1px solid "+(analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#86efac":"#d4a017"),
                     color: analysis.ostacoli.toLowerCase().includes("nessun ostacolo")?"#166534":"#7c2d12"
                   }}>{analysis.ostacoli}</div>
                 </div>
@@ -2608,7 +2696,7 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,ma
           {aiError}
           <div style={{marginTop:10,display:"flex",gap:8,flexWrap:"wrap"}}>
             <a href="https://console.groq.com/keys" target="_blank" style={{textDecoration:"none"}}>
-              <button className="btn bsm" style={{background:"#f97316",color:"#fff",border:"none",fontFamily:"Inter",fontWeight:700}}>🔑 Chiave Groq (gratis)</button>
+              <button className="btn bsm" style={{background:"#b8860b",color:"#fff",border:"none",fontFamily:"Inter",fontWeight:700}}>🔑 Chiave Groq (gratis)</button>
             </a>
             <a href="https://aistudio.google.com/app/apikey" target="_blank" style={{textDecoration:"none"}}>
               <button className="btn bsm" style={{background:"#dc2626",color:"#fff",border:"none",fontFamily:"Inter",fontWeight:700}}>🔑 Chiave Gemini</button>
@@ -2858,14 +2946,14 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,mapillaryKe
             {suggestions.map(function(s,i){return(
               <div key={i} onClick={function(){selectSuggestion(s);}}
                 style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",cursor:"pointer",borderBottom:i<suggestions.length-1?"1px solid #f1f5f9":"none",transition:"background .15s"}}
-                onMouseEnter={function(e){e.currentTarget.style.background="#fff7ed";}}
+                onMouseEnter={function(e){e.currentTarget.style.background="#fefce8";}}
                 onMouseLeave={function(e){e.currentTarget.style.background="#fff";}}>
                 <span style={{fontSize:20,flexShrink:0,width:28,textAlign:"center"}}>{s.typeIco}</span>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{fontWeight:700,fontSize:13,color:"#1a1a2e",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.short}</div>
                   <div style={{fontSize:10,color:"#94a3b8",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",marginTop:1}}>{s.subtitle}</div>
                 </div>
-                <span style={{fontSize:11,color:"#f97316",fontWeight:600,flexShrink:0}}>→</span>
+                <span style={{fontSize:11,color:"#b8860b",fontWeight:600,flexShrink:0}}>→</span>
               </div>
             );})}
             <div style={{padding:"6px 14px",fontSize:10,color:"#cbd5e1",textAlign:"center",borderTop:"1px solid #f1f5f9"}}>
@@ -2930,9 +3018,9 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,mapillaryKe
             {[["all",t("allFilter")+" ("+pois.length+")"],["sosta","🅿️ "+t("restAreas")],["camp","🏕 "+t("campsites")],["dump","🚰 "+t("dumpStations")]].map(([v,l])=>(
               <button key={v} onClick={()=>setFilter(v)} style={{
                 padding:"5px 10px",borderRadius:99,border:"1.5px solid",
-                borderColor:filter===v?"#f97316":"#e2e8f0",
-                background:filter===v?"#fff7ed":"#fff",
-                fontSize:11,fontWeight:700,color:filter===v?"#ea580c":"#64748b",cursor:"pointer"
+                borderColor:filter===v?"#b8860b":"#e2e8f0",
+                background:filter===v?"#fefce8":"#fff",
+                fontSize:11,fontWeight:700,color:filter===v?"#996515":"#64748b",cursor:"pointer"
               }}>{l}</button>
             ))}
             <button onClick={()=>{setCompareMode(!compareMode);if(compareMode)setCompareList([]);}} style={{
@@ -2985,7 +3073,7 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,mapillaryKe
                 </div>
                 <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3}}>
                   {p.distKm<99&&<span style={{fontSize:10,color:"#94a3b8"}}>{p.distKm<1?(p.distKm*1000).toFixed(0)+"m":p.distKm.toFixed(1)+"km"}</span>}
-                  <span style={{fontSize:12,color:"#f97316",fontWeight:700,whiteSpace:"nowrap"}}>{"\ud83e\udd16"} Analizza {"\u2192"}</span>
+                  <span style={{fontSize:12,color:"#b8860b",fontWeight:700,whiteSpace:"nowrap"}}>{"\ud83e\udd16"} Analizza {"\u2192"}</span>
                 </div>
               </div>
               );
@@ -3100,20 +3188,53 @@ function TabCertificate({camper,t,lang}){
     {id:"10.5",label:"Fino a 10.5m",emoji:"mh-md",isSvg:true,color:"#ca8a04",bg:"#fef9c3"},
     {id:"12",label:"Fino a 12m",emoji:"mh-lg",isSvg:true,color:"#dc2626",bg:"#fee2e2"}
   ];
+  const SIZE_ORDER=["9.5","10.5","12"];
+  /* Se adatto a 12m → adatto anche a 10.5m e 9.5m */
+  function fitsSize(itemMaxSize,querySize){
+    if(querySize==="all")return true;
+    return SIZE_ORDER.indexOf(itemMaxSize)>=SIZE_ORDER.indexOf(querySize);
+  }
   const MhIcon=({id,size})=>{const src=id==="mh-lg"?CAMPER_IMG_MD:id==="mh-md"?CAMPER_IMG_BTN:CAMPER_IMG_SM;const w=size||40;return <img src={src} style={{width:w,height:"auto",display:"inline-block",verticalAlign:"middle"}} alt=""/>;};
   const [items,setItems]=useState(()=>LS.getJ("oit_cert_community")||[]);
   const [filterSize,setFilterSize]=useState("all");
-  const [filterCountry,setFilterCountry]=useState("all");
   const [sortBy,setSortBy]=useState("recent");
   const [adding,setAdding]=useState(false);
   const [form,setForm]=useState({name:"",address:"",country:"Italia",maxSize:"10.5",type:"campeggio",note:"",website:"",lat:"",lng:""});
   const [searchQ,setSearchQ]=useState("");
+  const [viewMode,setViewMode]=useState("grouped"); /* "grouped" or "list" */
+  const [openSections,setOpenSections]=useState({});
+  const [selectedItem,setSelectedItem]=useState(null);
+  const [regionMap,setRegionMap]=useState(()=>LS.getJ("oit_cert_region_map")||{});
+  const [detectingRegions,setDetectingRegions]=useState(false);
   const fbReady=FB.ready();
   useEffect(()=>{
     if(!fbReady)return;
     const unsub=FB.listen("certificates",data=>{setItems(data);});
     return unsub;
   },[fbReady]);
+
+  /* Auto-detect regions for items with coordinates */
+  useEffect(()=>{
+    let cancelled=false;
+    async function detectAll(){
+      const toDetect=items.filter(i=>i.lat&&i.lng&&!regionMap[i.id]);
+      if(toDetect.length===0)return;
+      setDetectingRegions(true);
+      const newMap={...regionMap};
+      for(let idx=0;idx<toDetect.length;idx++){
+        if(cancelled)break;
+        const it=toDetect[idx];
+        const reg=await detectRegion(it.lat,it.lng);
+        if(reg)newMap[it.id]=reg;
+        if(idx<toDetect.length-1)await new Promise(r=>setTimeout(r,1100));
+      }
+      if(!cancelled){setRegionMap(newMap);LS.setJ("oit_cert_region_map",newMap);setDetectingRegions(false);}
+    }
+    detectAll();
+    return()=>{cancelled=true;};
+  },[items.length]);
+
+  function toggleSection(key){setOpenSections(prev=>({...prev,[key]:!prev[key]}));}
 
   function addCertified(){
     if(!form.name.trim())return;
@@ -3123,6 +3244,11 @@ function TabCertificate({camper,t,lang}){
       address:form.address.trim(),
       country:form.country,
       maxSize:form.maxSize,
+      sizeFlags:{
+        "9.5":parseFloat(form.maxSize)>=9.5,
+        "10.5":parseFloat(form.maxSize)>=10.5,
+        "12":form.maxSize==="12"
+      },
       type:form.type,
       note:form.note.trim(),
       website:form.website.trim(),
@@ -3153,21 +3279,399 @@ function TabCertificate({camper,t,lang}){
     setItems(n);
     LS.setJ("oit_cert_community",n);
     if(FB.ready()&&target&&target._fbId)FB.remove("certificates/"+target._fbId);
+    if(selectedItem&&selectedItem.id===id)setSelectedItem(null);
+  }
+  function updateSizeFlag(id,sizeId,value){
+    /* Se 12m → attiva anche 10.5 e 9.5. Se 10.5 → attiva anche 9.5. Se disattiva 9.5 → disattiva tutto. */
+    const n=items.map(it=>{
+      if(it.id!==id)return it;
+      const flags={...(it.sizeFlags||{"9.5":false,"10.5":false,"12":false})};
+      flags[sizeId]=value;
+      if(value){
+        /* Cascata verso il basso: se attivo 12, attivo anche 10.5 e 9.5 */
+        const idx=SIZE_ORDER.indexOf(sizeId);
+        for(let i=0;i<=idx;i++)flags[SIZE_ORDER[i]]=true;
+      } else {
+        /* Cascata verso l'alto: se disattivo 9.5, disattivo anche 10.5 e 12 */
+        const idx=SIZE_ORDER.indexOf(sizeId);
+        for(let i=idx;i<SIZE_ORDER.length;i++)flags[SIZE_ORDER[i]]=false;
+      }
+      /* Aggiorna maxSize in base al flag più grande attivo */
+      let newMax="9.5";
+      if(flags["12"])newMax="12";
+      else if(flags["10.5"])newMax="10.5";
+      else if(flags["9.5"])newMax="9.5";
+      return{...it,sizeFlags:flags,maxSize:newMax};
+    });
+    setItems(n);
+    LS.setJ("oit_cert_community",n);
+    const target=n.find(it=>it.id===id);
+    if(FB.ready()&&target&&target._fbId)FB.update("certificates/"+target._fbId,{sizeFlags:target.sizeFlags,maxSize:target.maxSize});
+    if(selectedItem&&selectedItem.id===id)setSelectedItem(target);
   }
 
+  function updateServices(id,updates){
+    const n=items.map(it=>{
+      if(it.id!==id)return it;
+      const svc={...(it.services||{}), ...updates};
+      return{...it,services:svc,amperage:svc.amperage!==undefined?svc.amperage:it.amperage};
+    });
+    setItems(n);LS.setJ("oit_cert_community",n);
+    const target=n.find(it=>it.id===id);
+    if(FB.ready()&&target&&target._fbId)FB.update("certificates/"+target._fbId,{services:target.services,amperage:target.amperage});
+    if(selectedItem&&selectedItem.id===id)setSelectedItem({...target});
+  }
+  function addCommunityNote(id,noteText){
+    if(!noteText.trim())return;
+    const newNote={text:noteText.trim(),by:FB.userId(),at:Date.now()};
+    const n=items.map(it=>{
+      if(it.id!==id)return it;
+      const notes=[...(it.communityNotes||[]),newNote];
+      return{...it,communityNotes:notes};
+    });
+    setItems(n);LS.setJ("oit_cert_community",n);
+    const target=n.find(it=>it.id===id);
+    if(FB.ready()&&target&&target._fbId)FB.update("certificates/"+target._fbId,{communityNotes:target.communityNotes});
+    if(selectedItem&&selectedItem.id===id)setSelectedItem({...target});
+  }
+  const COUNTRY_FLAGS={"Italia":"🇮🇹","Francia":"🇫🇷","Germania":"🇩🇪","Spagna":"🇪🇸","Portogallo":"🇵🇹","Austria":"🇦🇹","Svizzera":"🇨🇭","Paesi Bassi":"🇳🇱","Belgio":"🇧🇪","Croazia":"🇭🇷","Slovenia":"🇸🇮","Grecia":"🇬🇷","Danimarca":"🇩🇰","Svezia":"🇸🇪","Norvegia":"🇳🇴","Regno Unito":"🇬🇧","Polonia":"🇵🇱","Repubblica Ceca":"🇨🇿","Ungheria":"🇭🇺","Romania":"🇷🇴"};
+  const TYPE_ICONS={"campeggio":"🏕","area_sosta":"🅿️","stellplatz":"🚐","parcheggio":"🅿️","agriturismo":"🌾","libera":"🌿"};
+
   const filtered=items.filter(it=>{
-    if(filterSize!=="all"&&it.maxSize!==filterSize)return false;
-    if(filterCountry!=="all"&&it.country!==filterCountry)return false;
-    if(searchQ.trim()&&!it.name.toLowerCase().includes(searchQ.toLowerCase())&&!it.address.toLowerCase().includes(searchQ.toLowerCase()))return false;
+    if(filterSize!=="all"){
+      const flags=it.sizeFlags||{"9.5":parseFloat(it.maxSize)>=9.5,"10.5":parseFloat(it.maxSize)>=10.5,"12":it.maxSize==="12"};
+      if(!flags[filterSize])return false;
+    }
+    if(searchQ.trim()&&!it.name.toLowerCase().includes(searchQ.toLowerCase())&&!(it.address||"").toLowerCase().includes(searchQ.toLowerCase()))return false;
     return true;
   }).sort((a,b)=>{
     if(sortBy==="votes")return(b.votes||0)-(a.votes||0);
     if(sortBy==="name")return a.name.localeCompare(b.name);
-    return b.addedAt-a.addedAt;
+    return(b.addedAt||0)-(a.addedAt||0);
   });
 
-  const countries=[...new Set(items.map(i=>i.country))].sort();
-  const stats={total:items.length,"9.5":items.filter(i=>i.maxSize==="9.5").length,"10.5":items.filter(i=>i.maxSize==="10.5").length,"12":items.filter(i=>i.maxSize==="12").length};
+  /* Raggruppamento per Stato > Regione > Provincia */
+  const grouped=useMemo(()=>{
+    const byCountry={};
+    filtered.forEach(item=>{
+      const info=regionMap[item.id];
+      let country,region,province;
+      if(info&&typeof info==="object"){country=info.country||item.country||"Altro";region=info.region||"Sconosciuta";province=info.province||null;}
+      else{country=item.country||"Altro";region="Sconosciuta";province=null;}
+      if(!byCountry[country])byCountry[country]={};
+      if(!byCountry[country][region])byCountry[country][region]={_items:[],_provinces:{}};
+      if(province){
+        if(!byCountry[country][region]._provinces[province])byCountry[country][region]._provinces[province]=[];
+        byCountry[country][region]._provinces[province].push(item);
+      }else{
+        byCountry[country][region]._items.push(item);
+      }
+    });
+    return Object.entries(byCountry).sort(([a],[b])=>a.localeCompare(b)).map(([country,regions])=>{
+      const regionEntries=Object.entries(regions).sort(([a],[b])=>a.localeCompare(b)).map(([regName,regData])=>{
+        const provinces=Object.entries(regData._provinces||{}).sort(([a],[b])=>a.localeCompare(b));
+        const loose=regData._items||[];
+        const total=loose.length+provinces.reduce((s,[,items])=>s+items.length,0);
+        return[regName,loose,provinces,total];
+      });
+      const totalCountry=regionEntries.reduce((s,[,,, t])=>s+t,0);
+      return[country,regionEntries,totalCountry];
+    });
+  },[filtered,regionMap]);
+
+  const stats={total:items.length,"9.5":items.filter(i=>{const f=i.sizeFlags;return f?f["9.5"]:parseFloat(i.maxSize)>=9.5;}).length,"10.5":items.filter(i=>{const f=i.sizeFlags;return f?f["10.5"]:parseFloat(i.maxSize)>=10.5;}).length,"12":items.filter(i=>{const f=i.sizeFlags;return f?f["12"]:i.maxSize==="12";}).length};
+
+  function timeAgo(ts){
+    if(!ts)return"";
+    const d=Date.now()-ts;
+    if(d<3600000)return Math.round(d/60000)+"min fa";
+    if(d<86400000)return Math.round(d/3600000)+"h fa";
+    if(d<2592000000)return Math.round(d/86400000)+"g fa";
+    return new Date(ts).toLocaleDateString("it-IT");
+  }
+
+  /* ── Mini-mappa per provincia con marker cliccabili ── */
+  function CertMiniMap({items:mapItems,onSelect}){
+    const mapRef=useRef(null);
+    const mapInst=useRef(null);
+    useEffect(()=>{
+      if(!mapRef.current||!window.L)return;
+      const withCoords=mapItems.filter(i=>i.lat&&i.lng);
+      if(withCoords.length===0)return;
+      /* Init map */
+      if(mapInst.current){mapInst.current.remove();mapInst.current=null;}
+      const m=window.L.map(mapRef.current,{zoomControl:true,attributionControl:false,scrollWheelZoom:true});
+      window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18}).addTo(m);
+      const bounds=[];
+      const verdictColors={"ok":"#16a34a","warn":"#ca8a04","no":"#dc2626"};
+      withCoords.forEach(it=>{
+        const sizeCat=SIZE_CATS.find(s=>s.id===it.maxSize)||SIZE_CATS[1];
+        const vc=verdictColors[it.verdict]||sizeCat.color;
+        const icon=window.L.divIcon({
+          className:"",
+          html:'<div style="width:28px;height:28px;border-radius:50%;background:'+vc+';border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;">'+(TYPE_ICONS[it.type]||"📍")+'</div>',
+          iconSize:[28,28],iconAnchor:[14,14]
+        });
+        const marker=window.L.marker([it.lat,it.lng],{icon}).addTo(m);
+        marker.bindTooltip(it.name,{direction:"top",offset:[0,-14],className:"cert-tooltip"});
+        marker.on("click",()=>{if(onSelect)onSelect(it);});
+        bounds.push([it.lat,it.lng]);
+      });
+      if(bounds.length===1){m.setView(bounds[0],13);}
+      else{m.fitBounds(bounds,{padding:[30,30],maxZoom:14});}
+      mapInst.current=m;
+      return()=>{if(mapInst.current){mapInst.current.remove();mapInst.current=null;}};
+    },[mapItems]);
+    const withCoords=mapItems.filter(i=>i.lat&&i.lng);
+    if(withCoords.length===0)return null;
+    return <div ref={mapRef} style={{width:"100%",height:200,borderRadius:10,overflow:"hidden",border:"1.5px solid #ddd6fe",marginBottom:6,marginTop:4}}/>;
+  }
+
+  /* ── Render singolo item certificato (usato sia in lista che in grouped) ── */
+  function renderCertItem(it){
+    const sizeCat=SIZE_CATS.find(s=>s.id===it.maxSize)||SIZE_CATS[1];
+    const typeIco=TYPE_ICONS[it.type]||"🅿️";
+    const mySize=parseFloat(camper.length);
+    const fits=mySize<=parseFloat(it.maxSize);
+    const flags=it.sizeFlags||{"9.5":parseFloat(it.maxSize)>=9.5,"10.5":parseFloat(it.maxSize)>=10.5,"12":it.maxSize==="12"};
+    return(
+      <div key={it.id} className="card" onClick={()=>setSelectedItem(it)} style={{padding:"10px 12px",border:"1.5px solid "+(fits?"#16a34a33":"#dc262633"),cursor:"pointer",transition:"transform .15s",marginTop:4}}>
+        <div style={{display:"flex",alignItems:"flex-start",gap:10}}>
+          <div style={{width:42,height:42,borderRadius:10,background:sizeCat.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0,border:"1.5px solid "+sizeCat.color+"33"}}>
+            {typeIco}
+          </div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+              <div style={{fontWeight:800,fontSize:13,color:"var(--text1)"}}>{it.name}</div>
+              {fits?<span style={{fontSize:8,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#dcfce7",color:"#16a34a"}}>✅</span>
+                   :<span style={{fontSize:8,fontWeight:700,padding:"1px 5px",borderRadius:4,background:"#fee2e2",color:"#dc2626"}}>❌</span>}
+            </div>
+            <div style={{fontSize:10,color:"var(--text3)",marginTop:2}}>{it.address}</div>
+            {/* Size badges inline */}
+            <div style={{display:"flex",gap:3,marginTop:4,alignItems:"center",flexWrap:"wrap"}}>
+              {SIZE_CATS.map(s=>(
+                <span key={s.id} style={{fontSize:8,fontWeight:700,padding:"1px 5px",borderRadius:4,background:flags[s.id]?s.bg:"#f1f5f9",color:flags[s.id]?s.color:"#cbd5e1",border:"1px solid "+(flags[s.id]?s.color+"44":"#e2e8f0")}}>{s.id}m {flags[s.id]?"✓":"✗"}</span>
+              ))}
+              {/* Service icons */}
+              {(()=>{const svc=it.services||{};const hasAny=svc.electricity===true||svc.water===true||svc.blackWater===true||svc.greyWater===true;
+                return hasAny?<span style={{fontSize:10,marginLeft:2}}>{svc.electricity===true?"⚡":""}{svc.water===true?"🚿":""}{svc.blackWater===true?"🚽":""}{svc.greyWater===true?"🫧":""}</span>:null;
+              })()}
+              <span style={{fontSize:9,color:"var(--text3)",marginLeft:"auto"}}>👍 {it.votes||0}</span>
+              <span style={{fontSize:9,color:"var(--text3)"}}>🕐 {timeAgo(it.addedAt)}</span>
+            </div>
+          </div>
+          <div style={{fontSize:14,color:"#94a3b8",alignSelf:"center"}}>›</div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ── Scheda dettaglio di una meta certificata ── */
+  const [noteInput,setNoteInput]=useState("");
+  const [ampInput,setAmpInput]=useState("");
+  if(selectedItem){
+    const it=items.find(i=>i.id===selectedItem.id)||selectedItem;
+    const sizeCat=SIZE_CATS.find(s=>s.id===it.maxSize)||SIZE_CATS[1];
+    const typeIco=TYPE_ICONS[it.type]||"🅿️";
+    const mySize=parseFloat(camper.length);
+    const fits=mySize<=parseFloat(it.maxSize);
+    const flags=it.sizeFlags||{"9.5":parseFloat(it.maxSize)>=9.5,"10.5":parseFloat(it.maxSize)>=10.5,"12":it.maxSize==="12"};
+    const regInfo=regionMap[it.id];
+    const communityNotes=it.communityNotes||[];
+    return(
+      <div className="pg">
+        <button className="btn bgh" onClick={()=>{setSelectedItem(null);setNoteInput("");setAmpInput("");}} style={{marginBottom:8,fontSize:12}}>← {t("certBackToList")}</button>
+        <div className="card" style={{border:"2px solid #7c3aed",padding:"14px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+            <div style={{width:50,height:50,borderRadius:12,background:sizeCat.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:26,flexShrink:0,border:"2px solid "+sizeCat.color+"44"}}>{typeIco}</div>
+            <div>
+              <div style={{fontWeight:800,fontSize:18,color:"var(--text1)"}}>{it.name}</div>
+              <div style={{fontSize:12,color:"var(--text3)"}}>{it.address}</div>
+            </div>
+          </div>
+          {/* Location info */}
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:12}}>
+            <span style={{fontSize:11,background:"#eff6ff",color:"#1d4ed8",padding:"3px 8px",borderRadius:6,fontWeight:600}}>{COUNTRY_FLAGS[it.country]||"🏳"} {it.country}</span>
+            {regInfo&&regInfo.region&&regInfo.region!=="Sconosciuta"&&<span style={{fontSize:11,background:"#f0fdf4",color:"#166534",padding:"3px 8px",borderRadius:6,fontWeight:600}}>📍 {regInfo.region}</span>}
+            {regInfo&&regInfo.province&&<span style={{fontSize:11,background:"#faf5ff",color:"#7c3aed",padding:"3px 8px",borderRadius:6,fontWeight:600}}>🏛 {regInfo.province}</span>}
+            {fits?<span style={{fontSize:11,fontWeight:700,padding:"3px 8px",borderRadius:6,background:"#dcfce7",color:"#16a34a"}}>✅ {t("certYourFits",camper.length)}</span>
+                 :<span style={{fontSize:11,fontWeight:700,padding:"3px 8px",borderRadius:6,background:"#fee2e2",color:"#dc2626"}}>❌ {t("certTooLarge",camper.length)}</span>}
+          </div>
+          {/* Note originale */}
+          {it.note&&<div style={{fontSize:12,color:"var(--text2)",marginBottom:12,fontStyle:"italic",lineHeight:1.5,background:"#fefce8",borderRadius:8,padding:"8px 10px",border:"1px solid #fef08a"}}>💬 "{it.note}"</div>}
+
+          {/* 🔧 Servizi disponibili */}
+          {(()=>{
+            const svc=it.services||{};
+            const hasElec=svc.electricity===true;
+            const noElec=svc.electricity===false;
+            const amps=svc.amperage||it.amperage||null;
+            const ServiceToggle=({label,icon,yesText,noText,value,onSet})=>(
+              <div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 0",borderBottom:"1px solid #f1f5f9"}}>
+                <span style={{fontSize:18,width:28,textAlign:"center"}}>{icon}</span>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:12,fontWeight:700,color:"var(--text1)"}}>{label}</div>
+                  <div style={{fontSize:10,color:value===true?"#16a34a":value===false?"#dc2626":"#94a3b8",fontWeight:600}}>
+                    {value===true?"✅ "+yesText:value===false?"❌ "+noText:t("certNotSet")}
+                  </div>
+                </div>
+                <div style={{display:"flex",gap:4}}>
+                  <button onClick={()=>onSet(true)} style={{width:32,height:28,borderRadius:6,border:"1.5px solid "+(value===true?"#16a34a":"#e2e8f0"),background:value===true?"#dcfce7":"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>✓</button>
+                  <button onClick={()=>onSet(false)} style={{width:32,height:28,borderRadius:6,border:"1.5px solid "+(value===false?"#dc2626":"#e2e8f0"),background:value===false?"#fee2e2":"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>✗</button>
+                </div>
+              </div>
+            );
+            return(
+              <div style={{marginBottom:14,background:"#fffbeb",borderRadius:12,padding:"12px 14px",border:"1.5px solid #fde68a"}}>
+                <div style={{fontWeight:800,fontSize:14,color:"#92400e",marginBottom:8,display:"flex",alignItems:"center",gap:6}}>🔧 {t("certServices")}</div>
+
+                {/* ⚡ Corrente */}
+                <div style={{padding:"8px 0",borderBottom:"1px solid #f1f5f9"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <span style={{fontSize:18,width:28,textAlign:"center"}}>⚡</span>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:12,fontWeight:700,color:"var(--text1)"}}>{t("certElectricity")}</div>
+                      {hasElec&&amps?
+                        <div style={{display:"flex",alignItems:"center",gap:6}}>
+                          <span style={{fontSize:18,fontWeight:800,color:"#d97706"}}>{amps}A</span>
+                          <span style={{fontSize:10,color:"#92400e",fontWeight:600}}>{amps>=10?"🟢 OK":amps>=6?"🟡 Base":"🔴 Low"}</span>
+                        </div>
+                        :hasElec?<span style={{fontSize:10,color:"#16a34a",fontWeight:600}}>✅ {t("certElectricityAvail")}</span>
+                        :noElec?<span style={{fontSize:10,color:"#dc2626",fontWeight:600}}>❌ {t("certElectricityNo")}</span>
+                        :<span style={{fontSize:10,color:"#94a3b8"}}>{t("certNotSet")}</span>
+                      }
+                    </div>
+                    <div style={{display:"flex",gap:4}}>
+                      <button onClick={()=>updateServices(it.id,{electricity:true})} style={{width:32,height:28,borderRadius:6,border:"1.5px solid "+(hasElec?"#16a34a":"#e2e8f0"),background:hasElec?"#dcfce7":"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>✓</button>
+                      <button onClick={()=>updateServices(it.id,{electricity:false,amperage:null})} style={{width:32,height:28,borderRadius:6,border:"1.5px solid "+(noElec?"#dc2626":"#e2e8f0"),background:noElec?"#fee2e2":"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>✗</button>
+                    </div>
+                  </div>
+                  {/* Ampere input — solo se corrente = sì */}
+                  {hasElec&&(
+                    <div style={{marginTop:8,marginLeft:36}}>
+                      <div style={{display:"flex",gap:4,marginBottom:6}}>
+                        {[3,6,10,16].map(a=>(
+                          <button key={a} onClick={()=>updateServices(it.id,{amperage:a,electricity:true})} style={{flex:1,padding:"5px 2px",borderRadius:6,border:"1.5px solid "+(amps===a?"#d97706":"#fde68a"),background:amps===a?"#fef3c7":"#fffbeb",cursor:"pointer",fontSize:11,fontWeight:700,color:amps===a?"#d97706":"#92400e"}}>
+                            {a}A
+                          </button>
+                        ))}
+                      </div>
+                      <div style={{display:"flex",gap:6}}>
+                        <input type="number" className="inp" placeholder={t("certAmps")+"..."} value={ampInput} onChange={e=>setAmpInput(e.target.value)} style={{flex:1,fontSize:11,padding:"5px 8px"}}/>
+                        <button className="btn bsm" style={{background:"#fbbf24",color:"#78350f",fontWeight:700,border:"none",fontSize:10,padding:"5px 10px"}} onClick={()=>{
+                          const a=parseInt(ampInput);
+                          if(a>0&&a<=100){updateServices(it.id,{amperage:a,electricity:true});setAmpInput("");}
+                        }}>{t("certSetAmps")}</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 🚿 Carico acqua */}
+                <ServiceToggle label={t("certWater")} icon="🚿" yesText={t("certWaterYes")} noText={t("certWaterNo")} value={svc.water}
+                  onSet={(v)=>updateServices(it.id,{water:v})}/>
+
+                {/* 🚽 Scarico nere */}
+                <ServiceToggle label={t("certBlackWater")} icon="🚽" yesText={t("certBlackYes")} noText={t("certBlackNo")} value={svc.blackWater}
+                  onSet={(v)=>updateServices(it.id,{blackWater:v})}/>
+
+                {/* 🫧 Scarico grigie */}
+                <div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 0"}}>
+                  <span style={{fontSize:18,width:28,textAlign:"center"}}>🫧</span>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:12,fontWeight:700,color:"var(--text1)"}}>{t("certGreyWater")}</div>
+                    <div style={{fontSize:10,color:svc.greyWater===true?"#16a34a":svc.greyWater===false?"#dc2626":"#94a3b8",fontWeight:600}}>
+                      {svc.greyWater===true?"✅ "+t("certGreyYes"):svc.greyWater===false?"❌ "+t("certGreyNo"):t("certNotSet")}
+                    </div>
+                  </div>
+                  <div style={{display:"flex",gap:4}}>
+                    <button onClick={()=>updateServices(it.id,{greyWater:true})} style={{width:32,height:28,borderRadius:6,border:"1.5px solid "+(svc.greyWater===true?"#16a34a":"#e2e8f0"),background:svc.greyWater===true?"#dcfce7":"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>✓</button>
+                    <button onClick={()=>updateServices(it.id,{greyWater:false})} style={{width:32,height:28,borderRadius:6,border:"1.5px solid "+(svc.greyWater===false?"#dc2626":"#e2e8f0"),background:svc.greyWater===false?"#fee2e2":"#fff",cursor:"pointer",fontSize:14,display:"flex",alignItems:"center",justifyContent:"center"}}>✗</button>
+                  </div>
+                </div>
+
+                {/* Riepilogo icone servizi */}
+                <div style={{display:"flex",gap:8,marginTop:8,justifyContent:"center",padding:"6px 0",borderTop:"1px solid #fde68a"}}>
+                  <span style={{fontSize:16,opacity:hasElec?1:0.25}} title={t("certElectricity")}>⚡</span>
+                  <span style={{fontSize:16,opacity:svc.water===true?1:0.25}} title={t("certWater")}>🚿</span>
+                  <span style={{fontSize:16,opacity:svc.blackWater===true?1:0.25}} title={t("certBlackWater")}>🚽</span>
+                  <span style={{fontSize:16,opacity:svc.greyWater===true?1:0.25}} title={t("certGreyWater")}>🫧</span>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Size suitability - interactive */}
+          <div style={{marginBottom:14}}>
+            <div style={{fontWeight:700,fontSize:13,color:"var(--text1)",marginBottom:8}}>📏 {t("certSuitableFor")}</div>
+            <div style={{fontSize:10,color:"var(--text3)",marginBottom:8,lineHeight:1.5}}>{t("certSizeCascade")}</div>
+            <div style={{display:"flex",gap:8}}>
+              {SIZE_CATS.map(s=>{
+                const active=flags[s.id];
+                return(
+                  <button key={s.id} onClick={()=>updateSizeFlag(it.id,s.id,!active)}
+                    style={{flex:1,padding:"12px 6px",borderRadius:12,border:"2.5px solid "+(active?s.color:"var(--border2)"),
+                      background:active?s.bg:"var(--card)",cursor:"pointer",textAlign:"center",transition:"all .2s",opacity:active?1:0.5}}>
+                    <div style={{margin:"4px 0"}}>{s.isSvg?<MhIcon id={s.emoji} size={45}/>:<span style={{fontSize:20}}>{s.emoji}</span>}</div>
+                    <div style={{fontSize:13,fontWeight:800,color:active?s.color:"var(--text3)"}}>{s.id}m</div>
+                    <div style={{fontSize:18,marginTop:2}}>{active?"✅":"❌"}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 📝 Note community */}
+          <div style={{marginBottom:14,background:"#f0f9ff",borderRadius:10,padding:"10px 12px",border:"1.5px solid #bae6fd"}}>
+            <div style={{fontWeight:700,fontSize:13,color:"#0369a1",marginBottom:8}}>📝 {t("certNotes")}</div>
+            {communityNotes.length===0&&<div style={{fontSize:11,color:"#0c4a6e",fontStyle:"italic",marginBottom:8}}>{t("certNoNotes")}</div>}
+            {communityNotes.map((n,i)=>(
+              <div key={i} style={{background:"#fff",borderRadius:8,padding:"8px 10px",marginBottom:6,border:"1px solid #e0f2fe"}}>
+                <div style={{fontSize:12,color:"var(--text1)",lineHeight:1.5}}>{n.text}</div>
+                <div style={{fontSize:9,color:"#64748b",marginTop:4,display:"flex",gap:8}}>
+                  <span>👤 {n.by?.substring(0,12)||"Anonimo"}</span>
+                  <span>🕐 {timeAgo(n.at)}</span>
+                </div>
+              </div>
+            ))}
+            <div style={{display:"flex",gap:6,marginTop:6}}>
+              <textarea className="inp" placeholder={t("certAddNote")} value={noteInput} onChange={e=>setNoteInput(e.target.value)} rows={2} style={{flex:1,fontSize:12,resize:"vertical"}}/>
+            </div>
+            <button className="btn bsm" style={{marginTop:6,width:"100%",background:"#0ea5e9",color:"#fff",fontWeight:700,border:"none"}} onClick={()=>{addCommunityNote(it.id,noteInput);setNoteInput("");}}>
+              ✏️ {t("certSendNote")}
+            </button>
+          </div>
+
+          {/* Actions */}
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:10}}>
+            <button onClick={()=>vote(it.id)} style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:5,background:"#fefce8",border:"1.5px solid #d4a017",borderRadius:8,padding:"8px",fontSize:13,fontWeight:700,color:"#996515",cursor:"pointer"}}>
+              👍 {t("certVote")} ({it.votes||0})
+            </button>
+            {it.website&&<a href={it.website} target="_blank" style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:5,background:"#eff6ff",border:"1.5px solid #bfdbfe",borderRadius:8,padding:"8px",fontSize:13,fontWeight:700,color:"#1d4ed8",textDecoration:"none",cursor:"pointer"}}>
+              🌐 {t("certWebsite")}
+            </a>}
+            {it.lat&&it.lng&&<a href={"https://www.google.com/maps/search/?api=1&query="+it.lat+","+it.lng} target="_blank" style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:5,background:"#f0fdf4",border:"1.5px solid #bbf7d0",borderRadius:8,padding:"8px",fontSize:13,fontWeight:700,color:"#16a34a",textDecoration:"none",cursor:"pointer"}}>
+              📍 {t("certMap")}
+            </a>}
+          </div>
+          <div style={{display:"flex",gap:8}}>
+            {it.lat&&it.lng&&<a href={"https://www.google.com/maps/dir/?api=1&destination="+it.lat+","+it.lng} target="_blank" style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:5,background:"#faf5ff",border:"1.5px solid #ddd6fe",borderRadius:8,padding:"8px",fontSize:13,fontWeight:700,color:"#7c3aed",textDecoration:"none",cursor:"pointer"}}>
+              🧭 {t("certNavigate")}
+            </a>}
+            <button onClick={()=>{if(confirm(t("certRemoveConfirm")))removeCert(it.id);}} style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:5,background:"#fff1f2",border:"1.5px solid #fecaca",borderRadius:8,padding:"8px",fontSize:13,fontWeight:700,color:"#dc2626",cursor:"pointer"}}>
+              🗑 {t("certRemove")}
+            </button>
+          </div>
+          {/* Meta info */}
+          <div style={{marginTop:10,fontSize:10,color:"var(--text3)",display:"flex",gap:10,flexWrap:"wrap"}}>
+            <span>🕐 {t("certAdded")}: {timeAgo(it.addedAt)}</span>
+            <span>👤 {it.addedBy}</span>
+            <span>🏅 {t("certMax")}: {it.maxSize}m</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return(
     <div className="pg">
@@ -3214,8 +3718,9 @@ function TabCertificate({camper,t,lang}){
               <option value="libera">🌿 Sosta libera</option>
             </select>
           </div>
-          {/* Size category */}
+          {/* Size category with cascade info */}
           <div style={{fontSize:11,fontWeight:700,color:"var(--text2)",marginBottom:4}}>{t("accessibleTo")}</div>
+          <div style={{fontSize:10,color:"#059669",marginBottom:6}}>{t("certSizeCascade")}</div>
           <div style={{display:"flex",gap:6,marginBottom:8}}>
             {SIZE_CATS.map(s=>(
               <button key={s.id} onClick={()=>setForm({...form,maxSize:s.id})}
@@ -3250,25 +3755,19 @@ function TabCertificate({camper,t,lang}){
             </button>
           ))}
         </div>
-        {/* Country filter */}
-        {countries.length>1&&(
-          <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:6}}>
-            <button onClick={()=>setFilterCountry("all")} className={"btn bsm "+(filterCountry==="all"?"bto":"bgh")} style={{fontSize:10}}>🌍 Tutti</button>
-            {countries.map(c=>(
-              <button key={c} onClick={()=>setFilterCountry(filterCountry===c?"all":c)} className={"btn bsm"} style={{fontSize:10,background:filterCountry===c?"#eff6ff":"var(--card)",color:filterCountry===c?"#1d4ed8":"var(--text3)",border:"1.5px solid "+(filterCountry===c?"#1d4ed8":"var(--border2)")}}>
-                {({"Italia":"🇮🇹","Francia":"🇫🇷","Germania":"🇩🇪","Spagna":"🇪🇸","Portogallo":"🇵🇹","Austria":"🇦🇹","Svizzera":"🇨🇭","Paesi Bassi":"🇳🇱","Belgio":"🇧🇪","Croazia":"🇭🇷","Slovenia":"🇸🇮","Grecia":"🇬🇷"}[c]||"🏳")} {c}
-              </button>
-            ))}
-          </div>
-        )}
-        {/* Sort */}
+        {/* View mode + Sort */}
+        <div style={{display:"flex",gap:4,marginBottom:6}}>
+          <button onClick={()=>setViewMode("grouped")} className={"btn bsm "+(viewMode==="grouped"?"bto":"bgh")} style={{fontSize:10}}>🗂 {t("certByRegion")}</button>
+          <button onClick={()=>setViewMode("list")} className={"btn bsm "+(viewMode==="list"?"bto":"bgh")} style={{fontSize:10}}>📋 {t("certList")}</button>
+        </div>
         <div style={{display:"flex",gap:4}}>
           <button onClick={()=>setSortBy("recent")} className={"btn bsm "+(sortBy==="recent"?"bto":"bgh")} style={{fontSize:10}}>🕐 {t("recent")}</button>
           <button onClick={()=>setSortBy("votes")} className={"btn bsm "+(sortBy==="votes"?"bto":"bgh")} style={{fontSize:10}}>🔥 {t("popular")}</button>
           <button onClick={()=>setSortBy("name")} className={"btn bsm "+(sortBy==="name"?"bto":"bgh")} style={{fontSize:10}}>🔤 {t("name")}</button>
         </div>
       </div>
-      {/* List */}
+      {detectingRegions&&<div style={{fontSize:10,color:"#b8860b",textAlign:"center",padding:4}}>🔄 {t("certDetectingRegions")}</div>}
+      {/* List or Grouped */}
       {filtered.length===0&&(
         <div style={{textAlign:"center",padding:"30px 20px",color:"var(--text3)"}}>
           {items.length===0?(
@@ -3282,47 +3781,65 @@ function TabCertificate({camper,t,lang}){
           )}
         </div>
       )}
-      {filtered.map(it=>{
-        const sizeCat=SIZE_CATS.find(s=>s.id===it.maxSize)||SIZE_CATS[1];
-        const typeIco=it.type==="campeggio"?"🏕":it.type==="area_sosta"?"🅿️":it.type==="stellplatz"?"🚐":it.type==="agriturismo"?"🌾":it.type==="libera"?"🌿":"🅿️";
-        const timeAgo=(()=>{
-          const d=Date.now()-it.addedAt;
-          if(d<3600000)return Math.round(d/60000)+"min fa";
-          if(d<86400000)return Math.round(d/3600000)+"h fa";
-          if(d<2592000000)return Math.round(d/86400000)+"g fa";
-          return new Date(it.addedAt).toLocaleDateString("it-IT");
-        })();
-        const mySize=parseFloat(camper.length);
-        const fits=mySize<=parseFloat(it.maxSize);
+      {viewMode==="grouped"&&grouped.map(([country,regionEntries,totalCountry])=>{
+        const cKey="c_"+country;
+        const cOpen=openSections[cKey]!==false; /* default open */
         return(
-          <div key={it.id} className="card" style={{padding:"10px 12px",border:"1.5px solid "+(fits?"#16a34a33":"#dc262633")}}>
-            <div style={{display:"flex",alignItems:"flex-start",gap:10}}>
-              <div style={{width:42,height:42,borderRadius:10,background:sizeCat.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0,border:"1.5px solid "+sizeCat.color+"33"}}>
-                {typeIco}
-              </div>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                  <div style={{fontWeight:800,fontSize:14,color:"var(--text1)"}}>{it.name}</div>
-                  <span style={{fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:5,background:sizeCat.bg,color:sizeCat.color,border:"1px solid "+sizeCat.color+"44",display:"inline-flex",alignItems:"center",gap:3}}>{sizeCat.isSvg?<MhIcon id={sizeCat.emoji} size={22}/>:sizeCat.emoji} max {it.maxSize}m</span>
-                  {fits?<span style={{fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:5,background:"#dcfce7",color:"#16a34a"}}>✅ {t("yourFits",camper.length)}</span>
-                       :<span style={{fontSize:9,fontWeight:700,padding:"2px 6px",borderRadius:5,background:"#fee2e2",color:"#dc2626"}}>❌ {t("tooLarge")}</span>}
-                </div>
-                <div style={{fontSize:11,color:"var(--text3)",marginTop:2}}>{it.address}{it.address&&it.country?" · ":""}{({"Italia":"🇮🇹","Francia":"🇫🇷","Germania":"🇩🇪","Spagna":"🇪🇸","Portogallo":"🇵🇹","Austria":"🇦🇹","Svizzera":"🇨🇭","Croazia":"🇭🇷","Slovenia":"🇸🇮","Grecia":"🇬🇷"}[it.country]||"")} {it.country}</div>
-                {it.note&&<div style={{fontSize:11,color:"var(--text2)",marginTop:4,fontStyle:"italic",lineHeight:1.4}}>💬 "{it.note}"</div>}
-                <div style={{display:"flex",gap:6,marginTop:6,alignItems:"center",flexWrap:"wrap"}}>
-                  <button onClick={e=>{e.stopPropagation();vote(it.id);}} style={{display:"flex",alignItems:"center",gap:3,background:"#fff7ed",border:"1px solid #fed7aa",borderRadius:6,padding:"3px 8px",fontSize:11,fontWeight:700,color:"#ea580c",cursor:"pointer"}}>
-                    👍 {it.votes||0}
-                  </button>
-                  <span style={{fontSize:9,color:"var(--text3)"}}>🕐 {timeAgo}</span>
-                  {it.website&&<a href={it.website} target="_blank" onClick={e=>e.stopPropagation()} style={{fontSize:10,color:"#1d4ed8",textDecoration:"none",fontWeight:600}}>🌐 Sito</a>}
-                  {it.lat&&it.lng&&<a href={"https://www.google.com/maps/search/?api=1&query="+it.lat+","+it.lng} target="_blank" onClick={e=>e.stopPropagation()} style={{fontSize:10,color:"#16a34a",textDecoration:"none",fontWeight:600}}>📍 Mappa</a>}
-                  <button onClick={e=>{e.stopPropagation();if(confirm("Rimuovere questa certificazione?"))removeCert(it.id);}} style={{marginLeft:"auto",background:"none",border:"none",cursor:"pointer",fontSize:10,color:"#dc2626"}}>🗑</button>
-                </div>
-              </div>
+          <div key={cKey} style={{marginBottom:6}}>
+            <div onClick={()=>toggleSection(cKey)} style={{display:"flex",alignItems:"center",gap:8,padding:"10px 12px",background:"linear-gradient(135deg,#1e40af,#7c3aed)",borderRadius:10,cursor:"pointer",color:"#fff"}}>
+              <span style={{fontSize:16}}>{COUNTRY_FLAGS[country]||"🏳"}</span>
+              <span style={{fontWeight:800,fontSize:14,flex:1}}>{country}</span>
+              <span style={{fontSize:11,opacity:.8}}>{totalCountry} mete</span>
+              <span style={{fontSize:12,transition:"transform .2s",transform:cOpen?"rotate(90deg)":"rotate(0)"}}>▶</span>
             </div>
+            {cOpen&&regionEntries.map(([regName,loose,provinces,total])=>{
+              const rKey="r_"+country+"_"+regName;
+              const rOpen=openSections[rKey]!==false;
+              if(regName==="_unknown"||regName==="Sconosciuta"){
+                /* Items senza regione → mostra direttamente */
+                return loose.map(it=>renderCertItem(it));
+              }
+              return(
+                <div key={rKey} style={{marginLeft:8,marginTop:4}}>
+                  <div onClick={()=>toggleSection(rKey)} style={{display:"flex",alignItems:"center",gap:6,padding:"8px 10px",background:"#eff6ff",borderRadius:8,cursor:"pointer",border:"1px solid #bfdbfe"}}>
+                    <span style={{fontSize:13}}>📍</span>
+                    <span style={{fontWeight:700,fontSize:12,flex:1,color:"#1e40af"}}>{regName}</span>
+                    <span style={{fontSize:10,color:"#3b82f6"}}>{total}</span>
+                    <span style={{fontSize:10,transition:"transform .2s",transform:rOpen?"rotate(90deg)":"rotate(0)",color:"#3b82f6"}}>▶</span>
+                  </div>
+                  {rOpen&&(
+                    <div style={{marginLeft:8,marginTop:4}}>
+                      {/* Province */}
+                      {provinces.map(([provName,provItems])=>{
+                        const pKey="p_"+country+"_"+regName+"_"+provName;
+                        const pOpen=openSections[pKey]!==undefined?openSections[pKey]:true;
+                        return(
+                          <div key={pKey} style={{marginBottom:4}}>
+                            <div onClick={()=>toggleSection(pKey)} style={{display:"flex",alignItems:"center",gap:5,padding:"6px 8px",background:"#faf5ff",borderRadius:7,cursor:"pointer",border:"1px solid #e9d5ff"}}>
+                              <span style={{fontSize:11}}>🏛</span>
+                              <span style={{fontWeight:600,fontSize:11,flex:1,color:"#7c3aed"}}>{provName}</span>
+                              <span style={{fontSize:9,color:"#a855f7"}}>{provItems.length}</span>
+                              <span style={{fontSize:9,transition:"transform .2s",transform:pOpen?"rotate(90deg)":"rotate(0)",color:"#a855f7"}}>▶</span>
+                            </div>
+                            {pOpen&&<>
+                              <CertMiniMap items={provItems} onSelect={setSelectedItem}/>
+                              {provItems.map(it=>renderCertItem(it))}
+                            </>}
+                          </div>
+                        );
+                      })}
+                      {/* Loose items without province */}
+                      {loose.length>0&&provinces.length===0&&<CertMiniMap items={loose} onSelect={setSelectedItem}/>}
+                      {loose.map(it=>renderCertItem(it))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         );
       })}
+      {viewMode==="list"&&filtered.map(it=>renderCertItem(it))}
       {/* Info community */}
       <div className="card" style={{background:"#faf5ff",border:"1.5px solid #ddd6fe",padding:"12px 14px"}}>
         <div style={{fontWeight:700,fontSize:12,color:"#7c3aed",marginBottom:6}}>ℹ️ {t("howCertWorks")}</div>
@@ -3330,6 +3847,7 @@ function TabCertificate({camper,t,lang}){
           <b>🏅 {t("certify")}</b>{"\n"}
           <b>👍 {t("voteDesc")}</b>{"\n"}
           <b>📏 {t("categories")}:</b> <MhIcon id="mh-sm" size={20}/> ≤9.5m · <MhIcon id="mh-md" size={22}/> ≤10.5m · <MhIcon id="mh-lg" size={24}/> ≤12m{"\n"}
+          <b>📐 Cascata misure:</b> Se adatto a 12m → automaticamente adatto anche a 10.5m e 9.5m{"\n"}
           <b>✅/❌:</b> {t("fitBadge",camper.length)}
         </div>
       </div>
@@ -3473,7 +3991,7 @@ function TabOversize({camper,ttKey,externalItems,onRemove,t}){
           <div style={{fontWeight:700,fontSize:13}}>{item.name}</div>
           {item.address&&<div style={{fontSize:11,color:"#15803d",marginTop:2}}>📍 {item.address}</div>}
           {item.note&&<div style={{fontSize:11,color:"#475569",marginTop:2,fontStyle:"italic"}}>"{item.note}"</div>}
-          {item.website&&<a href={item.website.startsWith("http")?item.website:"https://"+item.website} target="_blank" style={{fontSize:11,color:"#f97316",marginTop:2,display:"block",fontWeight:600}}>🌐 {item.website}</a>}
+          {item.website&&<a href={item.website.startsWith("http")?item.website:"https://"+item.website} target="_blank" style={{fontSize:11,color:"#b8860b",marginTop:2,display:"block",fontWeight:600}}>🌐 {item.website}</a>}
           {item.verdict&&<div style={{fontSize:10,marginTop:3,color:item.verdict==="ok"?"#16a34a":item.verdict==="warn"?"#a16207":"#dc2626",fontWeight:700}}>
             {item.verdict==="ok"?"✅ Adatto":item.verdict==="warn"?"⚠️ Con attenzione":"🔴 Non adatto"}
           </div>}
@@ -3488,7 +4006,7 @@ function TabOversize({camper,ttKey,externalItems,onRemove,t}){
   }
   return(
     <div className="pg">
-      <div className="hero" style={{background:"linear-gradient(135deg,#f97316,#ea580c)"}}>
+      <div className="hero" style={{background:"linear-gradient(135deg,#b8860b,#996515)"}}>
         <img src={CAMPER_IMG_HERO} style={{position:"absolute",right:-10,bottom:-5,height:70,opacity:.18,pointerEvents:"none"}} alt=""/>
         <h2>⭐ {t("myFav")}</h2>
         <p>{t("myFavDesc",camper.length)}</p>
@@ -3743,6 +4261,12 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,cerebrasKey,orsKey,mapil
   const [dMly,setDMly]=useState(mapillaryKey||"");
   const [testGroqResult,setTestGroqResult]=useState(null);
   const [testingGroq,setTestingGroq]=useState(false);
+  const [testCereResult,setTestCereResult]=useState(null);
+  const [testingCere,setTestingCere]=useState(false);
+  const [testOrsResult,setTestOrsResult]=useState(null);
+  const [testingOrs,setTestingOrs]=useState(false);
+  const [testMlyResult,setTestMlyResult]=useState(null);
+  const [testingMly,setTestingMly]=useState(false);
   async function testGroq(){
     if(!dGroq){setTestGroqResult({ok:false,msg:"Nessuna chiave Groq inserita."});return;}
     setTestingGroq(true);setTestGroqResult(null);
@@ -3797,6 +4321,68 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,cerebrasKey,orsKey,mapil
     setTestResult({ok:false,msg:"❌ Nessun modello ha risposto:\n\n"+results.join("\n")});
     setTesting(false);
   }
+  async function testCerebras(){
+    if(!dCere){setTestCereResult({ok:false,msg:"Nessuna chiave Cerebras inserita."});return;}
+    setTestingCere(true);setTestCereResult(null);
+    try{
+      const r=await fetch("https://api.cerebras.ai/v1/chat/completions",{
+        method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+dCere.trim()},
+        body:JSON.stringify({model:"llama-3.3-70b",messages:[{role:"user",content:"Rispondi solo: OK"}],max_tokens:5}),
+        signal:AbortSignal.timeout(12000)
+      });
+      const data=await r.json();
+      if(data.error){setTestCereResult({ok:false,msg:"❌ "+(data.error.message||data.error.type||JSON.stringify(data.error))});setTestingCere(false);return;}
+      const reply=data.choices?.[0]?.message?.content||"";
+      setTestCereResult({ok:true,msg:"✅ Cerebras funziona! Modello: llama-3.3-70b\nRisposta: "+reply});
+    }catch(e){setTestCereResult({ok:false,msg:"❌ Errore: "+e.message});}
+    setTestingCere(false);
+  }
+  async function testORS(){
+    if(!dOrs){setTestOrsResult({ok:false,msg:"Nessuna chiave ORS inserita."});return;}
+    setTestingOrs(true);setTestOrsResult(null);
+    try{
+      /* Test con una rotta breve Roma centro → Colosseo */
+      const body={coordinates:[[12.4964,41.9028],[12.4922,41.8902]],options:{vehicle_type:"hgv",profile_params:{restrictions:{length:10,width:2.5,height:3.4,weight:3.5}}}};
+      const r=await fetch("https://api.openrouteservice.org/v2/directions/driving-hgv/json",{
+        method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json","Authorization":dOrs.trim()},
+        body:JSON.stringify(body),signal:AbortSignal.timeout(12000)
+      });
+      if(!r.ok){
+        const txt=await r.text().catch(()=>"");
+        let msg="HTTP "+r.status;
+        try{const d=JSON.parse(txt);msg=d.error?.message||d.message||msg;}catch(e){}
+        setTestOrsResult({ok:false,msg:"❌ "+msg});setTestingOrs(false);return;
+      }
+      const data=await r.json();
+      const route=data.routes?.[0];
+      if(route){
+        const dist=(route.summary.distance/1000).toFixed(1);
+        const time=Math.round(route.summary.duration/60);
+        setTestOrsResult({ok:true,msg:"✅ OpenRouteService HGV funziona!\nTest: Roma → Colosseo (camion 10m)\nRotta: "+dist+"km · "+time+"min\nQuota giornaliera: attiva"});
+      }else{
+        setTestOrsResult({ok:false,msg:"❌ Risposta senza rotte."});
+      }
+    }catch(e){setTestOrsResult({ok:false,msg:"❌ Errore: "+e.message});}
+    setTestingOrs(false);
+  }
+  async function testMapillary(){
+    if(!dMly){setTestMlyResult({ok:false,msg:"Nessuna chiave Mapillary inserita."});return;}
+    setTestingMly(true);setTestMlyResult(null);
+    try{
+      /* Test: cerca foto vicino al Colosseo */
+      const r=await fetch("https://graph.mapillary.com/images?access_token="+dMly.trim()+"&fields=id,captured_at&bbox=12.49,41.889,12.494,41.892&limit=3",{
+        signal:AbortSignal.timeout(10000)
+      });
+      if(!r.ok){
+        setTestMlyResult({ok:false,msg:"❌ HTTP "+r.status});setTestingMly(false);return;
+      }
+      const data=await r.json();
+      if(data.error){setTestMlyResult({ok:false,msg:"❌ "+(data.error.message||JSON.stringify(data.error))});setTestingMly(false);return;}
+      const count=(data.data||[]).length;
+      setTestMlyResult({ok:true,msg:"✅ Mapillary funziona!\nTest: foto vicino al Colosseo\nTrovate: "+count+" immagini"});
+    }catch(e){setTestMlyResult({ok:false,msg:"❌ Errore: "+e.message});}
+    setTestingMly(false);
+  }
   return(
     <div className="pg">
       <div className="hero">
@@ -3848,7 +4434,7 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,cerebrasKey,orsKey,mapil
           <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:10,background:"#f8fafc",borderRadius:10,padding:"12px 10px",border:"1px solid #e2e8f0"}}>
             <div>
               <div className="ilab">🟡 Groq API Key <span style={{color:"#16a34a",fontWeight:700}}>(Gratuita · Consigliata)</span></div>
-              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}>Llama 3.3 70B — <a href="https://console.groq.com/keys" target="_blank" style={{color:"#f97316",fontWeight:700}}>console.groq.com/keys</a></div>
+              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}>Llama 3.3 70B — <a href="https://console.groq.com/keys" target="_blank" style={{color:"#b8860b",fontWeight:700}}>console.groq.com/keys</a></div>
               <input className="kinp" type="password" placeholder="gsk_..." value={dGroq} onChange={e=>setDGroq(e.target.value)}/>
               <button className="btn bsm" style={{marginTop:4,width:"100%"}} onClick={testGroq} disabled={testingGroq}>
                 {testingGroq?<><span className="spin"/>Testing...</>:"🧪 Testa Groq"}
@@ -3861,12 +4447,20 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,cerebrasKey,orsKey,mapil
             </div>
             <div>
               <div className="ilab">🔴 Cerebras API Key <span style={{color:"#94a3b8",fontWeight:400}}>(Opzionale · Gratuita · Secondo parere AI)</span></div>
-              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://cloud.cerebras.ai/" target="_blank" style={{color:"#f97316",fontWeight:700}}>cloud.cerebras.ai</a> → API Keys</div>
+              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://cloud.cerebras.ai/" target="_blank" style={{color:"#b8860b",fontWeight:700}}>cloud.cerebras.ai</a> → API Keys</div>
               <input className="kinp" type="password" placeholder="csk-..." value={dCere} onChange={e=>setDCere(e.target.value)}/>
+              <button className="btn bsm" style={{marginTop:4,width:"100%"}} onClick={testCerebras} disabled={testingCere}>
+                {testingCere?<><span className="spin"/>Testing...</>:"🧪 Testa Cerebras"}
+              </button>
+              {testCereResult&&(
+                <div style={{background:testCereResult.ok?"#f0fdf4":"#fff1f2",border:"1.5px solid "+(testCereResult.ok?"#86efac":"#fca5a5"),borderRadius:8,padding:"8px 10px",fontSize:10,color:testCereResult.ok?"#166534":"#b91c1c",whiteSpace:"pre-wrap",fontFamily:"monospace",marginTop:4}}>
+                  {testCereResult.msg}
+                </div>
+              )}
             </div>
             <div>
               <div className="ilab">🟢 Gemini API Key <span style={{color:"#94a3b8",fontWeight:400}}>(Opzionale · Google Search grounding)</span></div>
-              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://aistudio.google.com/app/apikey" target="_blank" style={{color:"#f97316",fontWeight:700}}>aistudio.google.com/app/apikey</a></div>
+              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://aistudio.google.com/app/apikey" target="_blank" style={{color:"#b8860b",fontWeight:700}}>aistudio.google.com/app/apikey</a></div>
               <input className="kinp" type="password" placeholder="AIzaSy..." value={dGk} onChange={e=>setDGk(e.target.value)}/>
               <button className="btn bsm" style={{marginTop:4,width:"100%"}} onClick={testGemini} disabled={testing}>
                 {testing?<><span className="spin"/>Testing...</>:"🧪 Testa Gemini"}
@@ -3879,21 +4473,37 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,cerebrasKey,orsKey,mapil
             </div>
             <div>
               <div className="ilab">📸 Mapillary API Key <span style={{color:"#94a3b8",fontWeight:400}}>(Opzionale · Foto stradali)</span></div>
-              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://www.mapillary.com/developer" target="_blank" style={{color:"#f97316",fontWeight:700}}>mapillary.com/developer</a> → Client Token</div>
+              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://www.mapillary.com/developer" target="_blank" style={{color:"#b8860b",fontWeight:700}}>mapillary.com/developer</a> → Client Token</div>
               <input className="kinp" type="password" placeholder="MLY|..." value={dMly} onChange={e=>setDMly(e.target.value)}/>
+              <button className="btn bsm" style={{marginTop:4,width:"100%"}} onClick={testMapillary} disabled={testingMly}>
+                {testingMly?<><span className="spin"/>Testing...</>:"🧪 Testa Mapillary"}
+              </button>
+              {testMlyResult&&(
+                <div style={{background:testMlyResult.ok?"#f0fdf4":"#fff1f2",border:"1.5px solid "+(testMlyResult.ok?"#86efac":"#fca5a5"),borderRadius:8,padding:"8px 10px",fontSize:10,color:testMlyResult.ok?"#166534":"#b91c1c",whiteSpace:"pre-wrap",fontFamily:"monospace",marginTop:4}}>
+                  {testMlyResult.msg}
+                </div>
+              )}
             </div>
             <div>
               <div className="ilab">🛣 OpenRouteService API Key <span style={{color:"#94a3b8",fontWeight:400}}>(Opzionale · Gratuita · Routing HGV)</span></div>
-              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://openrouteservice.org/dev/#/signup" target="_blank" style={{color:"#f97316",fontWeight:700}}>openrouteservice.org</a> → Sign up → Dashboard → API Key (1000 req/giorno gratis)</div>
+              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://openrouteservice.org/dev/#/signup" target="_blank" style={{color:"#b8860b",fontWeight:700}}>openrouteservice.org</a> → Sign up → Dashboard → API Key (1000 req/giorno gratis)</div>
               <div style={{fontSize:10,color:"#059669",marginBottom:4,fontWeight:600}}>🏆 Consigliata: evita automaticamente ponti bassi, gallerie strette e strade vietate ai mezzi pesanti</div>
               <input className="kinp" type="password" placeholder="5b3ce3597851110001cf..." value={dOrs} onChange={e=>setDOrs(e.target.value)}/>
+              <button className="btn bsm" style={{marginTop:4,width:"100%"}} onClick={testORS} disabled={testingOrs}>
+                {testingOrs?<><span className="spin"/>Testing...</>:"🧪 Testa OpenRouteService"}
+              </button>
+              {testOrsResult&&(
+                <div style={{background:testOrsResult.ok?"#f0fdf4":"#fff1f2",border:"1.5px solid "+(testOrsResult.ok?"#86efac":"#fca5a5"),borderRadius:8,padding:"8px 10px",fontSize:10,color:testOrsResult.ok?"#166534":"#b91c1c",whiteSpace:"pre-wrap",fontFamily:"monospace",marginTop:4}}>
+                  {testOrsResult.msg}
+                </div>
+              )}
             </div>
             <button className="btn bto" style={{width:"100%"}} onClick={()=>{onSaveKeys&&onSaveKeys(dGk.trim(),dGroq.trim(),dMly.trim(),dCere.trim(),dOrs.trim());setEditKeys(false);}}>💾 Salva tutte le chiavi</button>
           </div>
         )}
         {!groqKey&&!editKeys&&(
           <div style={{background:"#fef9c3",border:"1px solid #fde047",borderRadius:9,padding:"8px 10px",fontSize:11,color:"#a16207",marginBottom:8}}>
-            💡 Aggiungi la chiave <b>Groq</b> (gratuita) per l'analisi AI. <a href="https://console.groq.com/keys" target="_blank" style={{color:"#f97316",fontWeight:700}}>console.groq.com/keys</a>
+            💡 Aggiungi la chiave <b>Groq</b> (gratuita) per l'analisi AI. <a href="https://console.groq.com/keys" target="_blank" style={{color:"#b8860b",fontWeight:700}}>console.groq.com/keys</a>
           </div>
         )}
       </div>
@@ -3906,7 +4516,7 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,cerebrasKey,orsKey,mapil
           [[t("length"),camper.length+"m"],[t("width"),camper.width+"m"],[t("height"),camper.height+"m"],[t("weight"),camper.weight+"t"],[t("wheelbase"),(camper.wheelbase||"auto")+"m"],[t("rearOverhang"),(camper.rearOverhang||"auto")+"m"],[t("model"),camper.model]].map(([k,v])=>(
             <div key={k} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:"1px solid #f1f5f9"}}>
               <span style={{fontSize:13,color:"#64748b"}}>{k}</span>
-              <span style={{fontSize:13,fontWeight:700,color:"#f97316"}}>{v}</span>
+              <span style={{fontSize:13,fontWeight:700,color:"#b8860b"}}>{v}</span>
             </div>
           ))
         ):(
@@ -3955,10 +4565,10 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,cerebrasKey,orsKey,mapil
           {LANG_OPTIONS.map(lo=>(
             <button key={lo.id} onClick={()=>changeLang(lo.id)} style={{
               padding:"8px 14px",borderRadius:10,border:"1.5px solid",
-              borderColor:lang===lo.id?"#f97316":"var(--border2)",
-              background:lang===lo.id?"#fff7ed":"var(--card)",
+              borderColor:lang===lo.id?"#b8860b":"var(--border2)",
+              background:lang===lo.id?"#fefce8":"var(--card)",
               fontSize:12,fontWeight:lang===lo.id?700:500,
-              color:lang===lo.id?"#ea580c":"var(--text2)",cursor:"pointer",
+              color:lang===lo.id?"#996515":"var(--text2)",cursor:"pointer",
               display:"flex",alignItems:"center",gap:6
             }}>
               <span style={{fontSize:16}}>{lo.flag}</span> {lo.label}
@@ -4050,28 +4660,28 @@ function Setup({onReady}){
         <div className="ibox" style={{background:"#fef3c7",border:"1px solid #fde68a",color:"#92400e"}}>
           🟡 <b>Groq AI</b> — <span style={{fontWeight:700}}>Consigliata · 100% Gratuita</span><br/>
           Llama 3.3 70B — analisi AI dell'accesso camper.<br/>
-          <a href="https://console.groq.com/keys" target="_blank" style={{color:"#f97316",fontWeight:700}}>console.groq.com/keys</a> → Create API Key
+          <a href="https://console.groq.com/keys" target="_blank" style={{color:"#b8860b",fontWeight:700}}>console.groq.com/keys</a> → Create API Key
         </div>
         <div className="ilab">Chiave Groq <span style={{color:"#94a3b8",fontWeight:400}}>(consigliata · gratuita)</span></div>
         <input className="kinp" type="password" placeholder="gsk_... oppure lascia vuoto" value={groqK} onChange={e=>setGroqK(e.target.value)}/>
         <div className="ibox" style={{background:"#fef2f2",border:"1px solid #fecaca",color:"#991b1b",marginTop:8}}>
           🔴 <b>Cerebras AI</b> — <span style={{fontWeight:700}}>Opzionale · Gratuita · Velocissima</span><br/>
           Llama 3.3 70B — secondo parere AI per verdetto a maggioranza.<br/>
-          <a href="https://cloud.cerebras.ai/" target="_blank" style={{color:"#f97316",fontWeight:700}}>cloud.cerebras.ai</a> → API Keys
+          <a href="https://cloud.cerebras.ai/" target="_blank" style={{color:"#b8860b",fontWeight:700}}>cloud.cerebras.ai</a> → API Keys
         </div>
         <div className="ilab">Chiave Cerebras <span style={{color:"#94a3b8",fontWeight:400}}>(opzionale · gratuita)</span></div>
         <input className="kinp" type="password" placeholder="csk-... oppure lascia vuoto" value={cereK} onChange={e=>setCereK(e.target.value)}/>
         <div className="ibox" style={{background:"#f0fdf4",border:"1px solid #bbf7d0",color:"#15803d",marginTop:8}}>
           🟢 <b>Google Gemini</b> — <span style={{fontWeight:700}}>Opzionale · Google Search grounding</span><br/>
           Aggiunge ricerca web in tempo reale. Puoi aggiungerla dopo.<br/>
-          <a href="https://aistudio.google.com/app/apikey" target="_blank" style={{color:"#f97316",fontWeight:700}}>aistudio.google.com/app/apikey</a>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" style={{color:"#b8860b",fontWeight:700}}>aistudio.google.com/app/apikey</a>
         </div>
         <div className="ilab">Chiave Gemini <span style={{color:"#94a3b8",fontWeight:400}}>(opzionale)</span></div>
         <input className="kinp" type="password" placeholder="AIzaSy... oppure lascia vuoto" value={gk} onChange={e=>setGk(e.target.value)}/>
         <div className="ibox" style={{background:"#ede9fe",border:"1px solid #ddd6fe",color:"#5b21b6",marginTop:8}}>
           📸 <b>Mapillary</b> — <span style={{fontWeight:700}}>Opzionale · Foto stradali reali</span><br/>
           Arricchisce l'analisi con foto dell'ingresso. Puoi aggiungerla dopo.<br/>
-          <a href="https://www.mapillary.com/developer" target="_blank" style={{color:"#f97316",fontWeight:700}}>mapillary.com/developer</a> → Client Token
+          <a href="https://www.mapillary.com/developer" target="_blank" style={{color:"#b8860b",fontWeight:700}}>mapillary.com/developer</a> → Client Token
         </div>
         <div className="ilab">Chiave Mapillary <span style={{color:"#94a3b8",fontWeight:400}}>(opzionale)</span></div>
         <input className="kinp" type="password" placeholder="MLY|... oppure lascia vuoto" value={mlyK} onChange={e=>setMlyK(e.target.value)}/>
@@ -4190,7 +4800,7 @@ function App(){
                 <div className="logo">OVERSIZE<em> IN TOUR</em></div>
                 <div style={{display:"flex",alignItems:"center",gap:4,marginTop:2}}>
                   {LANG_OPTIONS.map(lo=>(
-                    <button key={lo.id} onClick={()=>changeLang(lo.id)} style={{background:lang===lo.id?"#fff7ed":"transparent",border:lang===lo.id?"1.5px solid #fed7aa":"1.5px solid transparent",borderRadius:6,padding:"1px 4px",cursor:"pointer",fontSize:12,lineHeight:1,transition:"all .2s"}} title={lo.label}>{lo.flag}</button>
+                    <button key={lo.id} onClick={()=>changeLang(lo.id)} style={{background:lang===lo.id?"#fefce8":"transparent",border:lang===lo.id?"1.5px solid #d4a017":"1.5px solid transparent",borderRadius:6,padding:"1px 4px",cursor:"pointer",fontSize:12,lineHeight:1,transition:"all .2s"}} title={lo.label}>{lo.flag}</button>
                   ))}
                   <span style={{fontSize:8,color:"#64748b",fontWeight:500,marginLeft:2}}>LUXURY CAMPER · EUROPA</span>
                 </div>
@@ -4206,7 +4816,7 @@ function App(){
                 <span style={{fontSize:14}}>🚐</span>
                 <span>{camper.length}m · {camper.width}m · {camper.height}m</span>
               </div>
-              <span style={{fontSize:9,color:"#c2410c",fontWeight:600,letterSpacing:".2px"}}>{camper.model}</span>
+              <span style={{fontSize:9,color:"#92740a",fontWeight:600,letterSpacing:".2px"}}>{camper.model}</span>
             </button>
           </div>
         </div>
