@@ -397,9 +397,17 @@ function initFirebase(config){
 }
 // Auto-init Firebase at startup
 initFirebase(FIREBASE_CONFIG);
+/* ── User ID per sincronizzazione personale ── */
+function getUserId(){
+  let uid=LS.get("oit_user_id");
+  if(!uid){uid="u_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);LS.set("oit_user_id",uid);}
+  return uid;
+}
 const FB={
   ready:()=>!!fbDb,
+  userId:getUserId,
   push:async(path,data)=>{if(!fbDb)return null;try{const ref=fbDb.ref(path).push();await ref.set({...data,_ts:firebase.database.ServerValue.TIMESTAMP});return ref.key;}catch(e){console.warn("FB push error:",e);return null;}},
+  set:async(path,data)=>{if(!fbDb)return;try{await fbDb.ref(path).set({...data,_ts:firebase.database.ServerValue.TIMESTAMP});}catch(e){console.warn("FB set error:",e);}},
   listen:(path,cb)=>{if(!fbDb)return()=>{};const ref=fbDb.ref(path).orderByChild("_ts").limitToLast(500);ref.on("value",snap=>{const d=snap.val();const arr=d?Object.entries(d).map(([k,v])=>({...v,_fbId:k})).sort((a,b)=>(b._ts||0)-(a._ts||0)):[];cb(arr);});return()=>ref.off();},
   update:async(path,data)=>{if(!fbDb)return;try{await fbDb.ref(path).update(data);}catch(e){}},
   remove:async(path)=>{if(!fbDb)return;try{await fbDb.ref(path).remove();}catch(e){}}
@@ -941,18 +949,22 @@ SINTESI_VISIVA: [giudizio complessivo basato sulle foto]`;
     return null;
   }catch(e){return null;}
 }
-/* ─── OpenRouteService HGV routing ─── */
-async function checkORS_HGV(dest, camper) {
+/* ─── OpenRouteService HGV routing (con API key) ─── */
+async function checkORS_HGV(dest, camper, orsKey) {
+  if(!orsKey)return null;
   const approaches = [
-    {dir:"N", lat:dest.lat+0.04, lng:dest.lng},
-    {dir:"S", lat:dest.lat-0.04, lng:dest.lng},
-    {dir:"E", lat:dest.lat, lng:dest.lng+0.04},
+    {dir:"N", lat:dest.lat+0.06, lng:dest.lng},
+    {dir:"S", lat:dest.lat-0.06, lng:dest.lng},
+    {dir:"E", lat:dest.lat, lng:dest.lng+0.06},
+    {dir:"W", lat:dest.lat, lng:dest.lng-0.06},
   ];
   const results = [];
-  for(const from of approaches) {
+  /* Lancia tutte le direzioni in parallelo */
+  const jobs=approaches.map(async(from)=>{
     try {
       const body = {
         coordinates: [[from.lng, from.lat], [dest.lng, dest.lat]],
+        alternative_routes:{share_factor:0.6,target_count:2,weight_factor:1.4},
         options: {
           vehicle_type: "hgv",
           profile_params: {
@@ -967,27 +979,32 @@ async function checkORS_HGV(dest, camper) {
       };
       const r = await fetch("https://api.openrouteservice.org/v2/directions/driving-hgv/json", {
         method: "POST",
-        headers: {"Content-Type": "application/json", "Accept": "application/json"},
+        headers: {"Content-Type": "application/json", "Accept": "application/json", "Authorization": orsKey.trim()},
         body: JSON.stringify(body),
-        signal: AbortSignal.timeout(12000)
+        signal: AbortSignal.timeout(15000)
       });
-      if (!r.ok) continue;
+      if (!r.ok){console.warn("[ORS] "+from.dir+" HTTP "+r.status);return null;}
       const d = await r.json();
-      const route = d.routes?.[0];
-      if (route) {
-        results.push({
-          dir: from.dir,
-          dist: (route.summary.distance / 1000).toFixed(1),
-          time: Math.round(route.summary.duration / 60),
-          warnings: route.warnings || [],
-          ok: true
-        });
-      }
-    } catch(e) { continue; }
-  }
+      /* ORS può restituire più rotte alternative */
+      const routes=(d.routes||[]).map((route,idx)=>({
+        dir: from.dir+(idx>0?" alt"+(idx+1):""),
+        dist: (route.summary.distance / 1000).toFixed(1),
+        time: Math.round(route.summary.duration / 60),
+        warnings: route.warnings || [],
+        extras: route.extras || {},
+        ok: true,
+        isAlternative: idx>0
+      }));
+      return routes;
+    } catch(e) {console.warn("[ORS] "+from.dir+" err:",e.message);return null;}
+  });
+  const allRes=await Promise.all(jobs);
+  allRes.forEach(r=>{if(r)results.push(...r);});
   if (results.length === 0) return null;
-  const best = results.sort((a,b) => parseFloat(a.dist) - parseFloat(b.dist))[0];
-  return { ok: true, dist: best.dist, time: best.time, dir: best.dir, warnings: best.warnings, alternatives: results.slice(1), source: "OpenRouteService HGV" };
+  const sorted=results.sort((a,b) => parseFloat(a.dist) - parseFloat(b.dist));
+  const best = sorted[0];
+  console.log("[ORS HGV] "+results.length+" rotte trovate, migliore: "+best.dir+" "+best.dist+"km");
+  return { ok: true, dist: best.dist, time: best.time, dir: best.dir, warnings: best.warnings, alternatives: sorted.slice(1).slice(0,5), allRoutes: sorted, source: "OpenRouteService HGV", note: "Routing HGV con restrizioni altezza/larghezza/peso — evita ponti bassi e gallerie strette" };
 }
 /* ─── Mapillary: foto lungo il percorso (ultimo km) ─── */
 async function getMapillaryRoutePhotos(routePoints, mlyKey) {
@@ -1137,7 +1154,16 @@ function computeAccessibilityScore(camper, routing, extraData, pitchData, mapill
   if (critical && critical.turningCircles === 0 && camper.length >= 10) { pen("turning", 5, "Nessun punto di inversione per camper " + camper.length + "m"); }
   if (critical && critical.turningCircles > 0) { bon("turning", 3, critical.turningCircles + " punto/i inversione trovati"); }
   // Routing
-  if (routing) {
+  const orsHGV = extraData?.orsHGV;
+  if (orsHGV && orsHGV.ok) {
+    /* ORS HGV è più affidabile di Valhalla per restrizioni fisiche */
+    bon("orsHgv", 8, "ORS HGV: rotta verificata per mezzi pesanti "+orsHGV.dist+"km da "+orsHGV.dir);
+    if (orsHGV.alternatives?.length > 0) bon("orsAlternatives", 3, orsHGV.alternatives.length+" rotte alternative HGV disponibili");
+    if (routing && routing.restricted) {
+      /* Valhalla dice deviazione, ma ORS trova una rotta — riduci la penalità */
+      pen("routing", 5, "Valhalla segnala deviazione ma ORS HGV ha trovato rotta praticabile");
+    }
+  } else if (routing) {
     if (!routing.ok) { pen("routing", 10, "Routing camion non disponibile"); }
     else if (routing.restricted) { pen("routing", 15, "Deviazione camion +" + Math.round((routing.ratio||0)*100) + "%"); }
   }
@@ -1475,8 +1501,14 @@ function buildAnalysisPrompt(poi,camper,routing,extraData,mapillaryData,countryI
     :"Valhalla/OSM: routing camion non disponibile";
   const orsInfo=(()=>{
     const ors=extraData?.orsHGV;
-    if(!ors||!ors.ok)return"OpenRouteService HGV: non disponibile";
-    return"OpenRouteService HGV: "+ors.dist+"km · "+ors.time+"min da "+ors.dir+(ors.warnings?.length?" · "+ors.warnings.length+" avvisi":"")+(ors.alternatives?.length?" · "+ors.alternatives.length+" percorsi alternativi":"");
+    if(!ors||!ors.ok)return"OpenRouteService HGV: non disponibile (aggiungi chiave ORS gratuita nel Profilo per routing camion avanzato con evitamento ponti bassi)";
+    let info="OpenRouteService HGV: rotta migliore "+ors.dist+"km · "+ors.time+"min da "+ors.dir;
+    if(ors.warnings?.length)info+=" · AVVISI: "+ors.warnings.map(w=>w.message||JSON.stringify(w)).join("; ");
+    if(ors.alternatives?.length>0){
+      info+="\n  ROTTE ALTERNATIVE HGV (evitano ostacoli diversi): "+ors.alternatives.map(a=>a.dir+" "+a.dist+"km "+a.time+"min"+(a.warnings?.length?" ("+a.warnings.length+" avvisi)":"")).join(" | ");
+    }
+    info+="\n  ⚠️ IMPORTANTE: ORS HGV calcola rotte specifiche per mezzi pesanti che EVITANO automaticamente ponti bassi (<"+camper.height+"m), gallerie strette (<"+camper.width+"m) e strade vietate ai mezzi >"+camper.weight+"t. Se ORS trova una rotta, significa che ESISTE un percorso praticabile. Se la rotta è diversa/più lunga di quella auto, cerca strade alternative percorribili.";
+    return info;
   })();
   const prompt=
 `Sei un esperto di viabilità e campeggio per camper di grandi dimensioni in Europa, con specializzazione su ${destCountry}. Analizza questa struttura per il camper con le ESATTE misure indicate sotto.
@@ -1607,7 +1639,7 @@ PIAZZOLE_INTERNE: [Dati OSM piazzole: ${pitchInfo}. Analisi compatibilità: lung
 STRUTTURA: [tipo, ingresso vs ${swp.minEntry}m, piazzole vs ${(camper.length+1.5).toFixed(1)}m, altezza sbarre vs ${(camper.height+0.3).toFixed(1)}m, pavimentazione, servizi]
 RECENSIONI: [3-5 punti concreti: valutazione media, commenti camper grandi/lunghi, segnali critici trovati con le keyword, stagionalità. Fonte per ogni dato]
 PUNTI_CRITICI: [vincoli fisici incompatibili per ${camper.length}m×${camper.width}m×${camper.height}m con misure numeriche. Se nessuno: Nessun vincolo critico rilevato]
-PERCORSI_ALTERNATIVI: [Se ci sono restrizioni o deviazioni: elenca percorsi alternativi verificati — per ciascuno: da quale direzione arrivare, strada principale (SS/SP/comunale), punti di svolta chiave, km aggiuntivi stimati, restrizione evitata. Se accesso diretto è OK: "Accesso diretto praticabile da ${routing.primaryDir||'N/D'} — nessuna deviazione necessaria"]
+PERCORSI_ALTERNATIVI: [CRUCIALE: se Valhalla segnala deviazione o restrizioni, ma ORS HGV trova una rotta praticabile, significa che ESISTE una strada alternativa percorribile per il camper. Analizza TUTTE le rotte ORS HGV alternative disponibili. Per ciascuna: direzione di arrivo, strada principale (SS/SP/comunale), km, tempo, ostacoli evitati. Se ORS HGV non è disponibile: basati su Valhalla e conoscenza locale. Se accesso diretto è OK: "Accesso diretto praticabile da ${routing.primaryDir||'N/D'} — nessuna deviazione necessaria"]
 CONSIGLIO: [2-3 azioni concrete: cosa verificare prima di partire, chi contattare, orario ideale di arrivo]
 
 NON scrivere nulla prima di VERDETTO. Se i dati sono scarsi abbassa la confidenza e spiegalo.`;
@@ -1871,7 +1903,7 @@ function FunTips({lang}){
   );
 }
 /* ══════════════════ SCHERMATA ANALISI AI ══════════════════ */
-function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,onSave,onSaveCert,t,lang}){
+function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,mapillaryKey,onBack,onSave,onSaveCert,t,lang}){
   const [phase,setPhase]=useState("gps"); // gps | routing | osm | pitches | mapillary | vision | ai | done
   const [routing,setRouting]=useState(null);
   const [userPos,setUserPos]=useState(null);
@@ -1936,7 +1968,7 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
     const [r,realR,orsR]=await Promise.all([
       checkRouting(null,{lat:poi.lat,lng:poi.lng},camper),
       uPos?routeFromUser(uPos,{lat:poi.lat,lng:poi.lng},camper):Promise.resolve(null),
-      checkORS_HGV({lat:poi.lat,lng:poi.lng},camper).catch(()=>null)
+      checkORS_HGV({lat:poi.lat,lng:poi.lng},camper,orsKey).catch(()=>null)
     ]);
     setRouting(r);
     setRealRoute(realR);
@@ -2009,55 +2041,69 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
     const relevantFb=allFb.filter(fb=>fb.poiId===poi.id||(fb.poiName&&fb.poiName===poi.name));
     if(relevantFb.length>0) extra.historicalFeedback=relevantFb;
     setPhase("ai");
-    let primaryAnalysis=null;
-    let primarySource=null;
-    if(groqKey){
-      const prompt=buildAnalysisPrompt(poi,camper,r,extra,mlyData,cInfo,lang);
-      const groqRes=await groqDeepAnalysis(groqKey,prompt);
-      if(groqRes&&!groqRes._apiError){
-        const parsed=parseAIResponse(groqRes.txt);
-        if(parsed){primaryAnalysis=parsed;primarySource="groq";}
-      }
+    const prompt=buildAnalysisPrompt(poi,camper,r,extra,mlyData,cInfo,lang);
+    /* ── MULTI-AI: lancia tutte le AI disponibili in parallelo ── */
+    const aiJobs=[];
+    if(groqKey)aiJobs.push({name:"Groq",fn:groqDeepAnalysis(groqKey,prompt).then(r=>r&&!r._apiError?parseAIResponse(r.txt):null)});
+    if(cerebrasKey)aiJobs.push({name:"Cerebras",fn:cerebrasDeepAnalysis(cerebrasKey,prompt).then(r=>r&&!r._apiError?parseAIResponse(r.txt):null)});
+    if(geminiKey)aiJobs.push({name:"Gemini",fn:geminiDeepAnalysis(geminiKey,poi,camper,r,extra,mlyData,cInfo,lang)});
+    if(aiJobs.length===0){
+      setAiError("Nessuna chiave AI configurata. Aggiungi Groq o Cerebras (gratuite) nel Profilo.");
     }
-    if(!primaryAnalysis&&geminiKey){
-      const ai=await geminiDeepAnalysis(geminiKey,poi,camper,r,extra,mlyData,cInfo,lang);
-      if(ai?._apiError){
-        setAiError(ai._apiError);
-      } else if(ai){
-        primaryAnalysis=ai;primarySource="gemini";
-      }
-    } else if(!primaryAnalysis&&!groqKey&&!geminiKey){
-      setAiError("Nessuna chiave AI configurata. Aggiungi Groq (gratuita) o Gemini nel Profilo.");
-    }
+    /* Esegui tutte in parallelo */
+    const aiResults=await Promise.all(aiJobs.map(j=>j.fn.catch(()=>null)));
+    const validResults=[];
+    aiJobs.forEach((j,i)=>{
+      const res=aiResults[i];
+      if(res&&!res._apiError&&res.verdict)validResults.push({name:j.name,analysis:res});
+    });
+    console.log("[AI] "+validResults.length+"/"+aiJobs.length+" AI risposte: "+validResults.map(v=>v.name+"="+v.verdict).join(", "));
+    /* Scegli analisi primaria (prima valida) */
+    let primaryAnalysis=validResults.length>0?validResults[0].analysis:null;
+    let primarySource=validResults.length>0?validResults[0].name:"";
     if(primaryAnalysis){
       setAnalysis(primaryAnalysis);
       setAiSource(primarySource);
     }
-    // Multi-model consensus
-    let secAn=null;
-    if(groqKey&&geminiKey&&primaryAnalysis){
-      try{
-        if(primarySource==="groq"){
-          secAn=await geminiDeepAnalysis(geminiKey,poi,camper,r,extra,mlyData,cInfo,lang);
-        } else {
-          const prompt2=buildAnalysisPrompt(poi,camper,r,extra,mlyData,cInfo,lang);
-          const groqRes2=await groqDeepAnalysis(groqKey,prompt2);
-          if(groqRes2&&!groqRes2._apiError) secAn=parseAIResponse(groqRes2.txt);
-        }
-      }catch(e){}
-    }
-    if(secAn&&!secAn._apiError){
-      setSecondAnalysis(secAn);
-      if(secAn.verdict===primaryAnalysis.verdict){
-        setConsensusNote("Consenso: entrambi i modelli concordano -> "+primaryAnalysis.verdict);
+    /* ── CONSENSO A MAGGIORANZA (2+ AI) ── */
+    if(validResults.length>=2){
+      const secondRes=validResults[1];
+      setSecondAnalysis(secondRes.analysis);
+      /* Conta voti per verdetto */
+      const votes={ok:0,warn:0,no:0};
+      const names={ok:[],warn:[],no:[]};
+      validResults.forEach(v=>{
+        const vd=v.analysis.verdict||"warn";
+        votes[vd]=(votes[vd]||0)+1;
+        names[vd]=(names[vd]||[]);names[vd].push(v.name);
+      });
+      /* Verdetto finale = maggioranza */
+      let finalVerdict=primaryAnalysis.verdict;
+      let maxVotes=0;
+      for(const v of["ok","warn","no"]){if(votes[v]>maxVotes){maxVotes=votes[v];finalVerdict=v;}}
+      const allAgree=validResults.every(v=>v.analysis.verdict===validResults[0].analysis.verdict);
+      if(allAgree){
+        setConsensusNote("Consenso unanime ("+validResults.length+" AI): "+validResults.map(v=>v.name).join(", ")+" → "+finalVerdict);
       } else {
-        let cn="Disaccordo: "+primarySource+" dice "+primaryAnalysis.verdict+", l'altro dice "+secAn.verdict+". Valuta con cautela.";
-        if((primaryAnalysis.verdict==="ok"&&secAn.verdict==="no")||(primaryAnalysis.verdict==="no"&&secAn.verdict==="ok")){
-          primaryAnalysis.verdict="warn";
-          primaryAnalysis.confidence=Math.min(primaryAnalysis.confidence,60);
-          setAnalysis({...primaryAnalysis});
+        const detail=validResults.map(v=>v.name+": "+v.analysis.verdict).join(" · ");
+        if(validResults.length>=3&&maxVotes>=2){
+          setConsensusNote("Maggioranza "+maxVotes+"/"+validResults.length+": "+detail+" → verdetto: "+finalVerdict);
+        } else {
+          setConsensusNote("Disaccordo: "+detail+". Valuta con cautela.");
+          finalVerdict="warn";/* In caso di parità, cautela */
         }
-        setConsensusNote(cn);
+      }
+      /* Applica verdetto di maggioranza se diverso dal primario */
+      if(finalVerdict!==primaryAnalysis.verdict){
+        primaryAnalysis.verdict=finalVerdict;
+        primaryAnalysis.confidence=Math.min(primaryAnalysis.confidence,allAgree?primaryAnalysis.confidence:65);
+        setAnalysis({...primaryAnalysis});
+      }
+      /* Media della confidenza se concordano */
+      if(allAgree&&validResults.length>=2){
+        const avgConf=Math.round(validResults.reduce((s,v)=>s+(v.analysis.confidence||60),0)/validResults.length);
+        primaryAnalysis.confidence=avgConf;
+        setAnalysis({...primaryAnalysis});
       }
     }
     setPhase("done");
@@ -2287,10 +2333,14 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
             <b>📍 Percorso reale:</b> {realRoute.dist}km · {Math.floor(realRoute.time/60)}h{realRoute.time%60}min (camion {camper.length}m dalla tua posizione)
           </div>}
           {orsRoute&&orsRoute.ok&&<div style={{color:"#7c3aed",marginBottom:4}}>
-            <b>🛣 ORS HGV:</b> {orsRoute.dist}km · {orsRoute.time}min da {orsRoute.dir} {orsRoute.warnings.length>0?" · "+orsRoute.warnings.length+" avvisi":""}
+            <b>🛣 ORS HGV:</b> {orsRoute.dist}km · {orsRoute.time}min da {orsRoute.dir} {orsRoute.warnings?.length>0?" · "+orsRoute.warnings.length+" avvisi":""}
+            {orsRoute.alternatives?.length>0&&<div style={{fontSize:10,color:"#6d28d9",marginTop:2,paddingLeft:12}}>
+              📍 {orsRoute.alternatives.length} rotte alternative: {orsRoute.alternatives.slice(0,3).map(a=>a.dir+" "+a.dist+"km").join(" · ")}
+            </div>}
+            <div style={{fontSize:9,color:"#8b5cf6",marginTop:1}}>✅ Rotta verificata per mezzi pesanti — evita ponti bassi e gallerie strette</div>
           </div>}
           {orsRoute===null&&phase==="done"&&<div style={{color:"#94a3b8",marginBottom:4}}>
-            <b>🛣 ORS HGV:</b> non disponibile
+            <b>🛣 ORS HGV:</b> non disponibile — aggiungi chiave ORS nel Profilo per routing avanzato
           </div>}
         </details>
       )}
@@ -2388,14 +2438,14 @@ function AnalisiScreen({poi,camper,ttKey,geminiKey,groqKey,mapillaryKey,onBack,o
           )}
           {/* Consensus note */}
           {consensusNote&&(
-            <div style={{fontSize:11,padding:"6px 10px",borderRadius:8,marginBottom:6,background:consensusNote.includes("Consenso")?"#f0fdf4":"#fef9c3",border:"1px solid "+(consensusNote.includes("Consenso")?"#86efac":"#fde047"),color:consensusNote.includes("Consenso")?"#166534":"#92400e",fontWeight:600}}>
-              {consensusNote.includes("Consenso")?"✅ ":"⚠️ "}{consensusNote}
+            <div style={{fontSize:11,padding:"6px 10px",borderRadius:8,marginBottom:6,background:consensusNote.includes("unanime")||consensusNote.includes("Maggioranza")?"#f0fdf4":consensusNote.includes("Consenso")?"#f0fdf4":"#fef9c3",border:"1px solid "+(consensusNote.includes("unanime")||consensusNote.includes("Consenso")||consensusNote.includes("Maggioranza")?"#86efac":"#fde047"),color:consensusNote.includes("unanime")||consensusNote.includes("Consenso")||consensusNote.includes("Maggioranza")?"#166534":"#92400e",fontWeight:600}}>
+              {consensusNote.includes("unanime")?"🏆 ":consensusNote.includes("Maggioranza")?"✅ ":consensusNote.includes("Consenso")?"✅ ":"⚠️ "}{consensusNote}
             </div>
           )}
           {/* Confidence meter */}
           <div style={{fontSize:11,color:"#64748b",marginBottom:3,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
             <span>Confidenza analisi: {analysis.confidence}% · Camper {analysis.camperTag||""}</span>
-            {aiSource&&<span style={{background:aiSource==="groq"?"#fef3c7":"#dcfce7",color:aiSource==="groq"?"#92400e":"#166534",borderRadius:6,padding:"1px 6px",fontSize:10,fontWeight:700}}>{aiSource==="groq"?"🟡 Groq Llama":"🟢 Gemini"}</span>}
+            {aiSource&&<span style={{background:aiSource==="Groq"?"#fef3c7":aiSource==="Cerebras"?"#fee2e2":"#dcfce7",color:aiSource==="Groq"?"#92400e":aiSource==="Cerebras"?"#991b1b":"#166534",borderRadius:6,padding:"1px 6px",fontSize:10,fontWeight:700}}>{aiSource==="Groq"?"🟡 Groq Llama":aiSource==="Cerebras"?"🔴 Cerebras Llama":"🟢 Gemini"}</span>}
           </div>
           <div className="v-meter">
             <div className="v-meter-fill" style={{width:analysis.confidence+"%",background:vc.meterColor}}/>
@@ -2678,7 +2728,7 @@ function ConfrontoScreen({pois,camper,onBack}){
   );
 }
 /* ══════════════════ TAB CERCA ══════════════════ */
-function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,onSaveCert,onCenterChange,t,lang}){
+function TabCerca({camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,mapillaryKey,onSaveOversize,onSaveCert,onCenterChange,t,lang}){
   const [q,setQ]=useState("");
   const [loading,setLoading]=useState(false);
   const [center,setCenter]=useState({lat:41.9,lng:12.5});
@@ -2750,7 +2800,7 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,mapillaryKey,onSaveOversize,on
   }
 
   if(showConfronto&&compareList.length>=2)return<ConfrontoScreen pois={compareList} camper={camper} onBack={()=>setShowConfronto(false)}/>;
-  if(selPoi)return<AnalisiScreen poi={selPoi} camper={camper} ttKey={ttKey} geminiKey={geminiKey} groqKey={groqKey} mapillaryKey={mapillaryKey}
+  if(selPoi)return<AnalisiScreen poi={selPoi} camper={camper} ttKey={ttKey} geminiKey={geminiKey} groqKey={groqKey} cerebrasKey={cerebrasKey} orsKey={orsKey} mapillaryKey={mapillaryKey}
     onBack={()=>setSelPoi(null)} onSave={onSaveOversize} onSaveCert={onSaveCert} t={t} lang={lang}/>;
 
   async function cerca(){
@@ -3291,6 +3341,17 @@ function TabOversize({camper,ttKey,externalItems,onRemove,t}){
   const [form,setForm]=useState({name:"",address:"",note:"",website:""});
   const [localItems,setLocalItems]=useState(()=>LS.getJ("oit_oversize_manual")||[]);
   const [regionMap,setRegionMap]=useState(()=>LS.getJ("oit_region_map")||{});
+  /* ── Sync manual items con Firebase ── */
+  useEffect(()=>{
+    if(!FB.ready())return;
+    const uid=FB.userId();
+    const unsub=FB.listen("oversize_manual/"+uid,data=>{
+      const fbItems=data.map(d=>({...d}));
+      setLocalItems(fbItems);
+      LS.setJ("oit_oversize_manual",fbItems);
+    });
+    return unsub;
+  },[]);
   const [openRegions,setOpenRegions]=useState({});
   const [detecting,setDetecting]=useState(false);
   const allItems=[...externalItems,...localItems];
@@ -3374,18 +3435,26 @@ function TabOversize({camper,ttKey,externalItems,onRemove,t}){
         if(c){
           setLocalItems(prev=>{
             const u=prev.map(i=>i.id===ni.id?{...i,lat:c.lat,lng:c.lng}:i);
-            LS.setJ("oit_oversize_manual",u);return u;
+            LS.setJ("oit_oversize_manual",u);
+            /* Update Firebase with coords */
+            if(FB.ready()){const tgt=u.find(x=>x.id===ni.id);if(tgt&&tgt._fbId){const uid=FB.userId();FB.update("oversize_manual/"+uid+"/"+tgt._fbId,{lat:c.lat,lng:c.lng});}}
+            return u;
           });
         }
       });
     }
     const upd=[...localItems,ni];
     setLocalItems(upd);LS.setJ("oit_oversize_manual",upd);
+    /* Sync to Firebase */
+    if(FB.ready()){const uid=FB.userId();FB.push("oversize_manual/"+uid,ni);}
     setForm({name:"",address:"",note:"",website:""});setAdding(false);
   }
   function removeLocal(id){
+    const target=localItems.find(i=>i.id===id);
     const u=localItems.filter(i=>i.id!==id);
     setLocalItems(u);LS.setJ("oit_oversize_manual",u);
+    /* Remove from Firebase */
+    if(FB.ready()&&target&&target._fbId){const uid=FB.userId();FB.remove("oversize_manual/"+uid+"/"+target._fbId);}
     // Also remove from regionMap
     const nm={...regionMap};delete nm[id];setRegionMap(nm);LS.setJ("oit_region_map",nm);
   }
@@ -3661,7 +3730,7 @@ function TabNoleggio({t,lang}){
 }
 
 /* ══════════════════ TAB PROFILO ══════════════════ */
-function TabProfilo({camper,setCamper,geminiKey,groqKey,mapillaryKey,ttKey,onReset,onSaveKeys,t,lang,changeLang}){
+function TabProfilo({camper,setCamper,geminiKey,groqKey,cerebrasKey,orsKey,mapillaryKey,ttKey,onReset,onSaveKeys,t,lang,changeLang}){
   const [editing,setEditing]=useState(false);
   const [d,setD]=useState({...camper});
   const [testResult,setTestResult]=useState(null);
@@ -3669,6 +3738,8 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,mapillaryKey,ttKey,onRes
   const [editKeys,setEditKeys]=useState(false);
   const [dGk,setDGk]=useState(geminiKey||"");
   const [dGroq,setDGroq]=useState(groqKey||"");
+  const [dCere,setDCere]=useState(cerebrasKey||"");
+  const [dOrs,setDOrs]=useState(orsKey||"");
   const [dMly,setDMly]=useState(mapillaryKey||"");
   const [testGroqResult,setTestGroqResult]=useState(null);
   const [testingGroq,setTestingGroq]=useState(false);
@@ -3789,6 +3860,11 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,mapillaryKey,ttKey,onRes
               )}
             </div>
             <div>
+              <div className="ilab">🔴 Cerebras API Key <span style={{color:"#94a3b8",fontWeight:400}}>(Opzionale · Gratuita · Secondo parere AI)</span></div>
+              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://cloud.cerebras.ai/" target="_blank" style={{color:"#f97316",fontWeight:700}}>cloud.cerebras.ai</a> → API Keys</div>
+              <input className="kinp" type="password" placeholder="csk-..." value={dCere} onChange={e=>setDCere(e.target.value)}/>
+            </div>
+            <div>
               <div className="ilab">🟢 Gemini API Key <span style={{color:"#94a3b8",fontWeight:400}}>(Opzionale · Google Search grounding)</span></div>
               <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://aistudio.google.com/app/apikey" target="_blank" style={{color:"#f97316",fontWeight:700}}>aistudio.google.com/app/apikey</a></div>
               <input className="kinp" type="password" placeholder="AIzaSy..." value={dGk} onChange={e=>setDGk(e.target.value)}/>
@@ -3806,7 +3882,13 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,mapillaryKey,ttKey,onRes
               <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://www.mapillary.com/developer" target="_blank" style={{color:"#f97316",fontWeight:700}}>mapillary.com/developer</a> → Client Token</div>
               <input className="kinp" type="password" placeholder="MLY|..." value={dMly} onChange={e=>setDMly(e.target.value)}/>
             </div>
-            <button className="btn bto" style={{width:"100%"}} onClick={()=>{onSaveKeys&&onSaveKeys(dGk.trim(),dGroq.trim(),dMly.trim());setEditKeys(false);}}>💾 Salva tutte le chiavi</button>
+            <div>
+              <div className="ilab">🛣 OpenRouteService API Key <span style={{color:"#94a3b8",fontWeight:400}}>(Opzionale · Gratuita · Routing HGV)</span></div>
+              <div style={{fontSize:10,color:"#64748b",marginBottom:4}}><a href="https://openrouteservice.org/dev/#/signup" target="_blank" style={{color:"#f97316",fontWeight:700}}>openrouteservice.org</a> → Sign up → Dashboard → API Key (1000 req/giorno gratis)</div>
+              <div style={{fontSize:10,color:"#059669",marginBottom:4,fontWeight:600}}>🏆 Consigliata: evita automaticamente ponti bassi, gallerie strette e strade vietate ai mezzi pesanti</div>
+              <input className="kinp" type="password" placeholder="5b3ce3597851110001cf..." value={dOrs} onChange={e=>setDOrs(e.target.value)}/>
+            </div>
+            <button className="btn bto" style={{width:"100%"}} onClick={()=>{onSaveKeys&&onSaveKeys(dGk.trim(),dGroq.trim(),dMly.trim(),dCere.trim(),dOrs.trim());setEditKeys(false);}}>💾 Salva tutte le chiavi</button>
           </div>
         )}
         {!groqKey&&!editKeys&&(
@@ -3904,6 +3986,32 @@ function TabProfilo({camper,setCamper,geminiKey,groqKey,mapillaryKey,ttKey,onRes
           }}>🔗 {t("connectFirebase")}</button>
         </div>
       </div>
+      {/* Sync across devices */}
+      <div className="card">
+        <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:13,marginBottom:8}}>🔄 Sincronizzazione Dispositivi</div>
+        <div style={{fontSize:11,color:"var(--text2)",marginBottom:8}}>
+          Le mete salvate nella sezione Oversize vengono sincronizzate automaticamente via Firebase. Per usare lo stesso account su un altro dispositivo, copia il codice qui sotto e incollalo sull'altro dispositivo.
+        </div>
+        <div style={{display:"flex",gap:6,alignItems:"center",marginBottom:8}}>
+          <div className="ilab" style={{flex:"0 0 auto"}}>Il tuo codice:</div>
+          <input className="inp" type="text" readOnly value={FB.userId()} style={{fontSize:11,fontFamily:"monospace",flex:1}}/>
+          <button className="btn bsm" style={{flex:"0 0 auto"}} onClick={()=>{navigator.clipboard?.writeText(FB.userId());alert("Codice copiato!");}}>📋</button>
+        </div>
+        <div style={{fontSize:10,color:"#64748b",marginBottom:6}}>Per collegare un altro dispositivo, incolla qui il codice dell'account:</div>
+        <div style={{display:"flex",gap:6}}>
+          <input className="inp" type="text" placeholder="u_abc123_xyz..." id="sync-code-input" style={{fontSize:11,fontFamily:"monospace",flex:1}}/>
+          <button className="btn bto bsm" style={{flex:"0 0 auto"}} onClick={()=>{
+            const inp=document.getElementById("sync-code-input");
+            const code=inp?.value?.trim();
+            if(!code||code.length<5){alert("Codice non valido.");return;}
+            if(confirm("Vuoi collegare questo dispositivo all'account "+code+"?\n\nI salvataggi locali verranno sostituiti con quelli dell'account remoto.")){
+              LS.set("oit_user_id",code);
+              alert("Collegato! Ricarica l'app per sincronizzare.");
+              window.location.reload();
+            }
+          }}>🔗 Collega</button>
+        </div>
+      </div>
       {/* Privacy Policy & Terms */}
       <div className="card">
         <div style={{fontFamily:"Poppins",fontWeight:700,fontSize:13,marginBottom:8}}>📜 {t("privacy")} & {t("terms")}</div>
@@ -3982,6 +4090,8 @@ function App(){
   const [tk,setTk]=useState(()=>LS.get("oit_tk")||"");
   const [gk,setGk]=useState(()=>LS.get("oit_gk")||"");
   const [groqK,setGroqK]=useState(()=>LS.get("oit_groq")||"");
+  const [cereK,setCereK]=useState(()=>LS.get("oit_cere")||"");
+  const [orsK,setOrsK]=useState(()=>LS.get("oit_ors")||"");
   const [mlyK,setMlyK]=useState(()=>LS.get("oit_mly")||"");
   const [setup,setSetup]=useState(()=>!LS.get("oit_setup_done"));
   const [tab,setTab]=useState("cerca");
@@ -3994,9 +4104,21 @@ function App(){
   const [camper,setCamper]=useState(()=>LS.getJ("oit_camper")||{name:"Il mio Camper",model:"Maxi Camper",length:11,width:2.55,height:3.4,weight:7.5,wheelbase:6.05,rearOverhang:2.42});
   const {lang,t,changeLang}=useI18n();
   const [oversizeItems,setOversizeItems]=useState(()=>LS.getJ("oit_oversize_ai")||[]);
+  /* ── Sync oversize items con Firebase ── */
+  useEffect(()=>{
+    if(!FB.ready())return;
+    const uid=FB.userId();
+    const unsub=FB.listen("oversize/"+uid,data=>{
+      /* Merge Firebase data con local — Firebase vince */
+      const fbItems=data.map(d=>({id:d.id,name:d.name,address:d.address,lat:d.lat,lng:d.lng,website:d.website||null,verdict:d.verdict||"ok",note:d.note||"",_fbId:d._fbId}));
+      setOversizeItems(fbItems);
+      LS.setJ("oit_oversize_ai",fbItems);
+    });
+    return unsub;
+  },[]);
   function saveCamper(c){setCamper(c);LS.setJ("oit_camper",c);}
-  function handleReady(t,g,grq,mly){LS.set("oit_setup_done","1");if(g)LS.set("oit_gk",g);if(grq)LS.set("oit_groq",grq);if(mly)LS.set("oit_mly",mly);setTk(t);setGk(g);setGroqK(grq||"");setMlyK(mly||"");setSetup(false);}
-  function reset(){LS.del("oit_setup_done");LS.del("oit_tk");LS.del("oit_gk");LS.del("oit_groq");LS.del("oit_mly");setTk("");setGk("");setGroqK("");setMlyK("");setSetup(true);}
+  function handleReady(t,g,grq,mly,cere,ors){LS.set("oit_setup_done","1");if(g)LS.set("oit_gk",g);if(grq)LS.set("oit_groq",grq);if(mly)LS.set("oit_mly",mly);if(cere)LS.set("oit_cere",cere);if(ors)LS.set("oit_ors",ors);setTk(t);setGk(g);setGroqK(grq||"");setMlyK(mly||"");setCereK(cere||"");setOrsK(ors||"");setSetup(false);}
+  function reset(){LS.del("oit_setup_done");LS.del("oit_tk");LS.del("oit_gk");LS.del("oit_groq");LS.del("oit_mly");LS.del("oit_cere");LS.del("oit_ors");setTk("");setGk("");setGroqK("");setMlyK("");setCereK("");setOrsK("");setSetup(true);}
   function handleSaveOversize(poi,analysis){
     const item={
       id:"ai_"+poi.id,
@@ -4010,11 +4132,20 @@ function App(){
       if(prev.find(i=>i.id===item.id))return prev;
       const u=[...prev,item];
       LS.setJ("oit_oversize_ai",u);
+      /* Sync to Firebase */
+      if(FB.ready()){const uid=FB.userId();FB.push("oversize/"+uid,item);}
       return u;
     });
   }
   function removeOversize(id){
-    setOversizeItems(prev=>{const u=prev.filter(i=>i.id!==id);LS.setJ("oit_oversize_ai",u);return u;});
+    setOversizeItems(prev=>{
+      const target=prev.find(i=>i.id===id);
+      const u=prev.filter(i=>i.id!==id);
+      LS.setJ("oit_oversize_ai",u);
+      /* Remove from Firebase */
+      if(FB.ready()&&target&&target._fbId){const uid=FB.userId();FB.remove("oversize/"+uid+"/"+target._fbId);}
+      return u;
+    });
   }
   async function handleSaveCert(poi,analysis){
     const maxSizeCat=camper.length<=9.5?"9.5":camper.length<=10.5?"10.5":"12";
@@ -4083,11 +4214,11 @@ function App(){
           {NAV.map(n=><div key={n.id} className={"tl"+(tab===n.id?" on":"")}/>)}
         </div>
       </header>
-      {tab==="cerca"      &&<TabCerca      camper={camper} ttKey={tk} geminiKey={gk} groqKey={groqK} mapillaryKey={mlyK} onSaveOversize={handleSaveOversize} onSaveCert={handleSaveCert} onCenterChange={setLastCenter} t={t} lang={lang}/>}
+      {tab==="cerca"      &&<TabCerca      camper={camper} ttKey={tk} geminiKey={gk} groqKey={groqK} cerebrasKey={cereK} orsKey={orsK} mapillaryKey={mlyK} onSaveOversize={handleSaveOversize} onSaveCert={handleSaveCert} onCenterChange={setLastCenter} t={t} lang={lang}/>}
       {tab==="certificate"&&<TabCertificate camper={camper} t={t} lang={lang}/>}
       {tab==="noleggio"   &&<TabNoleggio t={t} lang={lang}/>}
       {tab==="preferiti"  &&<TabOversize   camper={camper} ttKey={tk} externalItems={oversizeItems} onRemove={removeOversize} t={t}/>}
-      {tab==="profilo"    &&<TabProfilo    camper={camper} setCamper={saveCamper} geminiKey={gk} groqKey={groqK} mapillaryKey={mlyK} ttKey={tk} onReset={reset} onSaveKeys={(g,grq,mly)=>{if(g!==undefined){LS.set("oit_gk",g);setGk(g);}if(grq!==undefined){LS.set("oit_groq",grq);setGroqK(grq);}if(mly!==undefined){LS.set("oit_mly",mly);setMlyK(mly);}}} t={t} lang={lang} changeLang={changeLang}/>}
+      {tab==="profilo"    &&<TabProfilo    camper={camper} setCamper={saveCamper} geminiKey={gk} groqKey={groqK} cerebrasKey={cereK} orsKey={orsK} mapillaryKey={mlyK} ttKey={tk} onReset={reset} onSaveKeys={(g,grq,mly,cere,ors)=>{if(g!==undefined){LS.set("oit_gk",g);setGk(g);}if(grq!==undefined){LS.set("oit_groq",grq);setGroqK(grq);}if(mly!==undefined){LS.set("oit_mly",mly);setMlyK(mly);}if(cere!==undefined){LS.set("oit_cere",cere);setCereK(cere);}if(ors!==undefined){LS.set("oit_ors",ors);setOrsK(ors);}}} t={t} lang={lang} changeLang={changeLang}/>}
       <nav className="bnav">
         {NAV.map(n=>(
           <button key={n.id} className={"nv"+(tab===n.id?" on":"")} onClick={()=>setTab(n.id)}>
