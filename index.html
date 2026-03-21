@@ -796,7 +796,9 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
         isCamp,isDump,isStellplatz,isOvernight,cat,
         _source:"osm",_capacity:t.capacity||t["capacity:caravans"]||null,
         _fee:t.fee||null,_power:t.power_supply||null,
-        _water:t.drinking_water||null,_wifi:t.internet_access||null
+        _water:t.drinking_water||null,_wifi:t.internet_access||null,
+        _maxlength:parseFloat(t.maxlength)||null,_maxwidth:parseFloat(t.maxwidth)||null,
+        _maxheight:parseFloat(t.maxheight||t["maxheight:physical"])||null,_maxweight:parseFloat(t.maxweight)||null
       };
     })
     .filter(Boolean);
@@ -831,6 +833,10 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
     if(!existing._water&&r._water)existing._water=r._water;
     if(!existing._wifi&&r._wifi)existing._wifi=r._wifi;
     if(!existing._p4nId&&r._p4nId)existing._p4nId=r._p4nId;
+    if(!existing._maxlength&&r._maxlength)existing._maxlength=r._maxlength;
+    if(!existing._maxwidth&&r._maxwidth)existing._maxwidth=r._maxwidth;
+    if(!existing._maxheight&&r._maxheight)existing._maxheight=r._maxheight;
+    if(!existing._maxweight&&r._maxweight)existing._maxweight=r._maxweight;
     /* Prefer longer/better name */
     if(r.name&&r.name.length>existing.name.length&&/(area sosta|campeggio|stellplatz)/i.test(existing.name))existing.name=r.name;
     /* Track sources */
@@ -844,7 +850,36 @@ async function _doSearchPOIs(lat,lng,cacheKeyPOI){
     return true;
   });
 
-  const finalResult=finalDedup.sort(function(a,b){return a.distKm-b.distKm;}).slice(0,500);
+  /* ── PRE-FILTRO DIMENSIONI: marca i POI con restrizioni note ── */
+  /* Non rimuove — marca con _sizeWarn per avviso visuale */
+  let dimFiltered=0;
+  finalDedup.forEach(r=>{
+    const ml=r._maxlength,mw=r._maxwidth,mh=r._maxheight,mwt=r._maxweight;
+    r._sizeOk=true;/* default: nessuna restrizione nota */
+    r._sizeWarnings=[];
+    if(ml&&ml<12){r._sizeOk=false;r._sizeWarnings.push("max "+ml+"m lungh.");dimFiltered++;}
+    if(mw&&mw<2.6){r._sizeOk=false;r._sizeWarnings.push("max "+mw+"m larg.");}
+    if(mh&&mh<3.5){r._sizeOk=false;r._sizeWarnings.push("max "+mh+"m alt.");}
+    if(mwt&&mwt<8){r._sizeOk=false;r._sizeWarnings.push("max "+mwt+"t peso");}
+    /* Parcheggi generici senza nome = bassa affidabilità */
+    if(!r.isCamp&&!r.isStellplatz&&r._source==="osm"&&!r.name.match(/\w{4,}/)){r._lowConfidence=true;}
+    /* Campeggi con nome/sito = alta affidabilità */
+    if(r.isCamp&&r.name&&r.name.length>5){r._highConfidence=true;}
+    if(r.website){r._highConfidence=true;}
+  });
+  if(dimFiltered>0)console.log("[POI] DIM-FILTER: "+dimFiltered+" POI con restrizioni dimensionali note");
+
+  /* Sort: campeggi/alta affidabilità prima, poi stellplatz, poi parcheggi. POI con sizeOk=false in fondo */
+  const finalResult=finalDedup.sort(function(a,b){
+    /* POI inaccessibili per dimensioni vanno in fondo */
+    if(a._sizeOk!==b._sizeOk)return a._sizeOk?-1:1;
+    /* Alta affidabilità prima */
+    if(a._highConfidence!==b._highConfidence)return a._highConfidence?-1:1;
+    /* Campeggi prima dei parcheggi */
+    if(a.isCamp!==b.isCamp)return a.isCamp?-1:1;
+    /* Per distanza */
+    return a.distKm-b.distKm;
+  }).slice(0,500);
   console.log("[POI] FINAL: "+finalResult.length+" unique (OSM="+osmResults.length+" OCM="+ocmFiltered.length+" P4N="+p4nResults.length+" IOV="+iovResults.length+" NOM="+nomResults.length+")");
   if(finalResult.length>0)OCache.savePOIs(cacheKeyPOI,finalResult);
   return finalResult;
@@ -2816,7 +2851,7 @@ function ConfrontoScreen({pois,camper,onBack}){
   );
 }
 /* ══════════════════ TAB CERCA ══════════════════ */
-function TabCerca({camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,mapillaryKey,onSaveOversize,onSaveCert,onCenterChange,t,lang}){
+function TabCerca({camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,mapillaryKey,onSaveOversize,onSaveCert,onCenterChange,oversizeItems,certItems,t,lang}){
   const [q,setQ]=useState("");
   const [loading,setLoading]=useState(false);
   const [center,setCenter]=useState({lat:41.9,lng:12.5});
@@ -3046,22 +3081,33 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,mapillaryKe
             </div>
             {filtered.map(p=>{
               const isInCompare=compareList.some(c=>c.id===p.id);
+              /* ⭐ Check se è nei preferiti */
+              const isFav=oversizeItems&&oversizeItems.some(f=>f.lat&&p.lat&&Math.abs(f.lat-p.lat)<0.002&&Math.abs(f.lng-p.lng)<0.002);
+              /* 🏅 Check se è certificato */
+              const isCert=certItems&&certItems.some(c=>c.lat&&p.lat&&Math.abs(c.lat-p.lat)<0.002&&Math.abs(c.lng-p.lng)<0.002);
+              const hasDimWarn=p._sizeWarnings&&p._sizeWarnings.length>0;
               return(
-              <div key={p.id} className="poi-row" onClick={()=>{if(compareMode){if(isInCompare){setCompareList(prev=>prev.filter(c=>c.id!==p.id));}else if(compareList.length<3){setCompareList(prev=>[...prev,p]);}return;}setSelPoi(p);}} style={isInCompare?{borderColor:"#7c3aed",background:"#faf5ff"}:{}}>
+              <div key={p.id} className="poi-row" onClick={()=>{if(compareMode){if(isInCompare){setCompareList(prev=>prev.filter(c=>c.id!==p.id));}else if(compareList.length<3){setCompareList(prev=>[...prev,p]);}return;}setSelPoi(p);}} style={{...(isInCompare?{borderColor:"#7c3aed",background:"#faf5ff"}:isCert?{borderColor:"#16a34a",background:"#f0fdf4"}:isFav?{borderColor:"#b8860b",background:"#fefce8"}:{}),opacity:hasDimWarn?0.7:1}}>
                 {compareMode&&(
                   <div style={{width:22,height:22,borderRadius:6,border:"2px solid "+(isInCompare?"#7c3aed":"#cbd5e1"),background:isInCompare?"#7c3aed":"#fff",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:12,color:"#fff"}}>
                     {isInCompare?"✓":""}
                   </div>
                 )}
-                <div className="poi-ico" style={{background:p.isDump?"#dcfce7":p.isCamp?"#fdf4ff":"#eff6ff"}}>
+                <div className="poi-ico" style={{background:p.isDump?"#dcfce7":p.isCamp?"#fdf4ff":"#eff6ff",position:"relative"}}>
                   {p.isDump?"🚰":p.isCamp?"🏕":p.isStellplatz?"🚐":"🅿️"}
+                  {isFav&&<span style={{position:"absolute",top:-4,right:-4,fontSize:12,filter:"drop-shadow(0 1px 1px rgba(0,0,0,.3))"}}>⭐</span>}
+                  {isCert&&<img src={typeof CAMPER_IMG_SM!=="undefined"?CAMPER_IMG_SM:""} style={{position:"absolute",bottom:-4,right:-6,width:18,height:"auto",filter:"drop-shadow(0 1px 1px rgba(0,0,0,.3))"}} alt="✓"/>}
                 </div>
                 <div style={{flex:1,minWidth:0}}>
-                  <div style={{display:"flex",alignItems:"center",gap:6}}>
+                  <div style={{display:"flex",alignItems:"center",gap:4}}>
                     <div style={{fontWeight:700,fontSize:13,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",flex:1}}>{p.name}</div>
+                    {isFav&&<span style={{fontSize:9,fontWeight:700,padding:"1px 4px",borderRadius:4,background:"#fefce8",color:"#b8860b",border:"1px solid #d4a017",flexShrink:0}}>⭐ Preferito</span>}
+                    {isCert&&<span style={{fontSize:9,fontWeight:700,padding:"1px 4px",borderRadius:4,background:"#dcfce7",color:"#16a34a",border:"1px solid #86efac",flexShrink:0}}>🏅 Certificato</span>}
                     {p._rating&&<span style={{fontSize:9,color:"#f59e0b",fontWeight:700,flexShrink:0}}>★{p._rating}</span>}
                   </div>
                   <div style={{fontSize:11,color:"#64748b",marginTop:2,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{p.address}{p._fee?" · "+({yes:"💰",no:"🆓"}[p._fee]||""):""}{p._capacity?" · "+p._capacity+" posti":""}</div>
+                  {/* ⚠️ Avviso dimensioni */}
+                  {hasDimWarn&&<div style={{fontSize:9,color:"#dc2626",fontWeight:700,marginTop:2,display:"flex",alignItems:"center",gap:3}}>⛔ {p._sizeWarnings.join(" · ")}</div>}
                   <div style={{display:"flex",gap:5,marginTop:4,flexWrap:"wrap"}}>
                     <a href={"https://www.google.com/maps/search/"+encodeURIComponent(p.name+" "+p.address)} target="_blank" onClick={e=>e.stopPropagation()} style={{textDecoration:"none"}}>
                       <span className="src-logo src-gm">🗺 Maps</span>
@@ -3073,7 +3119,7 @@ function TabCerca({camper,ttKey,geminiKey,groqKey,cerebrasKey,orsKey,mapillaryKe
                 </div>
                 <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"flex-end",gap:3}}>
                   {p.distKm<99&&<span style={{fontSize:10,color:"#94a3b8"}}>{p.distKm<1?(p.distKm*1000).toFixed(0)+"m":p.distKm.toFixed(1)+"km"}</span>}
-                  <span style={{fontSize:12,color:"#b8860b",fontWeight:700,whiteSpace:"nowrap"}}>{"\ud83e\udd16"} Analizza {"\u2192"}</span>
+                  <span style={{fontSize:12,color:hasDimWarn?"#dc2626":"#b8860b",fontWeight:700,whiteSpace:"nowrap"}}>{hasDimWarn?"⛔ Troppo piccolo":"\ud83e\udd16 Analizza \u2192"}</span>
                 </div>
               </div>
               );
@@ -4824,7 +4870,7 @@ function App(){
           {NAV.map(n=><div key={n.id} className={"tl"+(tab===n.id?" on":"")}/>)}
         </div>
       </header>
-      {tab==="cerca"      &&<TabCerca      camper={camper} ttKey={tk} geminiKey={gk} groqKey={groqK} cerebrasKey={cereK} orsKey={orsK} mapillaryKey={mlyK} onSaveOversize={handleSaveOversize} onSaveCert={handleSaveCert} onCenterChange={setLastCenter} t={t} lang={lang}/>}
+      {tab==="cerca"      &&<TabCerca      camper={camper} ttKey={tk} geminiKey={gk} groqKey={groqK} cerebrasKey={cereK} orsKey={orsK} mapillaryKey={mlyK} onSaveOversize={handleSaveOversize} onSaveCert={handleSaveCert} onCenterChange={setLastCenter} oversizeItems={oversizeItems} certItems={LS.getJ("oit_cert_community")||[]} t={t} lang={lang}/>}
       {tab==="certificate"&&<TabCertificate camper={camper} t={t} lang={lang}/>}
       {tab==="noleggio"   &&<TabNoleggio t={t} lang={lang}/>}
       {tab==="preferiti"  &&<TabOversize   camper={camper} ttKey={tk} externalItems={oversizeItems} onRemove={removeOversize} t={t}/>}
